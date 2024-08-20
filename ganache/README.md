@@ -37,3 +37,6 @@
 
     * Execute the following command:
       $ ./startApp
+
+  You must obtain the following result at the end of the console:
+    RPC Listening on 172.18.1.2:8546
