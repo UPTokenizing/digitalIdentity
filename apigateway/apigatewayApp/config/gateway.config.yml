@@ -1,0 +1,82 @@
+http:
+  port: 5500
+admin:
+  port: 9876
+  host: localhost
+apiEndpoints:
+  api:
+    host: localhost
+    paths: '/ip'
+
+  genesisidentityproof:
+    host: localhost
+    paths: '/proof'    
+
+  genesisidentityCreate:
+    host:  localhost
+    paths: '/create' 
+    #methods: ["POST"]
+
+  genesisidentityConsult:
+    host:  localhost
+    paths: '/consult' 
+    #methods: ["POST"]
+
+  didentityConsultField:
+    host:  d1c73e42f49e
+    paths: '/consult/field'        
+
+serviceEndpoints:
+  httpbin:
+    url: 'https://httpbin.org'
+
+  didentity:
+    url: 'http://172.18.1.3:5502'
+
+  genesisidentity:
+    url: 'http://172.18.1.4:5501'   #this is the name of the host   
+
+policies:
+  - basic-auth
+  - cors
+  - expression
+  - key-auth
+  - log
+  - oauth2
+  - proxy
+  - rate-limit
+pipelines:
+  default:
+    apiEndpoints:
+      - api
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: httpbin 
+              changeOrigin: true
+  genesisPipeline:
+    apiEndpoints:
+      - genesisidentityproof
+      - genesisidentityCreate
+      - genesisidentityConsult
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: genesisidentity 
+              changeOrigin: true
+
+  didentityPipeline:
+    apiEndpoints:      
+      - didentityConsultField      
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: didentity 
+              changeOrigin: true
+
