@@ -1,5 +1,5 @@
 # DigitalIdentity: Architecture for a digital identity ecosystem based on blockchain
-The respository will have all projects about digitizing physical objects and linking it with a person
+This repository will have all projects about digitizing physical objects and linking it with a person
 
 ## General description
   This is an architecture containing the following parts: 
@@ -20,9 +20,9 @@ The respository will have all projects about digitizing physical objects and lin
     Install orderly the following instructions: 
 
   1. First, install docker, a guide for that visit [docker install](https://docs.docker.com/engine/install/).   
-  2. Install Ganache: follow the instructions explained in file README.md within folder [ganache/](https://stillnotavailable).
-  3. Then, install API-Gateway, follow the instructions explained in file README.md within folder [apigateway/](https://stillnotavailable).
-  4. Next, install GenesisIdentity, follow the instructions explained in file README.md within folder [genesisIdenity/](https://stillnotavailable).
+  2. Install Ganache: follow the instructions explained in file README.md within folder [ganache/](https://github.com/UPTokenizing/digitalIdentity/tree/main/ganache).
+  3. Then, install API-Gateway, follow the instructions explained in file README.md within folder [apigateway/](https://github.com/UPTokenizing/digitalIdentity/tree/main/apigateway).
+  4. Next, install GenesisIdentity, follow the instructions explained in file README.md within folder [genesisIdenity/](https://github.com/UPTokenizing/digitalIdentity/tree/main/genesisIdentity).
 
 The next table illustrates the platforms that were already installed and tested the proofs successfully:
 
@@ -36,4 +36,4 @@ MACOS 14.4.1 (23E224)| Intel Iris Plus Graphics 1536 MB, 1.2 GHz Quad-Core Intel
 ## Example to consume the services
 To consume a list of services, check the following:
   
-  1. Follow the instructions explained in file Services.md within folder [genesisIdenity/genesisIdentityServices.pdf](https://stillnotavailable)
+  1. Follow the instructions explained in file genesisIdentityServices.pdf within folder [genesisIdenity/genesisIdentityServices.pdf](https://github.com/UPTokenizing/digitalIdentity/blob/main/genesisIdentity/genesisIdentityServices.pdf)
