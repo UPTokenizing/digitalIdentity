@@ -23,7 +23,7 @@
       $ docker build -t apigateway  <PATHL>
 
     * Run ubuntu: 
-      $ docker run -it --network TokPhyAppNetwork -p 6000:6000 -v <PATHL>:/apigateway  apigateway
+      $ docker run -it --network TokPhyAppNetwork -p 5500:5500 -p 9876:9876 -v  <PATHL>:/apigateway  apigateway
 
     * Then, go to the ubuntu instance path:
       $ cd /apigateway/apigatewayApp
