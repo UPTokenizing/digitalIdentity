@@ -1,6 +1,6 @@
-# API Gateway for tokenizing project
+# API Gateway for tokenizing
 ## General description
-  This application is the API Gateway for the tokening project. This offers a solution to insert various microservices.
+  This application is the API Gateway for the digital identity project. This offers a solution to insert various microservices.
 
 ## Pre-requirements
   Althouth it should have been installed previously. Check if you have the network created:

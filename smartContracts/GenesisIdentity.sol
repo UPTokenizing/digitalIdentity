@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: jclopezpimentel
 pragma solidity 0.8.19;
 
 contract GenesisIdentity{  
@@ -57,35 +58,4 @@ contract GenesisIdentity{
         tokenDigIdentity = digIdentity;
         dateLastUpdate = block.timestamp;
     }
-
-    function getFullName() public view returns ( string memory, string memory, string memory) {
-        return (name, fLastName, mLastName);
-    }
-
-    function getBirthDate() public view returns ( uint16, uint16, uint16) {
-        return (day, month, year);
-    }
-
-    function getPlaceOfBirthDate() public view returns ( string memory, string memory) {
-        return (municipality, state);
-    }
-
-    function getGender() public view returns ( bool) {
-        return (gender);
-    }
-
-    function getDates() public view returns (uint,uint) {
-        return (dateCreation,dateLastUpdate);
-    }
-
-    function getTokens() public view returns (address,address,address,address) {
-        return (tokenFather,tokenMother,tokenDigIdentity,government);
-    }
-
-     // Function to return all public attributes
-     /*
-    function getAllAttributes() public view returns ( string memory, string memory, string memory, bool, uint16, uint16, uint16, string memory, string memory, uint, uint, address, address, address, address) {
-        return (name, fLastName, mLastName, gender, day, month, year, state, municipality, dateCreation, dateLastUpdate, tokenFather, tokenMother, tokenDigIdentity, government);
-    }*/
 }
-
