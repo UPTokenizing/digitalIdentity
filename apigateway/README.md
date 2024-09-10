@@ -13,19 +13,22 @@
 
  
 ## Install process
-  Using the Dockerfile located in this repository, execute the following steps:
+  Download this repository in a path in your computer, so-called PATHL from now on.  Execute the following steps: 
 
-    * Download this repository in a path in your computer, so-called PATHL
+    * Go the following patch:
+      $ cd PATHL  
+    * You must see Dockerfile, README.md file and folder apigatewayApp:
+      $ ls 
     * Download ubuntu image (althouth this step should not be required because of the previous Ganache installation):
-      $ docker pull ubuntu:23.10
+      $ sudo docker pull ubuntu:23.10
     
     * Build the ubuntu image in a repository:
-      $ docker build -t apigateway  <PATHL>
+      $ sudo docker build -t apigateway  <PATHL>
 
     * Run ubuntu: 
-      $ docker run -it --network TokPhyAppNetwork -p 5500:5500 -p 9876:9876 -v  <PATHL>:/apigateway  apigateway
+      $ sudo docker run -it --network TokPhyAppNetwork -p 5500:5500 -p 9876:9876 -v  <PATHL>:/apigateway  apigateway
 
-    * Then, go to the ubuntu instance path:
+    * Then, go to the path:
       $ cd /apigateway/apigatewayApp
 
     * You must intro to the ubuntu instance and install npm:
@@ -39,3 +42,25 @@
 
     * Execute web server:
       $ ./startApp
+  
+  After this, you must see something like this:
+    [EG:gateway] info: gateway http server listening on :::5500
+    [EG:admin] info: admin http server listening on ::1:9876
+
+  You can execute <ctrl>+C to exit
+
+## Deployment
+  Check the containers installed executing the following:
+    sudo docker ps -a
+
+  Identify the container id of **apigateway** and set in the following command:
+    sudo docker start <containerid>
+
+  Go into container **apigateway** by executing the following:
+    sudo docker exec -it <containerid> /bin/bash
+
+  Go to the following path:
+    cd /apigateway/apigatewayApp/
+
+  Then, execute the following command:
+    ./startApp
