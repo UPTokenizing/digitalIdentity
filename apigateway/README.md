@@ -50,8 +50,9 @@
   You can execute <ctrl>+C to exit
 
 ## Deployment
-  Check the containers installed executing the following:
-      * sudo docker ps -a
+  Follow the next instructions: 
+    * Check the containers installed executing the following:
+      sudo docker ps -a
 
   Identify the container id of **apigateway** and set the following command:
       * sudo docker start <containerid>
