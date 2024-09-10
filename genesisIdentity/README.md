@@ -51,16 +51,16 @@
 
 ## Deployment
   Check the containers installed executing the following:
-      sudo docker ps -a
+      * sudo docker ps -a
 
   Identify the container id of **genesisidentity** and set the following command:
-      sudo docker start <containerid>
+      * sudo docker start <containerid>
 
   Go into container **genesisidentity** by executing the following:
-      sudo docker exec -it <containerid> /bin/bash
+      * sudo docker exec -it <containerid> /bin/bash
 
   Go to the following path:
-      cd /genesisidentity/genesisIdentityApp
+      * cd /genesisidentity/genesisIdentityApp
 
   Then, execute the following command:
-      ./startApp
+      * ./startApp

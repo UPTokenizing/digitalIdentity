@@ -39,7 +39,7 @@ MACOS 14.4.1 (23E224)| Intel Iris Plus Graphics 1536 MB, 1.2 GHz Quad-Core Intel
   3. Next, follow the **Deployment** instructions explained in file README.md within folder [genesisIdenity/](https://github.com/UPTokenizing/digitalIdentity/tree/main/genesisIdentity).
 
 You can execute the following command in the host operating system to check if everything is ok:
-  * curl -X GET http://localhost:5500/proof
+    * curl -X GET http://localhost:5500/proof
 
 It must return:
     _Returning: route /proof_
