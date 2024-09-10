@@ -13,9 +13,12 @@
 
  
 ## Install process
-  Using the Dockerfile located in this repository, execute the following steps:
+  Download this repository in a path in your computer, so-called PATHL from now on.  Execute the following steps: 
 
-    * Download this repository in a path in your computer, so-called PATHL
+    * Go the following patch:
+      $ cd PATHL  
+    * You must see Dockerfile, README.md file, folder genesisIdentityApp and genesisIdentityServices.pdf:
+      $ ls 
     * Download ubuntu image (althouth this step should not be required because of the previous Ganache installation):
       $ docker pull ubuntu:23.10
     
@@ -39,3 +42,25 @@
 
     * Execute web server:
       $ ./startApp
+
+  After this, you must see something like this:
+    > didentity@0.0.0 start
+    > node ./bin/www
+
+  You can execute <ctrl>+C to exit
+
+## Deployment
+  Check the containers installed executing the following:
+    sudo docker ps -a
+
+  Identify the container id of **genesisidentity ** and set in the following command:
+    sudo docker start <containerid>
+
+  Go into container **apigateway** by executing the following:
+    sudo docker exec -it <containerid> /bin/bash
+
+  Go to the following path:
+    cd /genesisidentity/genesisIdentityApp
+
+  Then, execute the following command:
+    ./startApp

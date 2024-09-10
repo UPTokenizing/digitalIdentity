@@ -16,17 +16,17 @@
 
     * Download this repository in a path in your computer, so-called PATHLBLOCKCHAIN
     * Download ubuntu image:
-      $ docker pull ubuntu:23.10
+      $ sudo docker pull ubuntu:23.10
     
     * If you are running docker in MacOS, disable line 22 and enable line 25 in the Dockerfile in PATHLBLOCKCHAIN
 
     * Build the ubuntu image in a repository:
-      $ docker build -t ganacheimage  <PATHLBLOCKCHAIN>
+      $ sudo docker build -t ganacheimage  <PATHLBLOCKCHAIN>
 
     * Run ubuntu: 
-      $ docker run -it --network TokPhyAppNetwork -p 8546:8546 -v <PATHLBLOCKCHAIN>:/tokPhyApp/ganache  ganacheimage
+      $ sudo docker run -it --network TokPhyAppNetwork -p 8546:8546 -v <PATHLBLOCKCHAIN>:/tokPhyApp/ganache  ganacheimage
 
-    * Then, go to the ubuntu instance path:
+    * Then, go to the path:
       $ cd /tokPhyApp/ganache
 
     * Update npm:
@@ -40,3 +40,18 @@
 
   You must obtain the following result at the end of the console:
     RPC Listening on 172.18.1.2:8546
+
+  You can execute <ctrl>+C to exit
+
+## Deployment
+  Check the containers installed executing the following:
+    sudo docker ps -a
+
+  Identify the container id of **ganacheimage** and set in the following command:
+    sudo docker start <containerid>
+
+  Go into container **ganacheimage** by executing the following:
+    sudo docker exec -it <containerid> /bin/bash
+
+  Then, execute the following command:
+    /tokPhyApp/ganache/startApp
