@@ -45,13 +45,13 @@
 
 ## Deployment
   Check the containers installed executing the following:
-    sudo docker ps -a
+      sudo docker ps -a
 
-  Identify the container id of **ganacheimage** and set in the following command:
-    sudo docker start <containerid>
+  Identify the container id of **ganacheimage** and set the following command:
+      sudo docker start <containerid>
 
   Go into container **ganacheimage** by executing the following:
-    sudo docker exec -it <containerid> /bin/bash
+      sudo docker exec -it <containerid> /bin/bash
 
   Then, execute the following command:
-    /tokPhyApp/ganache/startApp
+      /tokPhyApp/ganache/startApp
