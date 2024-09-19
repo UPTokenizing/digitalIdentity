@@ -12,15 +12,28 @@ apiEndpoints:
     host: localhost
     paths: '/proof'    
 
+  genesisidentityproofB:
+    host: '172.18.1.3'
+    paths: '/proof'    
+
   genesisidentityCreate:
     host:  localhost
+    paths: '/create' 
+    #methods: ["POST"]
+
+  genesisidentityCreateB:
+    host:  '172.18.1.3'
     paths: '/create' 
     #methods: ["POST"]
 
   genesisidentityConsult:
     host:  localhost
     paths: '/consult' 
-    #methods: ["POST"]
+
+  genesisidentityConsultB:
+    host:  '172.18.1.3'
+    paths: '/consult' 
+
 
   didentityConsultField:
     host:  d1c73e42f49e
@@ -61,6 +74,10 @@ pipelines:
       - genesisidentityproof
       - genesisidentityCreate
       - genesisidentityConsult
+      - genesisidentityproofB
+      - genesisidentityCreateB
+      - genesisidentityConsultB
+
     policies:
     # Uncomment `key-auth:` when instructed to in the Getting Started guide.
     # - key-auth:

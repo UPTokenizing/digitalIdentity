@@ -140,8 +140,14 @@ async function callGenesisIdenSC(req){
 
 //modified
 initializer.consultMethodNotParams = async function (req, res){	
-    const contractAdd = req.body.contractAdd;	
-    const publicMethod = req.body.publicMethod; //public method or attribute
+    //const contractAdd = req.body.contractAdd;	
+    //const publicMethod = req.body.publicMethod; //public method or attribute
+    const contractAdd = req.query.contractAdd;	
+    const publicMethod = req.query.publicMethod; //public method or attribute	
+	/*
+    const contractAdd = req.headers.contractadd;	
+    const publicMethod = req.headers.publicmethod; //public method or attribute
+	*/
 	var resul = {Result: "Success"};
 	var obj={body:
 			{	
