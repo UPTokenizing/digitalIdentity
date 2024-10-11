@@ -19,12 +19,18 @@ apiEndpoints:
   genesisidentityCreate:
     host:  localhost
     paths: '/create' 
-    #methods: ["POST"]
 
   genesisidentityCreateB:
     host:  '172.18.1.3'
     paths: '/create' 
-    #methods: ["POST"]
+
+  genesisidentitySetAddress:
+    host:  localhost
+    paths: '/setAddress' 
+
+  genesisidentitySetAddressB:
+    host:  '172.18.1.3'
+    paths: '/setAddress' 
 
   genesisidentityConsult:
     host:  localhost
@@ -74,9 +80,11 @@ pipelines:
       - genesisidentityproof
       - genesisidentityCreate
       - genesisidentityConsult
+      - genesisidentitySetAddress
       - genesisidentityproofB
       - genesisidentityCreateB
       - genesisidentityConsultB
+      - genesisidentitySetAddressB
 
     policies:
     # Uncomment `key-auth:` when instructed to in the Getting Started guide.
