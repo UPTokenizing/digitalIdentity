@@ -1,7 +1,13 @@
 // SPDX-License-Identifier: jclopezpimentel
 pragma solidity 0.8.19;
 
-contract GenesisIdentity{  
+interface ContractFrom {
+        function owner() external view returns (address);
+        function nameToken() external view returns (string memory); 
+}    
+
+
+contract GenesisIdentity is ContractFrom{  
 
     //errors
         string constant INCORRECT_GOVERNMENT_USER = "V0001";
@@ -21,6 +27,9 @@ contract GenesisIdentity{
    address public tokenMother;
    address public tokenDigIdentity;
    address public government;
+   address public owner;
+    string public nameToken="GenesisIdentity";
+   
 
   constructor(string memory _name, string memory _fLastName, string memory _mLastName, bool _gender, 
               uint16 _day, uint16 _month, uint16 _year, string memory _state, string memory _municipality, address tFather, address tMother) {
@@ -36,7 +45,7 @@ contract GenesisIdentity{
     dateCreation = block.timestamp;
     dateLastUpdate = dateCreation;
     tokenFather=(tFather==address(0))?address(0):tFather;
-    tokenMother=(tMother==address(0))?address(0):tMother;
+    tokenMother=(tMother==address(0))?address(0):tMother;    
     tokenDigIdentity=address(0);
     government = msg.sender;
   }
@@ -58,4 +67,12 @@ contract GenesisIdentity{
         tokenDigIdentity = digIdentity;
         dateLastUpdate = block.timestamp;
     }
+
+  
+    function setOwner(address _owner) public {
+        require(msg.sender==government,INCORRECT_GOVERNMENT_USER);
+        owner = _owner;
+        dateLastUpdate = block.timestamp;
+    }
+
 }
