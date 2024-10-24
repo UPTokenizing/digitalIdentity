@@ -6,73 +6,49 @@ interface ContractFrom {
         function nameToken() external view returns (string memory); 
 }    
 
-
-contract GenesisIdentity is ContractFrom{  
+contract DigitalIdentity is ContractFrom{  
 
     //errors
         string constant INCORRECT_GOVERNMENT_USER = "V0001";
+        string constant INCORRECT_OWNER_USER = "V0002";
+        string constant INCORRECT_OWNER_OF_CONTRACTADDRESS = "V0003";
+        string constant INCORRECT_TOKEN_NAME = "V0004";
+        string constant TOKEN_ALREADY_EXIST = "V0005"; 
+         
+
     //attributes
-    string public name; 
-    string public fLastName; 
-    string public mLastName; 
-      bool public gender; //true will be man and false woman
-    uint16 public day; 
-    uint16 public month; 
-    uint16 public year;
-    string public state;
-    string public municipality;    
-      uint public dateCreation=0; // it contains the date the contract was created
-      uint public dateLastUpdate=0;
-   address public tokenFather; //null 0x0000000000000000000000000000000000000000
-   address public tokenMother;
-   address public tokenDigIdentity;
-   address public government;
-   address public owner;
-    string public nameToken="GenesisIdentity";
-   
+        address public owner;
+            string public nameToken="DigitalIdentity";
+        address public government;
 
-  constructor(string memory _name, string memory _fLastName, string memory _mLastName, bool _gender, 
-              uint16 _day, uint16 _month, uint16 _year, string memory _state, string memory _municipality, address tFather, address tMother) {
-    name = _name; 
-    fLastName = _fLastName; 
-    mLastName = _mLastName; 
-    gender = _gender; //true will be man and false woman
-    day = _day; 
-    month = _month; 
-    year = _year;
-    state =_state;
-    municipality = _municipality;
-    dateCreation = block.timestamp;
-    dateLastUpdate = dateCreation;
-    tokenFather=(tFather==address(0))?address(0):tFather;
-    tokenMother=(tMother==address(0))?address(0):tMother;    
-    tokenDigIdentity=address(0);
-    government = msg.sender;
-  }
-
-    function setFatherAddress(address fAddress) public {
-        require(msg.sender==government,INCORRECT_GOVERNMENT_USER);
-        tokenFather = fAddress;
-        dateLastUpdate = block.timestamp;
-    }
-
-    function setMotherAddress(address mAddress) public {
-        require(msg.sender==government,INCORRECT_GOVERNMENT_USER);
-        tokenMother = mAddress;
-        dateLastUpdate = block.timestamp;
-    }
-
-    function setDigitalIdentityAddress(address digIdentity) public {
-        require(msg.sender==government,INCORRECT_GOVERNMENT_USER);
-        tokenDigIdentity = digIdentity;
-        dateLastUpdate = block.timestamp;
-    }
-
-  
-    function setOwner(address _owner) public {
-        require(msg.sender==government,INCORRECT_GOVERNMENT_USER);
+        struct LinkedToken{
+                address tokenAdd;
+                string nameToken;
+                bool exists; // Boolean flag to track whether a user exists 
+        }
+        mapping(address => LinkedToken) private linkedTokens;
+        address[] public addressesTokens;
+    constructor(address _owner) {    
         owner = _owner;
-        dateLastUpdate = block.timestamp;
+        government = msg.sender;
     }
 
-}
+    function linkToken(address contractAdd, string memory _nameToken) public {
+        require(msg.sender==owner,INCORRECT_OWNER_USER);
+        ContractFrom contractFrom = ContractFrom(contractAdd);
+        require(msg.sender==contractFrom.owner(),INCORRECT_OWNER_OF_CONTRACTADDRESS);
+        require(keccak256(bytes(_nameToken)) == keccak256(bytes(contractFrom.nameToken())),INCORRECT_TOKEN_NAME);
+        require(!linkedTokens[contractAdd].exists,TOKEN_ALREADY_EXIST);
+        linkedTokens[contractAdd] = LinkedToken(contractAdd,_nameToken,true);
+        addressesTokens.push(contractAdd);
+    }
+
+    function getNameToken(address _tokenAdd) public view returns (string memory) {
+        LinkedToken memory lToken = linkedTokens[_tokenAdd];
+        return (lToken.nameToken);
+    }
+
+    function numberOfLinkedTokens() public view returns (uint) {        
+        return (addressesTokens.length);
+    }
+ }
