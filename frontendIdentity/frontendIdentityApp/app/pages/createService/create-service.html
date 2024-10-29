@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Service Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            max-width: 600px;
+            margin: auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .form-group button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+        .response {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Create Service</h1>
+    <form id="create-service-form">
+        <div class="form-group">
+            <label for="gas">Gas</label>
+            <input type="number" id="gas" name="gas" required>
+        </div>
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="fLastName">Father's Last Name</label>
+            <input type="text" id="fLastName" name="fLastName" required>
+        </div>
+        <div class="form-group">
+            <label for="mLastName">Mother's Last Name</label>
+            <input type="text" id="mLastName" name="mLastName" required>
+        </div>
+        <div class="form-group">
+            <label for="sex">Sex</label>
+            <select id="sex" name="sex" required>
+                <option value="true">Male</option>
+                <option value="false">Female</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="day">Day</label>
+            <input type="number" id="day" name="day" min="1" max="31" required>
+        </div>
+        <div class="form-group">
+            <label for="month">Month</label>
+            <input type="number" id="month" name="month" min="1" max="12" required>
+        </div>
+        <div class="form-group">
+            <label for="year">Year</label>
+            <input type="number" id="year" name="year" min="1900" required>
+        </div>
+        <div class="form-group">
+            <label for="state">State</label>
+            <input type="text" id="state" name="state" required>
+        </div>
+        <div class="form-group">
+            <label for="municipality">Municipality</label>
+            <input type="text" id="municipality" name="municipality" required>
+        </div>
+        <div class="form-group">
+            <label for="tokenFather">Token Father</label>
+            <input type="text" id="tokenFather" name="tokenFather" required>
+        </div>
+        <div class="form-group">
+            <label for="tokenMother">Token Mother</label>
+            <input type="text" id="tokenMother" name="tokenMother" required>
+        </div>
+        <div class="form-group">
+            <label for="from">From</label>
+            <input type="text" id="from" name="from" required>
+        </div>
+        <div class="form-group">
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+
+    <div class="response" id="response-container">
+        <!-- Response will be displayed here -->
+    </div>
+
+
+    
+
+    <script>
+        document.getElementById('create-service-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('/createService', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                document.getElementById('response-container').innerHTML = `
+                    <h3>Response</h3>
+                    <pre>${JSON.stringify(result, null, 2)}</pre>
+                `;
+            } catch (error) {
+                document.getElementById('response-container').innerHTML = `
+                    <h3>Error</h3>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
