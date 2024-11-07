@@ -20,9 +20,8 @@ async function createGIdentitySC(req){
 	const month = req.body.month;
 	const year = req.body.year;	
 	const state =req.body.state;
-	const municipality = req.body.municipality;
-	const tokenFather = req.body.tokenFather;
-	const tokenMother = req.body.tokenMother;
+	const municipality = req.body.municipality;	
+	const contractUser = req.body.contractUser;
 	const from = req.body.from;	
 	var y="";
 	try {	
@@ -44,7 +43,7 @@ async function createGIdentitySC(req){
                 const userContract = new web3.eth.Contract(contractABI);                          
                 console.log("Entró3: " + from); 
                 const nonce = await web3.eth.getTransactionCount(from);
-                const contractAnswer = await userContract.deploy({data: contractByteCodeObj, arguments: [name, fLastName, mLastName, sex, day, month, year, state, municipality, tokenFather, tokenMother]}).send(
+                const contractAnswer = await userContract.deploy({data: contractByteCodeObj, arguments: [name, fLastName, mLastName, sex, day, month, year, state, municipality, contractUser]}).send(
                         { from: from, gas: gas,gasLimit:"6721975",gasPrice:"20000000000", nonce:nonce}).on('receipt',function(receipt){
                             console.log("Entró4: " + from);
                             //from = from.toUpperCase();
@@ -127,9 +126,8 @@ initializer.createGIdentity = async function (req, res){
 	const year = req.body.year;	
 	
 	const state = req.body.state;	
-	const municipality = req.body.municipality;
-	const tokenFather = req.body.tokenFather;
-	const tokenMother = req.body.tokenMother;
+	const municipality = req.body.municipality;	
+	const contractUser = req.body.contractUser;
 
 	const from = req.body.from;	
 	console.log("Request from: " + from);
@@ -146,9 +144,8 @@ initializer.createGIdentity = async function (req, res){
 			month:month,
 			year:year,
 			state:state,
-			municipality:municipality,
-			tokenFather:tokenFather,
-			tokenMother:tokenMother,		
+			municipality:municipality,			
+			contractUser:contractUser,		
 			from:from
 		}};
 	const errNum = errorControl.someFieldIsEmpty(obj);
@@ -182,10 +179,6 @@ initializer.createGIdentity = async function (req, res){
 		
 	}	
 	
-}
-
-initializer.createGIdentity2 = async function (req, res){		
-	res.send("Prueba create");
 }
 
 module.exports = initializer;
