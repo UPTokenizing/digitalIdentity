@@ -14,9 +14,8 @@ var proof = require('./routes/proof');
 var app = express();
 
 //global variable
-global.contractABIPath = "./smartContract/genesisidentity.abi";
-//global.contractJSONPath = "./smartContract/genesisidentity.json";
-global.contractByteCodeSource = "./smartContract/genesisidentity.bytecode";
+global.contractABIPath = "./smartContract/GenesisIdentity.abi";
+global.contractByteCodeSource = "./smartContract/GenesisIdentity.bytecode";
 global.blockchainAddress = "ws://172.18.1.2:8546";
 
 
