@@ -1,13 +1,11 @@
 // SPDX-License-Identifier: jclopezpimentel
-pragma solidity 0.8.19;
+pragma solidity 0.8.28;
 
 //importing the interface
 import "./OwnerInterface.sol";
+import "./UsersInterface.sol";
 
 contract GenesisIdentity is OwnerInterface{  
-
-    //errors
-        string constant INCORRECT_GOVERNMENT_USER = "V0001";
     //attributes
     string public name; 
     string public fLastName; 
@@ -27,9 +25,11 @@ contract GenesisIdentity is OwnerInterface{
    address public owner;
     string public nameToken="GenesisIdentity";
    
-
   constructor(string memory _name, string memory _fLastName, string memory _mLastName, bool _gender, 
-              uint16 _day, uint16 _month, uint16 _year, string memory _state, string memory _municipality, address tFather, address tMother) {
+              uint16 _day, uint16 _month, uint16 _year, string memory _state, string memory _municipality, 
+              address _contractUser) {
+    UsersInterface contractUsers = UsersInterface(_contractUser);
+    require(contractUsers.getType(msg.sender)==0,"Incorrect government user");
     name = _name; 
     fLastName = _fLastName; 
     mLastName = _mLastName; 
@@ -41,36 +41,34 @@ contract GenesisIdentity is OwnerInterface{
     municipality = _municipality;
     dateCreation = block.timestamp;
     dateLastUpdate = dateCreation;
-    tokenFather=(tFather==address(0))?address(0):tFather;
-    tokenMother=(tMother==address(0))?address(0):tMother;    
+    tokenFather=address(0);
+    tokenMother=address(0);
     tokenDigIdentity=address(0);
     government = msg.sender;
   }
 
-    function setFatherAddress(address fAddress) public {
-        require(msg.sender==government,INCORRECT_GOVERNMENT_USER);
+    modifier mustBeGovernment(){
+      require(msg.sender==government,"Incorrect government user");
+      _;
+    }
+    function setFatherAddress(address fAddress) public mustBeGovernment {        
         tokenFather = fAddress;
         dateLastUpdate = block.timestamp;
     }
 
-    function setMotherAddress(address mAddress) public {
-        require(msg.sender==government,INCORRECT_GOVERNMENT_USER);
+    function setMotherAddress(address mAddress) public mustBeGovernment {        
         tokenMother = mAddress;
         dateLastUpdate = block.timestamp;
     }
 
-    function setDigitalIdentityAddress(address digIdentity) public {
-        require(msg.sender==government,INCORRECT_GOVERNMENT_USER);
+    function setDigitalIdentityAddress(address digIdentity) public mustBeGovernment {
         tokenDigIdentity = digIdentity;
         dateLastUpdate = block.timestamp;
     }
 
-  
-    function setOwner(address _owner) public {
-        require(msg.sender==government,INCORRECT_GOVERNMENT_USER);
+    function setOwner(address _owner) public  mustBeGovernment {        
         owner = _owner;
         dateLastUpdate = block.timestamp;
     }
 
 }
-
