@@ -129,7 +129,7 @@ initializer.createGIdentity = async function (req, res){
 	const municipality = req.body.municipality;	
 	const contractUser = req.body.contractUser;
 
-	const from = req.body.from;	
+	const from = req.body.government;	
 	console.log("Request from: " + from);
 	var resul = {"Result": "Success"};		
 	//It is required that all variables contain values (not empty)
