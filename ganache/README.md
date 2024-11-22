@@ -22,7 +22,7 @@
       
       sudo docker pull ubuntu:23.10
     
-  If you are running docker in MacOS, disable line 22 and enable line 25 in the Dockerfile in PATHLBLOCKCHAIN
+  If you are running docker in MacOS (intel version), see the Dockerfile (in PATHLBLOCKCHAIN) and disable line 28 and enable line 31.
 
   Build the ubuntu image in a repository:
       
@@ -32,7 +32,7 @@
       
       sudo docker run -it --network TokPhyAppNetwork -p 8546:8546 -v <PATHLBLOCKCHAIN>:/tokPhyApp/ganache  ganacheimage
 
-  Then, go to the path:
+  Now, you must stay within the ganache's instance, then go to the path as follows:
   
       cd /tokPhyApp/ganache
 
