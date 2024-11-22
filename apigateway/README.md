@@ -35,7 +35,7 @@
       
       sudo docker run -it --network TokPhyAppNetwork -p 5500:5500 -p 9876:9876 -v  <PATHL>:/apigateway  apigateway
 
-  Then, go to the path:
+  Now, you must stay within the ganache's instance, then go to the path:
       
       cd /apigateway/apigatewayApp
 
