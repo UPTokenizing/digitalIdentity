@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: jclopezpimentel
-pragma solidity 0.8.28;
+pragma solidity 0.8.23;
 
 //importing the interface
 import "./OwnerInterface.sol";
