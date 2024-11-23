@@ -29,11 +29,11 @@
     
   Build the ubuntu image in a repository:
       
-      docker build -t users  <PATHL>
+    sudo docker build -t users  <PATHL>
 
   Run ubuntu: 
       
-      docker run -it --network TokPhyAppNetwork -p 5503:5503 -v <PATHL>:/users  users
+    sudo docker run -it --network TokPhyAppNetwork -p 5503:5503 -v <PATHL>:/users  users
 
   Then, go to the ubuntu instance path:
       
