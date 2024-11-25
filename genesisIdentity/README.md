@@ -25,11 +25,11 @@
   
   Download ubuntu image (althouth this step should not be required because of the previous Ganache installation):
       
-      docker pull ubuntu:23.10
+      sudo docker pull ubuntu:plucky-20241111
     
   Build the ubuntu image in a repository:
       
-      docker build -t genesisidentity  <PATHL>
+      sudo docker build -t genesisidentity  <PATHL>
 
   Run ubuntu: 
       
@@ -39,6 +39,9 @@
       
       cd /genesisidentity/genesisidentityApp
 
+  You must update some package lists before installing npm:
+      sudo apt-get update
+  
   You must intro to the ubuntu instance and install npm:
       
       sudo apt install nodejs npm
