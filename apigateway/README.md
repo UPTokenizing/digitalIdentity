@@ -82,4 +82,4 @@
 
   Then, execute the following command:
     
-    ./startApp
+    npm start

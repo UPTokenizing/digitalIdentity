@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users Interface</title>
+    <script src="/tokenListScript.js"></script>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/styleDashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- Dark Mode change -->
+    <script>
+        // Tailwind Configuration
+        tailwind.config = {
+            darkMode: 'class', // Use the 'class' strategy for dark mode
+            theme: {
+                extend: {},
+            },
+        };
+
+        // Check if the user has a previously saved preference
+        document.addEventListener('DOMContentLoaded', function () {
+            const darkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+            if (darkModeEnabled) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('darkModeToggle').checked = true; // Check the toggle switch
+            }
+
+            // Check login status and update the UI accordingly
+            checkAuth();
+        });
+
+        // Toggle the dark mode
+        function toggleDarkMode() {
+            const isDarkMode = document.documentElement.classList.toggle('dark');
+            if (isDarkMode) {
+                localStorage.setItem('darkMode', 'enabled'); // Save dark mode preference
+            } else {
+                localStorage.setItem('darkMode', 'disabled'); // Save light mode preference
+            }
+        }
+
+        // Check if the user is logged in
+        const checkAuth = () => {
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                // If logged in, show restricted buttons
+                document.getElementById('registerUserBtn').classList.remove('hidden');
+                document.getElementById('configureBtn').classList.remove('hidden');
+                document.getElementById('accountBtn').classList.remove('hidden');
+                document.getElementById('logoutBtn').classList.remove('hidden');
+                document.getElementById('loginBtn').classList.add('hidden');
+
+
+                
+
+
+
+            } else {
+                // If not logged in, show "Login" button and hide restricted buttons
+                document.getElementById('registerUserBtn').classList.add('hidden');
+                document.getElementById('configureBtn').classList.add('hidden');
+                document.getElementById('accountBtn').classList.add('hidden');
+                document.getElementById('logoutBtn').classList.add('hidden');
+                document.getElementById('loginBtn').classList.remove('hidden');
+            }
+        };
+    </script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 dark:text-white font-sans">
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="w-64 bg-white dark:bg-gray-800 h-screen shadow-md">
+            
+            <nav class="mt-6">
+                <ul>
+                    <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
+                        <button class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700" id="registerUserBtn">Register user</button>
+                    </li>
+                    <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
+                        <button class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700" id="homeBtn">Users consult information</button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 p-6">
+            <!-- Navbar -->
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold">Users</h1>
+                        <!-- <p class="text-gray-600 dark:text-gray-400">List of users in firebase</p> -->
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+
+                    <input type="search" id="search" placeholder="Search users..."
+                        class="w-64 h-8 pl-10 text-sm text-gray-700 dark:text-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 dark:focus:ring-orange-700">
+                    <button
+                        class="w-8 h-8 text-left flex items-center px-4 rounded lg hover:bg-gray-200 dark:hover:bg-gray-700"
+                        id="searchBtn"></button>
+
+                    <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"
+                        id="homeBtn"><i class="fas fa-home"></i> Home</button>
+                    <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"
+                        id="loginBtn"><i class="fas fa-sign-in-alt"></i> LogIn</button>
+                    <button
+                        class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded hidden"
+                        id="logoutBtn"><i class="fas fa-sign-out-alt"></i> LogOut</button>
+                    <button
+                        class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded hidden"
+                        id="configureBtn"><i class="fas fa-cog"></i> Configuration</button>
+                    <button
+                        class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded hidden"
+                        id="accountBtn"><i class="fas fa-user"></i> Account</button>
+                    <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"><i
+                            class="fas fa-info-circle"></i> About</button>
+                    <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"><i
+                            class="fas fa-envelope"></i> Contact</button>
+
+                    <!-- Toggle Switch for Dark Mode -->
+                    <label class="switch">
+                        <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()">
+                        <span class="slider">
+                            <!-- Moon Icon -->
+                            <i class="fas fa-moon moon"></i>
+                        </span>
+                    </label>
+                </div>
+            </div>
+            <div>
+                <div class="mt-6 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+                    <div id="resultContainer"></div>
+
+                    <!-- <table class="min-w-full bg-white dark:bg-gray-800">
+                        <thead>
+                            <tr>
+                                <th
+                                    class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
+                                    User name</th>
+                                <th
+                                    class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
+                                    Creator Address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                        </tbody>
+                    </table> -->
+                    <div id="response-container"></div>
+                </div>
+
+                <!-- Result Display Section -->
+                <div id="result" class="mt-4 p-4 border rounded-lg bg-gray-100 dark:bg-gray-800 hidden">
+                    <h2 class="text-lg font-bold">Result:</h2>
+                    <pre id="resultContent" class="text-gray-700 dark:text-gray-300"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+        const getContractAdd = async () => {
+            try {
+                // Send a POST request to the server to get the contract address
+                const response = await fetch('/api/getContractAdd', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json', // Set content type to JSON
+                    },
+                    body: JSON.stringify({}), // No need to send any data
+                });
+
+                // Handle the response
+                if (!response.ok) {
+                    throw new Error('Failed to retrieve contract address');
+                }
+
+                // Parse the response JSON
+                const data = await response.json();
+                console.log('Contract Address:', data.contractAdd);
+                return data.contractAdd; // Return the contract address
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while fetching contract address');
+            }
+        };
+
+        // Get references to the search input and search button
+        const searchInput = document.getElementById('search');
+        const searchBtn = document.getElementById('searchBtn');
+        const resultContainer = document.getElementById('resultContainer'); // To display results
+
+        // Function to get user info
+        async function getUserInfo(contractAdd, userAddress) {
+            try {
+                const response = await fetch(`/getInfoUser?contractAdd=${encodeURIComponent(contractAdd)}&userAddress=${encodeURIComponent(userAddress)}`);
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('Error getting user info:', error);
+                return null;
+            }
+        }
+
+        // Function to consult a contract method
+        async function consultContractMethod(contractAdd, publicMethod) {
+            try {
+                const response = await fetch(`/consultuser?contractAdd=${encodeURIComponent(contractAdd)}&publicMethod=${encodeURIComponent(publicMethod)}`);
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+
+                // Return only the Value property if the request is successful
+                if (data.Result === 'Success') {
+                    return { Value: data.Value };
+                } else {
+                    console.error(`Error in ${publicMethod}:`, data.Description || 'Unknown error');
+                    return null;
+                }
+            } catch (error) {
+                console.error(`Error consulting ${publicMethod}:`, error);
+                return null;
+            }
+        }
+
+        // Function to display results in a table
+        function displayResultsInTable(contractAddress, methods, results) {
+            let tableHTML = `
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                `;
+
+            // Loop through the methods and display the results
+            methods.forEach((method, index) => {
+                tableHTML += `
+            <tr>
+                <td>${method}</td>
+                <td>${results[index] && results[index].Value ? results[index].Value : 'Error fetching'}</td>
+            </tr>`;
+            });
+
+            tableHTML += `</tbody></table>`;
+
+            // Insert table HTML into the container
+            resultContainer.innerHTML = tableHTML;
+        }
+        // Function to display user info in a table
+        function displayUserInfoInTable(userInfo) {
+            let tableHTML = `
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Type</td><td>${userInfo.Data.getType}</td></tr>
+                    <tr><td>Name</td><td>${userInfo.Data.getName}</td></tr>
+                    <tr><td>Last Name</td><td>${userInfo.Data.getLastName}</td></tr>
+                    <tr><td>Email</td><td>${userInfo.Data.getEmail}</td></tr>
+                    <tr><td>Creator</td><td>${userInfo.Data.getCreator}</td></tr>
+                </tbody>
+            </table>`;
+
+            // Insert table HTML into the container
+            resultContainer.innerHTML = tableHTML;
+        }
+
+        // Main search functionality
+        searchBtn.addEventListener('click', async function () {
+            const searchTerm = searchInput.value.trim();
+            try {
+                // Get contract address using getContractAdd() and wait for it to resolve
+                const contractAddress = await getContractAdd(); // Wait for contract address
+
+                if (!searchTerm) {
+                    console.log('Search term is empty');
+                    try {
+                        // Array of methods to consult
+                        const methods = ['owner', 'nameToken', 'government'];
+
+                        // Promises to consult each method
+                        const consultPromises = methods.map(method =>
+                            consultContractMethod(contractAddress, method)
+                        );
+
+                        // Wait for all consultations to complete
+                        const results = await Promise.all(consultPromises);
+
+                        // Display results in table with contract address
+                        displayResultsInTable(contractAddress, methods, results);
+
+                    } catch (error) {
+                        console.error('Error in search process:', error);
+                    }
+                } else {
+                    console.log(`Requesting user info for contractAdd: ${contractAddress} and userAddress: ${searchTerm}`);
+
+                    const userInfo = await getUserInfo(contractAddress, searchTerm);
+
+                    if (userInfo) {
+                        console.log('User Info:', userInfo);
+                        displayUserInfoInTable(userInfo); // Display the user info in table
+                    } else {
+                        console.log('No user info found');
+                    }
+                }
+            } catch (error) {
+                console.error('Error in search process:', error);
+            }
+        });
+
+        // Trigger search on Enter key press
+        searchInput.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                searchBtn.click();
+            }
+        });
+
+
+        // Navigate buttons
+        document.getElementById('homeBtn').addEventListener('click', function () {
+            window.location.href = '/';
+        });
+
+        document.getElementById('registerUserBtn').addEventListener('click', function () {
+            window.location.href = '/dashboard';
+        });
+
+        document.getElementById('loginBtn').addEventListener('click', function () {
+            window.location.href = '/login';
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', function () {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            checkAuth();
+        });
+    </script>
+
+</body>
+
+</html>

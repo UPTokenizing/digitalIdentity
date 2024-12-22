@@ -40,17 +40,143 @@ apiEndpoints:
     host:  '172.18.1.3'
     paths: '/consult' 
 
+  # digital identity services
 
-  didentityConsultField:
-    host:  d1c73e42f49e
-    paths: '/consult/field'        
+  #Create
+  didentityCreate:
+    host:  localhost
+    paths: '/createDigitalIdentity'    
+
+  didentityCreateB:
+    host:  '172.18.1.3'
+    paths: '/createDigitalIdentity'        
+
+
+  #LinkToken
+  didentitylinkToken:
+    host:  localhost
+    paths: '/linkToken'    
+
+  didentitylinkTokenB:
+    host:  '172.18.1.3'
+    paths: '/linkToken'       
+
+
+
+  #Consult token name 
+  didentityconsultTokens:
+    host:  localhost
+    paths: '/consultTokens'    
+
+  didentityconsultTokensB:
+    host:  '172.18.1.3'
+    paths: '/consultTokens'       
+
+
+
+  #consult token government
+  didentityconsultTokenGovernment:
+    host:  localhost
+    paths: '/consultTokenGovernment'    
+
+  didentityconsultTokenGovernmentB:
+    host:  '172.18.1.3'
+    paths: '/consultTokenGovernment'      
+
+
+
+  #consult number of tokens
+  didentityconsultNumberToken:
+    host:  localhost
+    paths: '/consultNumberToken'    
+
+  didentityconsultNumberTokenB:
+    host:  '172.18.1.3'
+    paths: '/consultNumberToken'    
+
+  #consult parameters of digital contructor
+  didentityConsult:
+    host:  localhost
+    paths: '/consultDigitalIdentity'    
+
+  didentityConsultB:
+    host:  '172.18.1.3'
+    paths: '/consultDigitalIdentity'  
+
+  #proof method
+  didentityProof:
+    host:  localhost
+    paths: '/proofd'    
+
+  didentityProofB:
+    host:  '172.18.1.3'
+    paths: '/proofd'  
+
+
+
+
+# users services
+
+  #Create
+  usersCreate:
+    host:  localhost
+    paths: '/createUser'    
+
+  usersCreateB:
+    host:  '172.18.1.3'
+    paths: '/createUser'    
+
+  #Consult
+  usersConsult:
+    host:  localhost
+    paths: '/consultuser'    
+
+  usersConsultB:
+    host:  '172.18.1.3'
+    paths: '/consultuser'  
+  
+
+  #Consult info
+  usersGetInfo:
+    host:  localhost
+    paths: '/getInfoUser'    
+
+  usersGetInfoB:
+    host:  '172.18.1.3'
+    paths: '/getInfoUser' 
+
+
+  #RegisterUsers
+  usersRegister:
+    host:  localhost
+    paths: '/registerUser'    
+
+  usersRegisterB:
+    host:  '172.18.1.3'
+    paths: '/registerUser'  
+
+
+  #Proof
+  usersProof:
+    host:  localhost
+    paths: '/proofu'    
+
+  usersProofB:
+    host:  '172.18.1.3'
+    paths: '/proofu'  
+
+
+
 
 serviceEndpoints:
   httpbin:
     url: 'https://httpbin.org'
 
+  users:
+    url: 'http://172.18.1.6:5503'
+
   didentity:
-    url: 'http://172.18.1.3:5502'
+    url: 'http://172.18.1.5:5502'
 
   genesisidentity:
     url: 'http://172.18.1.4:5501'   #this is the name of the host   
@@ -96,12 +222,45 @@ pipelines:
 
   didentityPipeline:
     apiEndpoints:      
-      - didentityConsultField      
+      - didentityCreate   
+      - didentityCreateB  
+      - didentitylinkToken
+      - didentitylinkTokenB  
+      - didentityconsultTokens
+      - didentityconsultTokensB
+      - didentityconsultTokenGovernment
+      - didentityconsultTokenGovernmentB
+      - didentityconsultNumberToken
+      - didentityconsultNumberTokenB
+      - didentityConsult
+      - didentityConsultB
+      - didentityProof
+      - didentityProofB
     policies:
     # Uncomment `key-auth:` when instructed to in the Getting Started guide.
     # - key-auth:
       - proxy:
           - action:
               serviceEndpoint: didentity 
+              changeOrigin: true
+
+  usersPipeline:
+    apiEndpoints:      
+      - usersCreate
+      - usersCreateB
+      - usersConsult
+      - usersConsultB
+      - usersGetInfo
+      - usersGetInfoB
+      - usersRegister
+      - usersRegisterB
+      - usersProof
+      - usersProofB
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: users 
               changeOrigin: true
 
