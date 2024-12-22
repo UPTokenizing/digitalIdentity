@@ -1,5 +1,9 @@
 apigateway/apigatewayApp/node_modules/
-genesisIdentity/genesisIdentityApp_borrable/
 genesisIdentity/genesisIdentityApp/node_modules/
+digitalIdentity/digitaldentityApp/node_modules/
+frontendIdentityDigital/frontendDigitalApp/node_modules/
+frontendIdentityGenesis/frontendGenesisApp/node_modules/
+frontendUsersInteface/frontendUsersApp/node_modules/
 users/usersApp/node_modules/
+
 

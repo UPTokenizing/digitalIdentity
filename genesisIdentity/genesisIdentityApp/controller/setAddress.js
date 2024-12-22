@@ -8,7 +8,7 @@ async function callingsetAddress(req){
 	const gas = req.body.gas; 
 	const contractAdd=req.body.contractAdd;
 	const publicMethod = req.body.publicMethod;     
-    const fAddress = req.body.fAddress;     
+    const replaceAdd = req.body.replaceAdd;     // new address for the change
     const government = req.body.government;
 	var y="";
 	try {
@@ -27,7 +27,7 @@ async function callingsetAddress(req){
 				console.log("Entré promise");
 				const web3 = new Web3(Web3.givenProvider || blockchainAddress);
 				const userContract = new web3.eth.Contract(contractABI,contractAdd);
-				const contractAnswer = await userContract.methods[publicMethod](fAddress).send({from: government, gas:gas})
+				const contractAnswer = await userContract.methods[publicMethod](replaceAdd).send({from: government, gas:gas})
 						.on('receipt', function(receipt){
 							receipt["Result"] = "Success";
 							y = receipt;
@@ -73,7 +73,7 @@ initializer.setAddress = async function (req, res){
     const gas = req.body.gas; 
     const contractAdd = req.body.contractAdd; 
 	const publicMethod = req.body.publicMethod;
-    const fAddress = req.body.fAddress;     
+    const replaceAdd = req.body.replaceAdd;     
     const government = req.body.government;
     var resul = {Result: "Success"};
     var obj={body:
@@ -81,7 +81,7 @@ initializer.setAddress = async function (req, res){
                 gas : req.body.gas, 
                 contractAdd:contractAdd,      
 				publicMethod:publicMethod,
-                fAddress:fAddress,                
+                replaceAdd:replaceAdd,                
                 government : government                                          
             }};
 	const errNum = errorControl.someFieldIsEmpty(obj);

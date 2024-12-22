@@ -3,14 +3,10 @@ var utilities = require('./utilities');
 var initializer = {};
 
 
-async function createGIdentitySC(req) {
+async function createUsersGovernSC(req) {
 
-	contractABI = utilities.getContainFileJSON(contractABIPath);	//contractABIPath is a global variable	
-	//contractJSONCode = utilities.getContainFile(contractJSONPath); //contractJSONPath  is a global variable
-	//contractByteCodeObj = utilities.getContainFile(contractABIPath); //contractByteCodeSource  is a global variable	
-	contractByteCodeObj = utilities.getContainFile(contractByteCodeSource); //contractByteCodeSource  is a global variable	
-	//console.log(contractByteCodeObj);
-	//contractByteCodeObj = contractJSONCode.object;	
+	contractABI = utilities.getContainFileJSON(contractABIPath);	
+	contractByteCodeObj = utilities.getContainFile(contractByteCodeSource); 
 	const gas = req.body.gas;
 	const email = req.body.email;
 	const from = req.body.from;
@@ -108,7 +104,7 @@ async function createGIdentitySC(req) {
 }
 
 
-initializer.createGIdentity = async function (req, res) {
+initializer.createUsersGovern = async function (req, res) {
 	const gas = req.body.gas;
 	const email = req.body.email;
 	const from = req.body.government;
@@ -134,7 +130,7 @@ initializer.createGIdentity = async function (req, res) {
 	} else {
 		console.log("Processing request from: " + from);
 		try {
-			const response = await createGIdentitySC(obj).then(resul => {
+			const response = await createUsersGovernSC(obj).then(resul => {
 				let resHE = errorControl.handlingErrorOrNot(resul, from);
 				return resHE;
 			}).catch((e) => {

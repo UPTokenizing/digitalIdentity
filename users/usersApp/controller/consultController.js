@@ -3,7 +3,7 @@ var utilities = require('./utilities');
 var initializer = {};
 
 //need to be modified
-async function callNFTVehicleSCParam(req){
+async function consultMethodNotParamsUsersSC(req){
 	//console.log("OK");
 	contractABI = utilities.getContainFile(contractABIPath);	//contractABIPath is a global variable
 	contractByteCode = utilities.getContainFile(contractByteCodePath); //contractByteCodePath  is a global variable
@@ -139,7 +139,7 @@ async function callGenesisIdenSC(req){
 }
 
 //modified
-initializer.consultMethodNotParams = async function (req, res){	
+initializer.consultMethodNotParamsUsers = async function (req, res){	
     //const contractAdd = req.body.contractAdd;	
     //const publicMethod = req.body.publicMethod; //public method or attribute
     const contractAdd = req.query.contractAdd;	
@@ -213,7 +213,7 @@ initializer.consultMethodWithParams = async function (req, res){
 			res.send(resul);
 	}else{
 			try {
-				const response = await callNFTVehicleSCParam(obj).then((resul)=>{
+				const response = await consultMethodNotParamsUsersSC(obj).then((resul)=>{
 					//let resHE = errorControl.handlingErrorOrNot(resul,manufacturerAdd);
 					let resHE = JSON.parse(JSON.stringify(resul, utilities.replacer));					
 					return resHE;

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Identity</title>
+  <script src="/Dashscript.js"></script>
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/styleDashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <!-- Dark Mode change -->
+  <script>
+    // Tailwind Configuration
+    tailwind.config = {
+      darkMode: 'class', // Use the 'class' strategy for dark mode
+      theme: {
+        extend: {},
+      },
+    };
+
+    // Check if the user has a previously saved preference
+    document.addEventListener('DOMContentLoaded', function () {
+      const darkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+      if (darkModeEnabled) {
+        document.documentElement.classList.add('dark');
+        document.getElementById('darkModeToggle').checked = true; // Check the toggle switch
+      }
+    });
+
+    // Toggle the dark mode
+    function toggleDarkMode() {
+      const isDarkMode = document.documentElement.classList.toggle('dark');
+      if (isDarkMode) {
+        localStorage.setItem('darkMode', 'enabled'); // Save dark mode preference
+      } else {
+        localStorage.setItem('darkMode', 'disabled'); // Save light mode preference
+      }
+    }
+  </script>
+
+
+
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 dark:text-white font-sans">
+  <div class="flex">
+    <!-- Sidebar -->
+    <div class="w-64 bg-white dark:bg-gray-800 h-screen shadow-md">
+      <div class="p-4 flex items-center">
+        <!-- <div
+          class="w-10 h-10 bg-orange-500 dark:bg-orange-700 rounded-full flex items-center justify-center text-white font-bold">
+          </div> -->
+        <!-- <span class="ml-2 text-lg font-semibold dark:text-white">Juan Carlos P.</span> -->
+      </div>
+      <nav class="mt-6">
+        <ul>
+          <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
+            <button
+              class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
+              id="linkTokenBtn">Link token</button>
+          </li>
+          <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
+            <button
+              class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
+              id="homeBtn">Consult Token information</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-6">
+      <!-- Navbar -->
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-2xl font-bold">Digital Identity Dashboard</h1>
+            <p class="text-gray-600 dark:text-gray-400">Please fill in the following details:</p>
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"
+            id="homeBtn"><i class="fas fa-home"></i> Home</button>
+          <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"
+            id="logoutBtn"><i class="fas fa-sign-out-alt"></i> LogOut</button>
+          <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"><i
+              class="fas fa-cog"></i> Configuration</button>
+          <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"><i
+              class="fas fa-user"></i> Account</button>
+          <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"><i
+              class="fas fa-info-circle"></i> About</button>
+          <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"><i
+              class="fas fa-envelope"></i> Contact</button>
+
+          <!-- Toggle Switch for Dark Mode -->
+          <label class="switch">
+            <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()">
+            <span class="slider">
+              <!-- Moon Icon -->
+              <i class="fas fa-moon moon"></i>
+            </span>
+          </label>
+        </div>
+      </div>
+      <div>
+
+
+        <div class="mt-4">
+          <h2 class="text-2xl font-bold">Create Digital Identity</h2>
+          <form id="create-digital-form">
+            <div class="space-y-4">
+              <div class="mb-4">
+
+                <div class="mb-4">
+                  <label for="from" class="block text-gray-400 dark:text-gray-300">Owner of token *Needs to be the same
+                    token as the owner in the token to add</label>
+                  <input type="text" id="from" name="from" placeholder="0x000..."
+                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-900 dark:text-white"
+                    required>
+                </div>
+                <button type="submit" class="w-full h-12 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                  Submit
+                </button>
+              </div>
+          </form>
+        </div>
+        <!-- Result Display Section -->
+        <div id="resultCreate" class="mt-4 p-4 border rounded-lg bg-gray-100 dark:bg-gray-800 hidden">
+          <h2 class="text-lg font-bold">Digital Identity Address :</h2>
+          <pre id="resultContentCreate" class="text-gray-700 dark:text-gray-300"></pre>
+        </div>
+        <div class="mt-4">
+          <h2 class="text-2xl font-bold">Token linker</h2>
+          <form id="link-token-form">
+            <div class="space-y-4">
+              <div class="mb-4">
+                <div class="mb-4">
+                  <label for="tokenAddress" class="block text-gray-700 dark:text-gray-300">Token
+                    Address</label>
+                  <input type="text" id="tokenAddress" name="tokenAddress"
+                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-900 dark:text-white"
+                    placeholder="Enter token address" required>
+                </div>
+
+                <div class="mb-4">
+                  <label for="nameToken" class="block text-gray-700 dark:text-gray-300">Token Name</label>
+                  <input type="text" id="nameToken" name="nameToken"
+                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-900 dark:text-white"
+                    placeholder="Enter token name" required>
+                </div>
+                <div class="mb-4">
+                  <label for="contractAddress" class="block text-gray-400 dark:text-gray-300">Digital Identity
+                    Address</label>
+                  <input type="text" id="contractAddress" name="contractAddress" placeholder="0x000..."
+                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-900 dark:text-white"
+                    placeholder="Enter contract address" required>
+                </div>
+
+                <div class="mb-4">
+                  <label for="from" class="block text-gray-400 dark:text-gray-300">Owner of token *Needs to be the same
+                    token as the owner in the token to add</label>
+                  <input type="text" id="from" name="from" placeholder="0x000..."
+                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-900 dark:text-white"
+                    required>
+                </div>
+
+                <button type="submit" class="w-full h-12 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                  Submit
+                </button>
+              </div>
+          </form>
+        </div>
+
+        <!-- Result Display Section -->
+        <div id="result" class="mt-4 p-4 border rounded-lg bg-gray-100 dark:bg-gray-800 hidden">
+          <h2 class="text-lg font-bold">Result:</h2>
+          <pre id="resultContent" class="text-gray-700 dark:text-gray-300"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </div>
+
+  <script>
+
+    
+
+
+
+    document.getElementById('homeBtn').addEventListener('click', function () {
+      window.location.href = '/'; // Navigate to the dashboard page
+    });
+    document.getElementById('linkTok').addEventListener('click', function () {
+      window.location.href = '/dashboard'; // Navigate to the dashboard page
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', function () {
+
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
+
+      // Redirigir al login
+
+      window.location.href = '/login'; // Redirect to the login page
+    });
+  </script>
+
+  <script>
+    const checkAuth = () => {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        // Si no está logueado, redirigir a la página de login
+        window.location.href = '/login';
+      }
+    };
+
+    // Ejecutar al cargar la página
+    checkAuth();
+  </script>
+
+
+</body>
+
+</html>
