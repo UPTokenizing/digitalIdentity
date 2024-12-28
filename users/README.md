@@ -25,7 +25,7 @@
   
   Download ubuntu image (althouth this step should not be required because of the previous Ganache installation):
       
-      docker pull ubuntu:plucky-20241111
+      docker pull ubuntu:24.04
     
   Build the ubuntu image in a repository:
       
