@@ -20,7 +20,7 @@
   
   Download ubuntu image:
       
-      sudo docker pull ubuntu:23.10
+      sudo docker pull ubuntu:24.04
     
   If you are running docker in MacOS (intel version), see the Dockerfile (in PATHLBLOCKCHAIN) and disable line 28 and enable line 31.
 
