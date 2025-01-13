@@ -38,7 +38,7 @@
 
   Then, go to the path:
       
-      cd /frontendidentityGenesis/frontendIdentityApp/
+      cd frontendidentitygenesis/frontendGenesisApp/
 
   You must intro to the ubuntu instance and install npm:
       
@@ -98,7 +98,7 @@
 
   Go to the following path:
     
-    cd /frontendidentityGenesis/frontendIdentityApp/
+    cd frontendidentitygenesis/frontendGenesisApp/
 
   Then, execute the following command:
     
