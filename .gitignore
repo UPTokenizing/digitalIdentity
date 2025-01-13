@@ -5,5 +5,7 @@ frontendIdentityDigital/frontendDigitalApp/node_modules/
 frontendIdentityGenesis/frontendGenesisApp/node_modules/
 frontendUsersInteface/frontendUsersApp/node_modules/
 users/usersApp/node_modules/
-
+frontendUsersInteface/frontendUsersApp/app/pages/config/firebase-credentials.json
+frontendIdentityDigital/frontendDigitalApp/app/pages/config/firebase-credentials.json
+frontendIdentityGenesis/frontendGenesisApp/app/pages/config/firebase-credentials.json
 
