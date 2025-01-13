@@ -15,6 +15,11 @@ This repository will have all projects about digitizing physical objects and lin
   - apigateway/
   - genesisIdentity/
   - smartContracts/
+  - users/
+  - digitalIdentity/
+  - frontendUsersInteface/
+  - frontendIdentityGenesis/
+  - frontendIdentityDigital/
 
 ## Install
   Install the following instructions: 
@@ -37,16 +42,28 @@ MACOS 14.4.1 (23E224)| Intel Iris Plus Graphics 1536 MB, 1.2 GHz Quad-Core Intel
   1. Follow the **Deployment** instructions explained in file README.md within folder [ganache/](https://github.com/UPTokenizing/digitalIdentity/tree/main/ganache).
   2. Then, follow the **Deployment** instructions explained in file README.md within folder [apigateway/](https://github.com/UPTokenizing/digitalIdentity/tree/main/apigateway).
   3. Next, follow the **Deployment** instructions explained in file README.md within folder [genesisIdenity/](https://github.com/UPTokenizing/digitalIdentity/tree/main/genesisIdentity).
+  4. Following with the **Deployment** instructions explained in file README.md within folder [digitalIdentity/](https://github.com/UPTokenizing/digitalIdentity/tree/Tokenizing-Temp-Main/digitalIdentity).
+  5. After digital Identity, follow the **Deployment** instructions explained in file README.md within folder [users/](https://github.com/UPTokenizing/digitalIdentity/tree/Tokenizing-Temp-Main/users).
+  6. Lastly, follow the **Deployment** instructions explained in file README.md within the folders of for the user interactions [frontendIdentityGenesis/](https://github.com/UPTokenizing/digitalIdentity/tree/Tokenizing-Temp-Main/frontendIdentityGenesis), [frontendIdentityDigital/](https://github.com/UPTokenizing/digitalIdentity/tree/Tokenizing-Temp-Main/frontendIdentityDigital), [frontendUsersInteface/](https://github.com/UPTokenizing/digitalIdentity/tree/Tokenizing-Temp-Main/frontendUsersInteface).
 
-You can execute the following command in the host operating system to check if everything is ok:
+
+You can execute the following command in the host operating system to check if every service is ok:
     
     curl -X GET http://localhost:5500/proof
+    curl -X GET http://localhost:5500/proofd
+    curl -X GET http://localhost:5500/proofu
+
 
 It must return:
    
     Returning: route /proof
+    Returning: route /proof digital
+    Returning: route /proof users
 
 ## Example to consume the services
 To consume a list of services, check the following:
   
   1. Follow the instructions explained in file genesisIdentityServices.pdf within folder [genesisIdenity/genesisIdentityServices.pdf](https://github.com/UPTokenizing/digitalIdentity/blob/main/genesisIdentity/genesisIdentityServices.pdf)
+  2. Follow the instructions explained in file genesisIdentityServices.pdf within folder [digitalIdentity/digitalIdentityServices.pdf](https://github.com/UPTokenizing/digitalIdentity/blob/Tokenizing-Temp-Main/digitalIdentity/digitalIdentityServices.pdf)
+  3. Follow the instructions explained in file genesisIdentityServices.pdf within folder [users/usersServices.pdf](https://github.com/UPTokenizing/digitalIdentity/blob/Tokenizing-Temp-Main/users/usersServices.pdf)
+        
