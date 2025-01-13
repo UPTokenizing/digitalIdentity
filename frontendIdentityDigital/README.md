@@ -25,7 +25,7 @@
       ls 
   Download ubuntu image (althouth this step should not be required because of the previous Ganache installation):
       
-      sudo docker pull ubuntu:23.10
+      sudo docker pull ubuntu:24.04
     
   Build the ubuntu image in a repository:
       
@@ -96,7 +96,7 @@
 
   Go to the following path:
     
-    cd /frontendidentitydigital/frontendIdentityApp/
+    cd frontendIdentityDigital/frontendIdentityApp/
 
   Then, execute the following command:
     
