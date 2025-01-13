@@ -41,6 +41,62 @@
   </script>
 </head>
 
+<style>
+  /* Circle styling */
+  .user-circle {
+    width: 60px;
+    /* Smaller circle */
+    height: 60px;
+    /* Smaller circle */
+    border-radius: 50%;
+    background-color: rgb(255, 102, 0);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    /* Adjust font size for initials */
+    font-weight: bold;
+    margin: 10px auto;
+    position: relative;
+    cursor: pointer;
+  }
+
+  /* Tooltip styling */
+  .tooltip {
+    position: absolute;
+    top: 70px;
+    /* Position tooltip below the circle */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 6px;
+    /* Adjust padding */
+    border-radius: 4px;
+    font-size: 12px;
+    /* Adjust font size */
+    display: none;
+    white-space: nowrap;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    /* Add a shadow for better visibility */
+  }
+
+  .user-circle:hover .tooltip {
+    display: block;
+  }
+
+  /* Access text styling */
+  .access-text {
+    text-align: center;
+    margin-top: 5px;
+    /* Reduce margin */
+    font-size: 14px;
+    /* Adjust font size */
+    font-weight: bold;
+  }
+</style>
+
 <body class="bg-gray-100 dark:bg-gray-900 dark:text-white font-sans">
   <div class="flex">
     <!-- Main Content -->
@@ -427,23 +483,30 @@
       if (userType === "Error") {
         console.log("No user logged");
       } else {
-        let tableHTML = `
-<table border="1">
-    <thead>
-        <tr>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr><td>${userType}</td></tr>
-        <tr><td>${userInfoDef.Data.getName}</td></tr>
-        <tr><td>${userInfoDef.Data.getLastName}</td></tr>
-        <tr><td>${userInfoDef.Data.getEmail}</td></tr>
-    </tbody>
-</table>`;
+        const firstName = userInfoDef.Data.getName || "N";
+        const lastName = userInfoDef.Data.getLastName || "L";
+        const email = userInfoDef.Data.getEmail || "No email";
 
-        // Insert table HTML into the container
-        resultSideContainer.innerHTML = tableHTML;
+        // Generate initials
+        const initials = firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
+
+        // Generate HTML
+        const htmlContent = `
+        <div class="user-circle">
+          <span>${initials}</span>
+          <div class="tooltip">
+            <p>Name: ${firstName}</p>
+            <p>Last Name: ${lastName}</p>
+            <p>Email: ${email}</p>
+          </div>
+        </div>
+        <div class="access-text">
+          Access: ${userType}
+        </div>
+      `;
+
+        // Insert HTML into the container
+        resultSideContainer.innerHTML = htmlContent;
       }
     }
 

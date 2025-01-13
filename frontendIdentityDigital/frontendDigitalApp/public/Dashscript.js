@@ -157,6 +157,7 @@ document.getElementById('link-token-form').addEventListener('submit', async (eve
                 if (result.contractAddress) {
                     resultElement.classList.remove('hidden');
                     resultContentElement.textContent = `${result.contractAddress}`;
+                    alert("Contract created");
                 } else {
                     resultElement.classList.remove('hidden');
                     resultContentElement.textContent = 'Contract address not found in the response.';
