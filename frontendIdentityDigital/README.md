@@ -38,7 +38,7 @@
 
   Then, go to the path:
       
-      cd /frontendidentitydigital/frontendDigitalApp
+      cd frontendidentitydigital/frontendDigitalApp/
 
   You must intro to the ubuntu instance and install npm:
       
@@ -96,7 +96,7 @@
 
   Go to the following path:
     
-    cd frontendIdentityDigital/frontendIdentityApp/
+    cd frontendidentitydigital/frontendDigitalApp/
 
   Then, execute the following command:
     
