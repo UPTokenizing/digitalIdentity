@@ -25,7 +25,7 @@
       ls 
   Download ubuntu image (althouth this step should not be required because of the previous Ganache installation):
       
-      sudo docker pull ubuntu:23.10
+      sudo docker pull ubuntu:24.04
     
   Build the ubuntu image in a repository:
       
@@ -38,7 +38,7 @@
 
   Then, go to the path:
       
-      cd /frontendidentitygenesis/frontendgenesisapp
+      cd /frontendidentityGenesis/frontendIdentityApp/
 
   You must intro to the ubuntu instance and install npm:
       
