@@ -275,6 +275,38 @@ app.post('/api/getContractAdd', async (req, res) => {
 });
 
 
+app.post('/api/getUserAdd', async (req, res) => {
+  try {
+    const email = req.body.email; // Get the email from the request body
+
+    if (!email) {
+      return res.status(400).send({ message: 'Email is required in the request body.' });
+    }
+
+    const db = admin.firestore();
+
+    // Query Firestore to find the user based on the email
+    const userSnapshot = await db.collection('users')
+      .where('email', '==', email)
+      .get();
+
+    if (userSnapshot.empty) {
+      // Return a default user address if no user is found with the given email
+      const defaultUserAdd = 'No email';
+      return res.status(200).send({ UserAddress: defaultUserAdd });
+    }
+
+    // Get UserAddress from the found user document
+    const userDoc = userSnapshot.docs[0]; // Assuming email is unique
+    const UserAddress = userDoc.data().UserAddress;
+
+    res.status(200).send({ UserAddress });
+  } catch (error) {
+    console.error('Error retrieving user address:', error);
+    res.status(500).send({ message: 'Error retrieving user address.' });
+  }
+});
+
 
 
 

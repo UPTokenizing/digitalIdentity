@@ -53,11 +53,6 @@
                 document.getElementById('logoutBtn').classList.remove('hidden');
                 document.getElementById('loginBtn').classList.add('hidden');
 
-
-                
-
-
-
             } else {
                 // If not logged in, show "Login" button and hide restricted buttons
                 document.getElementById('registerUserBtn').classList.add('hidden');
@@ -69,18 +64,23 @@
         };
     </script>
 </head>
+
 <body class="bg-gray-100 dark:bg-gray-900 dark:text-white font-sans">
     <div class="flex">
         <!-- Sidebar -->
         <div class="w-64 bg-white dark:bg-gray-800 h-screen shadow-md">
-            
+            <div id="resultSideContainer"></div>
             <nav class="mt-6">
                 <ul>
                     <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
-                        <button class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700" id="registerUserBtn">Register user</button>
+                        <button
+                            class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
+                            id="registerUserBtn">Register user</button>
                     </li>
                     <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
-                        <button class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700" id="homeBtn">Users consult information</button>
+                        <button
+                            class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
+                            id="homeBtn">Users consult information</button>
                     </li>
                 </ul>
             </nav>
@@ -103,9 +103,6 @@
                     <button
                         class="w-8 h-8 text-left flex items-center px-4 rounded lg hover:bg-gray-200 dark:hover:bg-gray-700"
                         id="searchBtn"></button>
-
-                    <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"
-                        id="homeBtn"><i class="fas fa-home"></i> Home</button>
                     <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"
                         id="loginBtn"><i class="fas fa-sign-in-alt"></i> LogIn</button>
                     <button
@@ -164,7 +161,7 @@
     </div>
 
     <script>
-        
+
         const getContractAdd = async () => {
             try {
                 // Send a POST request to the server to get the contract address
@@ -192,10 +189,41 @@
             }
         };
 
+        const getUserAdd = async () => {
+            try {
+                const email = localStorage.getItem('userEmail'); // Get the email from localStorage
+                if (!email) {
+                    throw new Error('No email found in localStorage');
+                }
+
+                // Send a POST request to the server to get the user address
+                const response = await fetch('/api/getUserAdd', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json', // Set content type to JSON
+                    },
+                    body: JSON.stringify({ email: email }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to retrieve user address');
+                }
+
+                // Parse the response JSON
+                const data = await response.json();
+                console.log('User Address:', data.UserAddress);
+                return data.UserAddress; // Return the user address
+
+            } catch (error) {
+                console.error('Error fetching user address:', error);
+            }
+        };
+
         // Get references to the search input and search button
         const searchInput = document.getElementById('search');
         const searchBtn = document.getElementById('searchBtn');
         const resultContainer = document.getElementById('resultContainer'); // To display results
+        const resultSideContainer = document.getElementById('resultSideContainer'); // To display results
 
         // Function to get user info
         async function getUserInfo(contractAdd, userAddress) {
@@ -265,27 +293,93 @@
             resultContainer.innerHTML = tableHTML;
         }
         // Function to display user info in a table
+        function getUserTypeString(type) {
+            console.log("Tipo: ", type);
+            switch (type) {
+                case '0':
+                    return "Government";
+                case '1':
+                    return "Admin";
+                case '2':
+                    return "User";
+                default:
+                    return "Unknown"; // Handle unexpected types
+            }
+        }
+
         function displayUserInfoInTable(userInfo) {
+            const userType = getUserTypeString(userInfo.Data.getType);
+
             let tableHTML = `
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>Field</th>
-                        <th>Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>Type</td><td>${userInfo.Data.getType}</td></tr>
-                    <tr><td>Name</td><td>${userInfo.Data.getName}</td></tr>
-                    <tr><td>Last Name</td><td>${userInfo.Data.getLastName}</td></tr>
-                    <tr><td>Email</td><td>${userInfo.Data.getEmail}</td></tr>
-                    <tr><td>Creator</td><td>${userInfo.Data.getCreator}</td></tr>
-                </tbody>
-            </table>`;
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Type</td><td>${userType}</td></tr>
+            <tr><td>Name</td><td>${userInfo.Data.getName}</td></tr>
+            <tr><td>Last Name</td><td>${userInfo.Data.getLastName}</td></tr>
+            <tr><td>Email</td><td>${userInfo.Data.getEmail}</td></tr>
+            <tr><td>Creator</td><td>${userInfo.Data.getCreator}</td></tr>
+        </tbody>
+    </table>`;
 
             // Insert table HTML into the container
             resultContainer.innerHTML = tableHTML;
         }
+
+        function displayUserInfoInSideBar(userInfoDef) {
+            console.log(userInfoDef.Data.getType);
+            const userType = getUserTypeString(userInfoDef.Data.getType);
+
+            if (userType === "Error") {
+                console.log("No user logged");
+            } else {
+                let tableHTML = `
+        <table border="1">
+            <thead>
+                <tr>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>${userType}</td></tr>
+                <tr><td>${userInfoDef.Data.getName}</td></tr>
+                <tr><td>${userInfoDef.Data.getLastName}</td></tr>
+                <tr><td>${userInfoDef.Data.getEmail}</td></tr>
+            </tbody>
+        </table>`;
+
+                // Insert table HTML into the container
+                resultSideContainer.innerHTML = tableHTML;
+            }
+        }
+
+
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const contractAddress = await getContractAdd(); // Wait for contract address
+                const userAddress = await getUserAdd(); // Wait for user address
+
+                if (contractAddress && userAddress) {
+                    const userInfoDef = await getUserInfo(contractAddress, userAddress);
+                    if (userInfoDef) {
+                        console.log('User Info:', userInfoDef);
+                        displayUserInfoInSideBar(userInfoDef); // Display the user info in the sidebar
+                    } else {
+                        console.error('No user info found');
+                    }
+                } else {
+                    console.error('Missing contract address or user address');
+                }
+            } catch (error) {
+                console.error('Error during DOMContentLoaded:', error);
+            }
+        });
 
         // Main search functionality
         searchBtn.addEventListener('click', async function () {
@@ -355,7 +449,10 @@
         document.getElementById('logoutBtn').addEventListener('click', function () {
             localStorage.removeItem('authToken');
             localStorage.removeItem('user');
+            localStorage.removeItem('userEmail'); // Eliminar el correo guardado
             checkAuth();
+            window.location.reload();
+
         });
     </script>
 

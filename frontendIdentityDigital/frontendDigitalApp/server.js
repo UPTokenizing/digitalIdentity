@@ -264,6 +264,57 @@ app.post('/api/getContractAdd', async (req, res) => {
 });
 
 
+app.post('/api/getUserAdd', async (req, res) => {
+  try {
+    const email = req.body.email; // Get the email from the request body
+
+    const db = admin.firestore();
+
+    // Query Firestore to find the user based on the default UserAddress
+    const userSnapshot = await db.collection('users')
+      .where('email', '==', email)
+      .get();
+
+    if (userSnapshot.empty) {
+      // Return a default user address if no user is found with the given UserAddress
+      const defaultUserAdd = 'No email';
+      return res.status(200).send({ UserAddress: defaultUserAdd });
+    }
+
+    // Get userAdd from the found user document
+    const userDoc = userSnapshot.docs[0];  // Assuming UserAddress is unique
+    const UserAddress = userDoc.data().UserAddress;
+
+    res.status(200).send({ UserAddress: UserAddress });
+  } catch (error) {
+    console.error('Error retrieving user address:', error);
+    res.status(400).send({ message: error.message });
+  }
+});
+
+app.get('/getInfoUser', async (req, res) => {
+  try {
+    const { contractAdd, userAddress } = req.query;
+
+    // Make sure both parameters are provided
+    if (!contractAdd || !userAddress) {
+      return res.status(400).send('Both contractAdd and publicMethod are required.');
+    }
+
+    // Send a GET request to your desired endpoint with the provided query parameters
+    const response = await axios.get('http://172.18.1.3:5500/getInfoUser', {
+      params: {
+        contractAdd,
+        userAddress
+      }
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching the data:', error.response ? error.response.data : error.message);
+    res.status(500).send('Error fetching the data');
+  }
+});
 const PORT = 5511;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

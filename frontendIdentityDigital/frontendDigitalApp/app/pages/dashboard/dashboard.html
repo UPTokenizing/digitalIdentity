@@ -48,27 +48,27 @@
   <div class="flex">
     <!-- Sidebar -->
     <div class="w-64 bg-white dark:bg-gray-800 h-screen shadow-md">
-      <div class="p-4 flex items-center">
-        <!-- <div
-          class="w-10 h-10 bg-orange-500 dark:bg-orange-700 rounded-full flex items-center justify-center text-white font-bold">
-          </div> -->
-        <!-- <span class="ml-2 text-lg font-semibold dark:text-white">Juan Carlos P.</span> -->
-      </div>
       <nav class="mt-6">
         <ul>
+          <div id="resultSideContainer"></div>
           <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
             <button
               class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-              id="linkTokenBtn">Link token</button>
+              id="linkTok">
+              Link token / Create digital identity
+            </button>
           </li>
           <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
             <button
               class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-              id="homeBtn">Consult Token information</button>
+              id="homeBtn">
+              Consult Token information
+            </button>
           </li>
         </ul>
       </nav>
     </div>
+
 
     <!-- Main Content -->
     <div class="flex-1 p-6">
@@ -161,9 +161,9 @@
                 <div class="mb-4">
                   <label for="from" class="block text-gray-400 dark:text-gray-300">Owner of token *Needs to be the same
                     token as the owner in the token to add</label>
-                  <input type="text" id="from" name="from" placeholder="0x000..."
-                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-900 dark:text-white"
-                    required>
+                  <input type="text" id="fromT" name="fromT"
+                    class="w-full p-2 rounded text-black bg-gray-200 dark:bg-gray-700 dark:text-white" placeholder=""
+                    disabled>
                 </div>
 
                 <button type="submit" class="w-full h-12 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
@@ -185,8 +185,185 @@
   </div>
 
   <script>
+    const resultSideContainer = document.getElementById('resultSideContainer'); // To display results
 
-    
+    const getContractAdd = async () => {
+      try {
+        // Send a POST request to the server to get the contract address
+        const response = await fetch('/api/getContractAdd', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Set content type to JSON
+          },
+          body: JSON.stringify({}), // No need to send any data
+        });
+
+        // Handle the response
+        if (!response.ok) {
+          throw new Error('Failed to retrieve contract address');
+        }
+
+        // Parse the response JSON
+        const data = await response.json();
+        console.log('Contract Address:', data.contractAdd);
+        return data.contractAdd; // Return the contract address
+
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while fetching contract address');
+      }
+    };
+
+    const getUserAdd = async () => {
+      try {
+        const email = localStorage.getItem('userEmail'); // Get the email from localStorage
+        if (!email) {
+          throw new Error('No email found in localStorage');
+        }
+
+        // Send a POST request to the server to get the user address
+        const response = await fetch('/api/getUserAdd', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Set content type to JSON
+          },
+          body: JSON.stringify({ email: email }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to retrieve user address');
+        }
+
+        // Parse the response JSON
+        const data = await response.json();
+        console.log('User Address:', data.UserAddress);
+        return data.UserAddress; // Return the user address
+
+      } catch (error) {
+        console.error('Error fetching user address:', error);
+      }
+    };
+
+    // Function to get user info
+    async function getUserInfo(contractAdd, userAddress) {
+      try {
+        const response = await fetch(`/getInfoUser?contractAdd=${encodeURIComponent(contractAdd)}&userAddress=${encodeURIComponent(userAddress)}`);
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+      } catch (error) {
+        console.error('Error getting user info:', error);
+        return null;
+      }
+    }
+
+
+
+    function getUserTypeString(type) {
+      switch (type) {
+        case '0':
+          return 'Government';
+        case '1':
+          return 'Admin';
+        case '2':
+          return 'User';
+        default:
+          return 'Unknown';
+      }
+    }
+
+    function displayUserInfoInSideBar(userInfoDef) {
+      const userType = getUserTypeString(userInfoDef.Data.getType);
+
+      if (userType === "Error") {
+        console.log("No user logged");
+      } else {
+        let tableHTML = `
+        <table border="1">
+            <thead>
+                <tr>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>${userType}</td></tr>
+                <tr><td>${userInfoDef.Data.getName}</td></tr>
+                <tr><td>${userInfoDef.Data.getLastName}</td></tr>
+                <tr><td>${userInfoDef.Data.getEmail}</td></tr>
+            </tbody>
+        </table>`;
+
+        // Insert table HTML into the container
+        resultSideContainer.innerHTML = tableHTML;
+      }
+    }
+
+
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const contractAddress = await getContractAdd(); // Wait for contract address
+        const userAddress = await getUserAdd(); // Wait for user address
+
+        if (contractAddress && userAddress) {
+          const userInfoDef = await getUserInfo(contractAddress, userAddress);
+          if (userInfoDef) {
+            console.log('User Info:', userInfoDef);
+            displayUserInfoInSideBar(userInfoDef); // Display the user info in the sidebar
+          } else {
+            console.error('No user info found');
+          }
+        } else {
+          console.error('Missing contract address or user address');
+        }
+      } catch (error) {
+        console.error('Error during DOMContentLoaded:', error);
+      }
+    });
+
+
+    // Add this function near your other initialization code
+    async function initializeGovernmentField() {
+      try {
+        const userAddress = await getUserAdd();
+        const governmentField = document.getElementById('fromT');
+
+        if (governmentField && userAddress) {
+          governmentField.value = userAddress;
+          console.log('Set government field to:', userAddress);
+        } else {
+          console.log('Either government field or user address not found');
+        }
+      } catch (error) {
+        console.error('Error setting government field:', error);
+      }
+    }
+
+    // Modified DOMContentLoaded event listener to include updateUserType
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        // Initialize the government field
+        await initializeGovernmentField();
+
+        // Continue with other initialization if needed
+        const contractAddress = await getContractAdd();
+        const userAddress = await getUserAdd();
+
+        if (contractAddress && userAddress) {
+          const userInfoDef = await getUserInfo(contractAddress, userAddress);
+          if (userInfoDef) {
+            console.log('User Info:', userInfoDef);
+            displayUserInfoInSideBar(userInfoDef);
+          }
+        }
+      } catch (error) {
+        console.error('Error during initialization:', error);
+      }
+    });
+
 
 
 
@@ -201,6 +378,7 @@
 
       localStorage.removeItem('authToken');
       localStorage.removeItem('user');
+      localStorage.removeItem('userEmail'); // Eliminar el correo guardado
 
       // Redirigir al login
 

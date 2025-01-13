@@ -49,8 +49,7 @@
       <div class="flex items-center justify-between mb-6">
         <div class="flex items-center space-x-4">
 
-          <input type="text" placeholder="Search..."
-            class="p-2 border rounded w-64 bg-white dark:bg-gray-700 dark:text-white">
+          <div id="resultSideContainer"></div>
         </div>
         <div class="flex items-center space-x-4">
 
@@ -373,6 +372,149 @@
 
   <script>
 
+    const resultSideContainer = document.getElementById('resultSideContainer'); // To display results
+
+
+    const getContractAdd = async () => {
+      try {
+        // Send a POST request to the server to get the contract address
+        const response = await fetch('/api/getContractAdd', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Set content type to JSON
+          },
+          body: JSON.stringify({}), // No need to send any data
+        });
+
+        // Handle the response
+        if (!response.ok) {
+          throw new Error('Failed to retrieve contract address');
+        }
+
+        // Parse the response JSON
+        const data = await response.json();
+        console.log('Contract Address:', data.contractAdd);
+        return data.contractAdd; // Return the contract address
+
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while fetching contract address');
+      }
+    };
+
+    const getUserAdd = async () => {
+      try {
+        const email = localStorage.getItem('userEmail'); // Get the email from localStorage
+        if (!email) {
+          throw new Error('No email found in localStorage');
+        }
+
+        // Send a POST request to the server to get the user address
+        const response = await fetch('/api/getUserAdd', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Set content type to JSON
+          },
+          body: JSON.stringify({ email: email }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to retrieve user address');
+        }
+
+        // Parse the response JSON
+        const data = await response.json();
+        console.log('User Address:', data.UserAddress);
+        return data.UserAddress; // Return the user address
+
+      } catch (error) {
+        console.error('Error fetching user address:', error);
+      }
+    };
+
+    // Function to get user info
+    async function getUserInfo(contractAdd, userAddress) {
+      try {
+        const response = await fetch(`/getInfoUser?contractAdd=${encodeURIComponent(contractAdd)}&userAddress=${encodeURIComponent(userAddress)}`);
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+      } catch (error) {
+        console.error('Error getting user info:', error);
+        return null;
+      }
+    }
+
+
+
+    // Function to display user info in a table
+    function getUserTypeString(type) {
+      console.log("Tipo: ", type);
+      switch (type) {
+        case '0':
+          return "Government";
+        case '1':
+          return "Admin";
+        case '2':
+          return "User";
+        default:
+          return "Unknown"; // Handle unexpected types
+      }
+    }
+
+
+    function displayUserInfoInSideBar(userInfoDef) {
+      console.log(userInfoDef.Data.getType);
+      const userType = getUserTypeString(userInfoDef.Data.getType);
+
+      if (userType === "Error") {
+        console.log("No user logged");
+      } else {
+let tableHTML = `
+<table border="1">
+    <thead>
+        <tr>
+            <th></th>
+        </tr>
+    </thead>
+    <tr><td>${userType}</td></tr>
+    <tr><td>${userInfoDef.Data.getName}</td></tr>
+    <tr><td>${userInfoDef.Data.getLastName}</td></tr>
+    <tr><td>${userInfoDef.Data.getEmail}</td></tr>
+</table>`;
+        // Insert table HTML into the container
+        resultSideContainer.innerHTML = tableHTML;
+      }
+    }
+
+
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const contractAddress = await getContractAdd(); // Wait for contract address
+        const userAddress = await getUserAdd(); // Wait for user address
+
+        if (contractAddress && userAddress) {
+          const userInfoDef = await getUserInfo(contractAddress, userAddress);
+          if (userInfoDef) {
+            console.log('User Info:', userInfoDef);
+            displayUserInfoInSideBar(userInfoDef); // Display the user info in the sidebar
+          } else {
+            console.error('No user info found');
+          }
+        } else {
+          console.error('Missing contract address or user address');
+        }
+      } catch (error) {
+        console.error('Error during DOMContentLoaded:', error);
+      }
+    });
+
+
+
     const checkAuth = () => {
       const token = localStorage.getItem('authToken');
       if (!token) {
@@ -389,6 +531,7 @@
 
       localStorage.removeItem('authToken');
       localStorage.removeItem('user');
+      localStorage.removeItem('userEmail'); // Eliminar el correo guardado
 
       // Redirigir al login
 

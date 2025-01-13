@@ -50,16 +50,20 @@
     <div class="w-64 bg-white dark:bg-gray-800 h-screen shadow-md">
       <nav class="mt-6">
         <ul>
-
+          <div id="resultSideContainer"></div>
           <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
             <button
               class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-              id="linkTok">Register user</button>
+              id="linkTok">
+              Register user
+            </button>
           </li>
           <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
-            <button button
+            <button
               class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-              id="homeBtn">Users</button>
+              id="homeBtn">
+              Users consult information
+            </button>
           </li>
         </ul>
       </nav>
@@ -137,16 +141,15 @@
               <label for="userType" class="block dark:text-gray-400 mb-2 text-gray-600">User Type</label>
               <select id="userType" class="w-full p-2 rounded text-black bg-gray-200 dark:bg-gray-700 dark:text-white"
                 required>
-                <option value="0">Government</option>
-                <option value="1">Admin</option>
-                <option value="2">User</option>
+                <!-- This will dynamically update the options based on the user type -->
               </select>
             </div>
+
             <div class="mb-4">
               <label for="government" class="block dark:text-gray-400 mb-2 text-gray-600">Creator Address</label>
               <input type="text" id="government"
-                class="w-full p-2 rounded text-black bg-gray-200 dark:bg-gray-700 dark:text-white"
-                placeholder="0x0000..." required>
+                class="w-full p-2 rounded text-black bg-gray-200 dark:bg-gray-700 dark:text-white" placeholder=""
+                disabled>
             </div>
             <div class="flex items-center justify-between mb-6">
               <button type="submit"
@@ -170,27 +173,7 @@
 
   <script>
 
-
-
-    document.getElementById('homeBtn').addEventListener('click', function () {
-      window.location.href = '/'; // Navigate to the dashboard page
-    });
-    document.getElementById('linkTok').addEventListener('click', function () {
-      window.location.href = '/dashboard'; // Navigate to the dashboard page
-    });
-
-    document.getElementById('logoutBtn').addEventListener('click', function () {
-
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('user');
-
-      // Redirigir al login
-
-      window.location.href = '/login'; // Redirect to the login page
-    });
-  </script>
-
-  <script>
+    const resultSideContainer = document.getElementById('resultSideContainer'); // To display results
 
     const getContractAdd = async () => {
       try {
@@ -218,6 +201,239 @@
         alert('An error occurred while fetching contract address');
       }
     };
+
+    const getUserAdd = async () => {
+      try {
+        const email = localStorage.getItem('userEmail'); // Get the email from localStorage
+        if (!email) {
+          throw new Error('No email found in localStorage');
+        }
+
+        // Send a POST request to the server to get the user address
+        const response = await fetch('/api/getUserAdd', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Set content type to JSON
+          },
+          body: JSON.stringify({ email: email }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to retrieve user address');
+        }
+
+        // Parse the response JSON
+        const data = await response.json();
+        console.log('User Address:', data.UserAddress);
+        return data.UserAddress; // Return the user address
+
+      } catch (error) {
+        console.error('Error fetching user address:', error);
+      }
+    };
+
+    // Function to get user info
+    async function getUserInfo(contractAdd, userAddress) {
+      try {
+        const response = await fetch(`/getInfoUser?contractAdd=${encodeURIComponent(contractAdd)}&userAddress=${encodeURIComponent(userAddress)}`);
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+      } catch (error) {
+        console.error('Error getting user info:', error);
+        return null;
+      }
+    }
+
+
+    // Modified updateUserType function to handle async operations
+    async function updateUserType() {
+      try {
+        // Get the necessary addresses first
+        const contractAdd = await getContractAdd();
+        const userAdd = await getUserAdd();
+
+        if (!contractAdd || !userAdd) {
+          console.log("Missing contract or user address");
+          return;
+        }
+
+        // Get user info with the required parameters
+        const userInfo = await getUserInfo(contractAdd, userAdd);
+        const userTypeSelect = document.getElementById("userType");
+
+        if (!userTypeSelect) {
+          console.log("User type select element not found");
+          return;
+        }
+
+        if (userInfo && userInfo.Data) {
+          // Clear current options
+          userTypeSelect.innerHTML = '';
+          console.log('User Type:', userInfo.Data.getType);
+
+          // Depending on the user type, set the options
+          switch (userInfo.Data.getType) {
+            case '0':
+              userTypeSelect.innerHTML = `
+            <option value="0">Government</option>
+            <option value="1">Admin</option>
+            <option value="2">User</option>
+          `;
+              break;
+            case '1':
+              userTypeSelect.innerHTML = `
+            <option value="1">Admin</option>
+            <option value="2">User</option>
+          `;
+              break;
+            case '2':
+              window.location.href = "/";
+              break;
+            default:
+              console.log("Unknown user type:", userInfo.Data.getType);
+          }
+        } else {
+          console.log("No user info found");
+        }
+      } catch (error) {
+        console.error("Error updating user type:", error);
+      }
+    }
+
+
+
+    function getUserTypeString(type) {
+      switch (type) {
+        case '0':
+          return 'Government';
+        case '1':
+          return 'Admin';
+        case '2':
+          return 'User';
+        default:
+          return 'Unknown';
+      }
+    }
+
+    function displayUserInfoInSideBar(userInfoDef) {
+      const userType = getUserTypeString(userInfoDef.Data.getType);
+
+      if (userType === "Error") {
+        console.log("No user logged");
+      } else {
+        let tableHTML = `
+        <table border="1">
+            <thead>
+                <tr>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>${userType}</td></tr>
+                <tr><td>${userInfoDef.Data.getName}</td></tr>
+                <tr><td>${userInfoDef.Data.getLastName}</td></tr>
+                <tr><td>${userInfoDef.Data.getEmail}</td></tr>
+            </tbody>
+        </table>`;
+
+        // Insert table HTML into the container
+        resultSideContainer.innerHTML = tableHTML;
+      }
+    }
+
+
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const contractAddress = await getContractAdd(); // Wait for contract address
+        const userAddress = await getUserAdd(); // Wait for user address
+
+        if (contractAddress && userAddress) {
+          const userInfoDef = await getUserInfo(contractAddress, userAddress);
+          if (userInfoDef) {
+            console.log('User Info:', userInfoDef);
+            displayUserInfoInSideBar(userInfoDef); // Display the user info in the sidebar
+          } else {
+            console.error('No user info found');
+          }
+        } else {
+          console.error('Missing contract address or user address');
+        }
+      } catch (error) {
+        console.error('Error during DOMContentLoaded:', error);
+      }
+    });
+
+
+    // Add this function near your other initialization code
+    async function initializeGovernmentField() {
+      try {
+        const userAddress = await getUserAdd();
+        const governmentField = document.getElementById('government');
+
+        if (governmentField && userAddress) {
+          governmentField.value = userAddress;
+          console.log('Set government field to:', userAddress);
+        } else {
+          console.log('Either government field or user address not found');
+        }
+      } catch (error) {
+        console.error('Error setting government field:', error);
+      }
+    }
+
+    // Modified DOMContentLoaded event listener to include updateUserType
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        // Initialize the government field
+        await initializeGovernmentField();
+
+        // Update user type
+        await updateUserType();
+
+        // Continue with other initialization if needed
+        const contractAddress = await getContractAdd();
+        const userAddress = await getUserAdd();
+
+        if (contractAddress && userAddress) {
+          const userInfoDef = await getUserInfo(contractAddress, userAddress);
+          if (userInfoDef) {
+            console.log('User Info:', userInfoDef);
+            displayUserInfoInSideBar(userInfoDef);
+          }
+        }
+      } catch (error) {
+        console.error('Error during initialization:', error);
+      }
+    });
+
+    document.getElementById('homeBtn').addEventListener('click', function () {
+      window.location.href = '/'; // Navigate to the dashboard page
+    });
+    document.getElementById('linkTok').addEventListener('click', function () {
+      window.location.href = '/dashboard'; // Navigate to the dashboard page
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', function () {
+
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
+      localStorage.removeItem('userEmail');
+
+      // Redirigir al login
+
+      window.location.href = '/login'; // Redirect to the login page
+    });
+
+
+
+  </script>
+
+  <script>
 
     document.getElementById('RegisterForm').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -255,7 +471,7 @@
         console.log(result);
         if (result.hasOwnProperty('Result')) {
           console.log("Success Response");
-          console.log(result.Result );
+          console.log(result.Result);
           if (result.Result == "Success") {
             console.log("Creating user");
             const formData = {
