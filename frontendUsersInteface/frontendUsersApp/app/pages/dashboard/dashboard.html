@@ -70,7 +70,7 @@
     position: absolute;
     top: 70px;
     /* Position tooltip below the circle */
-    left: 50%;
+    left: 150%;
     transform: translateX(-50%);
     background-color: #333;
     color: #fff;
@@ -107,10 +107,9 @@
       <nav class="mt-6">
         <ul>
           <div id="resultSideContainer"></div>
-          <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
-            <button
-              class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-              id="linkTok">
+          <li
+            class="px-4 py-2 text-gray-200 dark:text-gray-700 hover:bg-gray-600 dark:hover:bg-gray-100 dark:bg-gray-100 bg-gray-600">
+            <button class="w-full h-8 text-left flex items-center px-4 rounded-lg " id="linkTok">
               Register user
             </button>
           </li>
@@ -136,15 +135,11 @@
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"
-            id="homeBtn"><i class="fas fa-home"></i> Home</button>
+
           <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"
             id="logoutBtn"><i class="fas fa-sign-out-alt"></i> LogOut</button>
-          <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"><i
-              class="fas fa-cog"></i> Configuration</button>
-          <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"><i
-              class="fas fa-user"></i> Account</button>
-          
+
+
 
           <!-- Toggle Switch for Dark Mode -->
           <label class="switch">
@@ -372,7 +367,7 @@
       }
     }
 
-    function displayUserInfoInSideBar(userInfoDef) {
+    async function displayUserInfoInSideBar(userInfoDef) {
       console.log(userInfoDef.Data.getType);
       const userType = getUserTypeString(userInfoDef.Data.getType);
 
@@ -382,6 +377,10 @@
         const firstName = userInfoDef.Data.getName || "N";
         const lastName = userInfoDef.Data.getLastName || "L";
         const email = userInfoDef.Data.getEmail || "No email";
+
+        const userAdd = await getUserAdd();
+
+
 
         // Generate initials
         const initials = firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
@@ -394,17 +393,25 @@
             <p>Name: ${firstName}</p>
             <p>Last Name: ${lastName}</p>
             <p>Email: ${email}</p>
+            <p>${userAdd}</p>
           </div>
         </div>
         <div class="access-text">
-          Access: ${userType}
+          <p>${email}</p>
+          <p>Access: ${userType}</p>
         </div>
       `;
 
         // Insert HTML into the container
         resultSideContainer.innerHTML = htmlContent;
+
+        const registerUserBtn = document.getElementById('registerUserBtn');
+        if (userType === "User" && registerUserBtn) {
+          registerUserBtn.classList.add('hidden');
+        }
       }
     }
+
 
 
 
@@ -473,7 +480,7 @@
     });
 
     document.getElementById('homeBtn').addEventListener('click', function () {
-      window.location.href = '/'; // Navigate to the dashboard page
+      window.location.href = '/';
     });
     document.getElementById('linkTok').addEventListener('click', function () {
       window.location.href = '/dashboard'; // Navigate to the dashboard page
@@ -495,6 +502,8 @@
   </script>
 
   <script>
+    
+
 
     document.getElementById('RegisterForm').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -516,6 +525,8 @@
           government: document.getElementById('government').value,
         };
 
+        //verificar que el correo usado para el register del contrato no este siedno usado por firebase
+
         console.log('Data sent:', createData);
 
         // Send the registration request
@@ -530,7 +541,8 @@
         const result = await response.json();
 
         console.log(result);
-        if (result.hasOwnProperty('Result')) {
+        
+        if (result.hasOwnProperty('Result')&& result.Result !== "Error") {
           console.log("Success Response");
           console.log(result.Result);
           if (result.Result == "Success") {
@@ -554,7 +566,7 @@
               });
               console.log(response);
               if (response.ok) {
-                alert('Govern registered successfully');
+                alert('User registered successfully');
                 window.location.href = '/login';
 
               } else {
@@ -567,8 +579,11 @@
             }
           }
         }
+        else{
+          alert('Invalid Input');
+        }
         console.log(result);
-        alert('Service created successfully!');
+       
 
       } catch (error) {
         console.error('Error:', error);

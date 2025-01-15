@@ -48,16 +48,13 @@
             if (token) {
                 // If logged in, show restricted buttons
                 document.getElementById('registerUserBtn').classList.remove('hidden');
-                document.getElementById('configureBtn').classList.remove('hidden');
-                document.getElementById('accountBtn').classList.remove('hidden');
+                
                 document.getElementById('logoutBtn').classList.remove('hidden');
                 document.getElementById('loginBtn').classList.add('hidden');
 
             } else {
                 // If not logged in, show "Login" button and hide restricted buttons
                 document.getElementById('registerUserBtn').classList.add('hidden');
-                document.getElementById('configureBtn').classList.add('hidden');
-                document.getElementById('accountBtn').classList.add('hidden');
                 document.getElementById('logoutBtn').classList.add('hidden');
                 document.getElementById('loginBtn').classList.remove('hidden');
             }
@@ -91,7 +88,7 @@
         position: absolute;
         top: 70px;
         /* Position tooltip below the circle */
-        left: 50%;
+        left: 150%;
         transform: translateX(-50%);
         background-color: #333;
         color: #fff;
@@ -119,6 +116,32 @@
         /* Adjust font size */
         font-weight: bold;
     }
+
+    .moreInfo {
+        position: relative;
+    }
+
+    .moreInfo::after {
+        content: "Search user address or press Enter to see public methods when search bar in blank";
+        position: absolute;
+        top: 150%;
+        right: 10px;
+        transform: translateX(-7%);
+        padding: 5px 10px;
+        background-color: white;
+        color: black;
+        border-color: #333;
+        border-width: 2px;
+        border-radius: 10px;
+        font-size: 14px;
+        white-space: nowrap;
+        visibility: hidden;
+        margin-bottom: 5px;
+    }
+
+    .moreInfo:hover::after {
+        visibility: visible;
+    }
 </style>
 
 <body class="bg-gray-100 dark:bg-gray-900 dark:text-white font-sans">
@@ -133,9 +156,9 @@
                             class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
                             id="registerUserBtn">Register user</button>
                     </li>
-                    <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
+                    <li class="px-4 py-2 text-gray-200 dark:text-gray-700 hover:bg-gray-600 dark:hover:bg-gray-100 dark:bg-gray-100 bg-gray-600">
                         <button
-                            class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
+                          class="w-full h-8 text-left flex items-center px-4 rounded-lg "
                             id="homeBtn">Users consult information</button>
                     </li>
                 </ul>
@@ -148,29 +171,26 @@
             <div class="flex items-center justify-between mb-6">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h1 class="text-2xl font-bold">Users</h1>
+                        <h1 class="text-2xl font-bold">Users consult information</h1>
                         <!-- <p class="text-gray-600 dark:text-gray-400">List of users in firebase</p> -->
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
 
-                    <input type="search" id="search" placeholder="Search users..."
+                    <input type="search" id="search"
+                        placeholder="Search user address or press Enter to see public methods"
                         class="w-64 h-8 pl-10 text-sm text-gray-700 dark:text-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 dark:focus:ring-orange-700">
-                    <button
-                        class="w-8 h-8 text-left flex items-center px-4 rounded lg hover:bg-gray-200 dark:hover:bg-gray-700"
-                        id="searchBtn"></button>
+                    <button class="moreInfo" id="searchBtn">
+                        🔍
+                    </button>
+
                     <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"
                         id="loginBtn"><i class="fas fa-sign-in-alt"></i> LogIn</button>
                     <button
                         class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded hidden"
                         id="logoutBtn"><i class="fas fa-sign-out-alt"></i> LogOut</button>
-                    <button
-                        class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded hidden"
-                        id="configureBtn"><i class="fas fa-cog"></i> Configuration</button>
-                    <button
-                        class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded hidden"
-                        id="accountBtn"><i class="fas fa-user"></i> Account</button>
-                    
+
+
 
                     <!-- Toggle Switch for Dark Mode -->
                     <label class="switch">
@@ -238,7 +258,7 @@
 
             } catch (error) {
                 console.error('Error:', error);
-                alert('An error occurred while fetching contract address');
+                //alert('An error occurred while fetching contract address');
             }
         };
 
@@ -384,7 +404,7 @@
             resultContainer.innerHTML = tableHTML;
         }
 
-        function displayUserInfoInSideBar(userInfoDef) {
+        async function displayUserInfoInSideBar(userInfoDef) {
             console.log(userInfoDef.Data.getType);
             const userType = getUserTypeString(userInfoDef.Data.getType);
 
@@ -394,6 +414,10 @@
                 const firstName = userInfoDef.Data.getName || "N";
                 const lastName = userInfoDef.Data.getLastName || "L";
                 const email = userInfoDef.Data.getEmail || "No email";
+
+                const userAdd = await getUserAdd();
+
+
 
                 // Generate initials
                 const initials = firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
@@ -406,10 +430,12 @@
             <p>Name: ${firstName}</p>
             <p>Last Name: ${lastName}</p>
             <p>Email: ${email}</p>
+            <p>${userAdd}</p>
           </div>
         </div>
         <div class="access-text">
-          Access: ${userType}
+          <p>${email}</p>
+          <p>Access: ${userType}</p>
         </div>
       `;
 
@@ -516,7 +542,7 @@
             localStorage.removeItem('user');
             localStorage.removeItem('userEmail'); // Eliminar el correo guardado
             checkAuth();
-            window.location.reload();
+            window.location.href = '/login';
 
         });
     </script>
