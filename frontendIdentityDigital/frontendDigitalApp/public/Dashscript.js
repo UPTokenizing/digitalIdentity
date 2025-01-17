@@ -2,88 +2,85 @@
 document.addEventListener('DOMContentLoaded', function () {
 
 
-    const getUserAdd = async () => {
+    const getUserAddfromEmail = async (email) => {
         try {
-          const email = localStorage.getItem('userEmail'); // Get the email from localStorage
-          if (!email) {
-            throw new Error('No email found in localStorage');
-          }
-  
-          // Send a POST request to the server to get the user address
-          const response = await fetch('/api/getUserAdd', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json', // Set content type to JSON
-            },
-            body: JSON.stringify({ email: email }),
-          });
-  
-          if (!response.ok) {
-            throw new Error('Failed to retrieve user address');
-          }
-  
-          // Parse the response JSON
-          const data = await response.json();
-          console.log('User Address:', data.UserAddress);
-          return data.UserAddress; // Return the user address
-  
+            
+
+            // Send a POST request to the server to get the user address
+            const response = await fetch('/api/getUserAdd', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // Set content type to JSON
+                },
+                body: JSON.stringify({ email: email }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to retrieve user address');
+            }
+
+            // Parse the response JSON
+            const data = await response.json();
+            console.log('User Address:', data.UserAddress);
+            return data.UserAddress; // Return the user address
+
         } catch (error) {
-          console.error('Error fetching user address:', error);
+            console.error('Error fetching user address:', error);
         }
-      };
+    };
 
-      
-document.getElementById('link-token-form').addEventListener('submit', async (event) => {
-    event.preventDefault();
-    // Get form data
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData.entries());
-    console.log(formData);
-    console.log(data);
 
-    try {
-        // Await the resolved user address
-        const userAddress = await getUserAdd();
+    document.getElementById('link-token-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        // Get form data
+        const formData = new FormData(event.target);
+        const data = Object.fromEntries(formData.entries());
+        console.log(formData);
+        console.log(data);
 
-        // Create an object with the input values
-        const inputValues = {
-            gas: 3000000, // Get gas amount
-            contractAdd: data.contractAddress, // Get contract address
-            contract2Add: data.tokenAddress, // Get token address
-            nameToken: data.nameToken, // Get token name
-            from: userAddress // Use the awaited address
-        };
+        try {
+            // Await the resolved user address
+            const userAddress = await getUserAdd();
 
-        console.log('Input Values for link:', inputValues); // For debugging
+            // Create an object with the input values
+            const inputValues = {
+                gas: 3000000, // Get gas amount
+                contractAdd: data.contractAddress, // Get contract address
+                contract2Add: data.tokenAddress, // Get token address
+                nameToken: data.nameToken, // Get token name
+                from: userAddress // Use the awaited address
+            };
 
-        const response = await fetch('/linkTokenService', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(inputValues)
-        });
+            console.log('Input Values for link:', inputValues); // For debugging
 
-        const result = await response.json();
+            const response = await fetch('/linkTokenService', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(inputValues)
+            });
 
-        // Display the result
-        const resultElement = document.getElementById('result');
-        const resultContentElement = document.getElementById('resultContent');
+            const result = await response.json();
 
-        // Check if the response indicates an error
-        if (result.Result === "Error") {
-            resultElement.classList.remove('hidden');
-            resultContentElement.textContent = 'Failed to create contract. Please try again or check the input data.';
-        } else if (result.Result === "Success") {
-            console.log(result);
-            resultElement.classList.remove('hidden');
-            resultContentElement.textContent = `Linked Successfully`;
-        } else {
-            resultElement.classList.remove('hidden');
-            resultContentElement.textContent = 'Unexpected result: ' + result.Result;
+            // Display the result
+            const resultElement = document.getElementById('result');
+            const resultContentElement = document.getElementById('resultContent');
+
+            // Check if the response indicates an error
+            if (result.Result === "Error") {
+                resultElement.classList.remove('hidden');
+                resultContentElement.textContent = 'Failed to create contract. Please try again or check the input data.';
+            } else if (result.Result === "Success") {
+                console.log(result);
+                resultElement.classList.remove('hidden');
+                resultContentElement.textContent = `Linked Successfully`;
+            } else {
+                resultElement.classList.remove('hidden');
+                resultContentElement.textContent = 'Unexpected result: ' + result.Result;
+            }
+        } catch (error) {
+            console.error('Error:', error);
         }
-    } catch (error) {
-        console.error('Error:', error);
-    }
-});
+    });
 
     const getContractAdd = async () => {
         try {
@@ -111,6 +108,35 @@ document.getElementById('link-token-form').addEventListener('submit', async (eve
             alert('An error occurred while fetching contract address');
         }
     };
+    const getUserAdd = async () => {
+        try {
+            const email = localStorage.getItem('userEmail'); // Get the email from localStorage
+            if (!email) {
+                throw new Error('No email found in localStorage');
+            }
+
+            // Send a POST request to the server to get the user address
+            const response = await fetch('/api/getUserAdd', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // Set content type to JSON
+                },
+                body: JSON.stringify({ email: email }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to retrieve user address');
+            }
+
+            // Parse the response JSON
+            const data = await response.json();
+            console.log('User Address:', data.UserAddress);
+            return data.UserAddress; // Return the user address
+
+        } catch (error) {
+            console.error('Error fetching user address:', error);
+        }
+    };
 
     document.getElementById('create-digital-form').addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -121,16 +147,17 @@ document.getElementById('link-token-form').addEventListener('submit', async (eve
         const data = Object.fromEntries(formData.entries());
         console.log(formData);
         console.log(data);
-
+        const govern = await getUserAdd();
         // Fetch the contract address
         const contractAddress = await getContractAdd(); // Await the contract address
+        const ownerEmail = await getUserAddfromEmail(data.from);
 
         // Create an object with the input values
         const inputValues = {
             gas: 3000000, // Get gas amount
-            government: "0x2CFcBB9Cf2910fBa7E7E7a8092aa1a40BC5BA341", // Get contract address
+            government: govern, // Get contract address
             contractUser: contractAddress, // Use the awaited contract address
-            owner: data.from // Get from address
+            owner: ownerEmail // Get from address
         };
 
         console.log('Input Values:', inputValues); // For debugging

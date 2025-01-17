@@ -93,7 +93,7 @@ app.post('/createUser', async (req, res) => {
 
 app.post('/registerUser', async (req, res) => {
   try {
-    const { 
+    const {
       gas,
       contractAdd,
       publicMethod,
@@ -102,7 +102,7 @@ app.post('/registerUser', async (req, res) => {
       lastName,
       email,
       userType,
-      government} = req.body;
+      government } = req.body;
 
     const requestData = {
       gas,
@@ -219,6 +219,56 @@ app.post('/api/login', async (req, res) => {
 
 
 app.post('/api/registerCritic', async (req, res) => {
+  const { email, password, UserAddress, Type, contractAdd } = req.body;
+
+  try {
+    const db = admin.firestore();
+
+    // Verificar si Firestore contiene datos en la colección `users`
+    const usersSnapshot = await db.collection('users').get();
+
+    if (!usersSnapshot.empty) {
+      // La colección `users` no está vacía, eliminar todos los usuarios y documentos
+      console.log('Firestore no está vacío. Eliminando datos existentes...');
+
+      // 1. Eliminar todos los usuarios de Firebase Authentication
+      const listUsersResult = await admin.auth().listUsers();
+      const deletePromises = listUsersResult.users.map(user =>
+        admin.auth().deleteUser(user.uid)
+      );
+      await Promise.all(deletePromises);
+      console.log('Todos los usuarios de Firebase Authentication han sido eliminados.');
+
+      // 2. Eliminar todas las colecciones/documentos de Firestore
+      const deleteFirestorePromises = usersSnapshot.docs.map(doc => doc.ref.delete());
+      await Promise.all(deleteFirestorePromises);
+      console.log('Todos los documentos de la colección `users` han sido eliminados.');
+    }
+
+    // Crear un nuevo usuario en Firebase Authentication
+    const userRecord = await admin.auth().createUser({
+      email: email,
+      password: password,
+    });
+
+    // Guardar datos adicionales del usuario en Firestore
+    await db.collection('users').doc(userRecord.uid).set({
+      email: email,
+      UserAddress: UserAddress,
+      Type: Type,
+      contractAdd: contractAdd,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+
+    res.status(201).send({ message: 'User registered successfully', uid: userRecord.uid });
+  } catch (error) {
+    console.error('Error en el registro:', error);
+    res.status(400).send({ message: error.message });
+  }
+});
+
+//before this was teh critic
+app.post('/api/registerUser2', async (req, res) => {
   const { email, password, UserAddress, Type, contractAdd } = req.body;
 
   try {

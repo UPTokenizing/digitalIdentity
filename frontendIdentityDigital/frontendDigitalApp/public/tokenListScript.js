@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 if (result.Result === "Error") {
                     resultElement.classList.remove('hidden');
-                    resultContentElement.textContent = 'Failed to create contract. Please try again or check the input data.';
+                    resultContentElement.textContent = 'Failed to retrieve info. Please try again or check the input data.';
                 } else if (result.Result === "Success") {
                     console.log(result);
                     resultElement.classList.remove('hidden');

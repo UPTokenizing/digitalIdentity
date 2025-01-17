@@ -107,10 +107,9 @@
       <nav class="mt-6">
         <ul>
           <div id="resultSideContainer"></div>
-          <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
-            <button
-              class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-              id="linkTok">
+          <li
+            class="px-4 py-2 text-gray-200 dark:text-gray-700 hover:bg-gray-600 dark:hover:bg-gray-100 dark:bg-gray-100 bg-gray-600">
+            <button class="w-full h-8 text-left flex items-center px-4 rounded-lg " id="linkTok">
               Create digital identity
             </button>
           </li>
@@ -120,6 +119,12 @@
               id="homeBtn">
               Consult Token information
             </button>
+          </li>
+          <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
+            <button
+              class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
+              id="linkT">Link
+              Tokens</button>
           </li>
         </ul>
       </nav>
@@ -138,10 +143,8 @@
         </div>
         <div class="flex items-center space-x-4">
           <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"
-            id="homeBtn"><i class="fas fa-home"></i> Home</button>
-          <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"
             id="logoutBtn"><i class="fas fa-sign-out-alt"></i> LogOut</button>
-          
+
 
 
           <!-- Toggle Switch for Dark Mode -->
@@ -165,8 +168,11 @@
 
                 <div class="mb-4">
                   <label for="from" class="block text-gray-400 dark:text-gray-300">Owner of token *Needs to be the same
-                    token as the owner in the token to add</label>
-                  <input type="text" id="from" name="from" placeholder="0x000..."
+                    token as the owner in the token to add 
+                    <p><a href="http://localhost:5510" class="text-blue-600">Users</a></p>
+                    
+                    </label>
+                  <input type="text" id="from" name="from" placeholder="email@email.com"
                     class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-900 dark:text-white"
                     required>
                 </div>
@@ -180,30 +186,29 @@
         <div id="resultCreate" class="mt-4 p-4 border rounded-lg bg-gray-100 dark:bg-gray-800 hidden">
           <h2 class="text-lg font-bold">Digital Identity Address :</h2>
           <pre id="resultContentCreate" class="text-gray-700 dark:text-gray-300"></pre>
+          <p> Copiar dirección y guardar en un lugar seguro </p>
         </div>
 
         <div class="mt-4 hidden">
           <h2 class="text-2xl font-bold">Token linker</h2>
           <form id="link-token-form">
 
-                <button type="submit" class="w-full h-12 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                  Submit
-                </button>
-              </div>
-          </form>
+            <button type="submit" class="w-full h-12 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+              Submit
+            </button>
         </div>
-
-        <!-- Result Display Section -->
-        <div id="result" class="mt-4 p-4 border rounded-lg bg-gray-100 dark:bg-gray-800 hidden">
-          <h2 class="text-lg font-bold">Result:</h2>
-          <pre id="resultContent" class="text-gray-700 dark:text-gray-300"></pre>
-        </div>
-
+        </form>
       </div>
+
+      <!-- Result Display Section -->
+      <div id="result" class="mt-4 p-4 border rounded-lg bg-gray-100 dark:bg-gray-800 hidden">
+        <h2 class="text-lg font-bold">Result:</h2>
+        <pre id="resultContent" class="text-gray-700 dark:text-gray-300"></pre>
+      </div>
+
     </div>
   </div>
-  </div>
-  </div>
+
 
   <script>
     const resultSideContainer = document.getElementById('resultSideContainer'); // To display results
@@ -231,7 +236,7 @@
 
       } catch (error) {
         console.error('Error:', error);
-        alert('An error occurred while fetching contract address');
+        //alert('An error occurred while fetching contract address');
       }
     };
 
@@ -296,7 +301,7 @@
       }
     }
 
-    function displayUserInfoInSideBar(userInfoDef) {
+    async function displayUserInfoInSideBar(userInfoDef) {
       console.log(userInfoDef.Data.getType);
       const userType = getUserTypeString(userInfoDef.Data.getType);
 
@@ -306,6 +311,10 @@
         const firstName = userInfoDef.Data.getName || "N";
         const lastName = userInfoDef.Data.getLastName || "L";
         const email = userInfoDef.Data.getEmail || "No email";
+
+        const userAdd = await getUserAdd();
+
+
 
         // Generate initials
         const initials = firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
@@ -318,10 +327,12 @@
             <p>Name: ${firstName}</p>
             <p>Last Name: ${lastName}</p>
             <p>Email: ${email}</p>
+            <p>${userAdd}</p>
           </div>
         </div>
         <div class="access-text">
-          Access: ${userType}
+          <p>${email}</p>
+          <p>Access: ${userType}</p>
         </div>
       `;
 
@@ -409,6 +420,9 @@
     });
     document.getElementById('linkTok').addEventListener('click', function () {
       window.location.href = '/dashboard'; // Navigate to the dashboard page
+    });
+    document.getElementById('linkT').addEventListener('click', function () {
+      window.location.href = '/tokens';
     });
 
     document.getElementById('logoutBtn').addEventListener('click', function () {

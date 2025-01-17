@@ -26,16 +26,11 @@ app.get('/home', (req, res) => {
 app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, 'app/pages/login/login.html'));
 });
-app.get('/registerGovernment', (req, res) => {
-  res.sendFile(path.join(__dirname, 'app/pages/register/registerCriticUsers.html'));
-});
-
-
-app.get('/loading', (req, res) => {
-  res.sendFile(path.join(__dirname, 'app/pages/loading/loading.html'));
-});
 app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, 'app/pages/dashboard/dashboard.html'));
+});
+app.get('/tokens', (req, res) => {
+  res.sendFile(path.join(__dirname, 'app/pages/tokens/tokens.html'));
 });
 
 app.use(express.json());
@@ -170,7 +165,6 @@ app.get('/consultNumberToken', async (req, res) => {
     res.status(500).send('Error fetching the data');
   }
 });
-
 app.get('/consultDigitalIdentity', async (req, res) => {
   try {
     const { contractAdd, publicMethod } = req.query;
@@ -263,7 +257,6 @@ app.post('/api/getContractAdd', async (req, res) => {
   }
 });
 
-
 app.post('/api/getUserAdd', async (req, res) => {
   try {
     const email = req.body.email; // Get the email from the request body
@@ -315,6 +308,7 @@ app.get('/getInfoUser', async (req, res) => {
     res.status(500).send('Error fetching the data');
   }
 });
+
 const PORT = 5511;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
