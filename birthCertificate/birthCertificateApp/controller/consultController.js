@@ -70,7 +70,7 @@ async function callNFTVehicleSCParam(req){
 }
 
 //modified
-async function callGenesisIdenSC(req){
+async function callBirthCerSC(req){
 	//console.log("OK");
 	contractABI = utilities.getContainFileJSON(contractABIPath);	//contractABIPath is a global variable
 	//contractByteCode = utilities.getContainFile(contractByteCodeSource); //contractByteCodeSource  is a global variable    
@@ -165,7 +165,7 @@ initializer.consultMethodNotParams = async function (req, res){
 			res.send(resul);
 	}else{
 			try {
-				const response = await callGenesisIdenSC(obj).then((resul)=>{
+				const response = await callBirthCerSC(obj).then((resul)=>{
 					//let resHE = errorControl.handlingErrorOrNot(resul,manufacturerAdd);
 					let resHE = JSON.parse(JSON.stringify(resul, utilities.replacer));					
 					return resHE;

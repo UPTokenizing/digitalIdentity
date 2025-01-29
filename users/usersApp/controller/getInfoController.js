@@ -16,7 +16,7 @@ async function callingGetInfo(req) {
     const contractABI = utilities.getContainFileJSON(contractABIPath); // Smart contract ABI
     const contractAdd = req.query.contractAdd;
     const userAddress = req.query.userAddress;
-    const publicMethods = ["getType", "getName", "getLastName", "getEmail", "getCreator"];
+    const publicMethods = ["getType", "getUserName", "getEmail", "getCreator"];
     let result = {};
 
     try {

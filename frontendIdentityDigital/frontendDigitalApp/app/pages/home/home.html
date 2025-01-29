@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Token Information center</title>
-    <script src="/tokenListScript.js"></script>
     <script src="/Dashscript.js"></script>
     <link rel="stylesheet" href="/style.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -145,7 +144,7 @@
                     </li>
                     <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
                         <button
-                            class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
+                            class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 hidden"
                             id="linkT">Link
                             Tokens</button>
                     </li>
@@ -277,7 +276,7 @@
 
             } catch (error) {
                 console.error('Error:', error);
-//                alert('An error occurred while fetching contract address');
+                //                alert('An error occurred while fetching contract address');
             }
         };
 
@@ -352,8 +351,7 @@
             if (userType === "Error") {
                 console.log("No user logged");
             } else {
-                const firstName = userInfoDef.Data.getName || "N";
-                const lastName = userInfoDef.Data.getLastName || "L";
+                const userName = userInfoDef.Data.getUserName || "N";
                 const email = userInfoDef.Data.getEmail || "No email";
 
                 const userAdd = await getUserAdd();
@@ -361,15 +359,14 @@
 
 
                 // Generate initials
-                const initials = firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
+                const initials = userName.charAt(0).toUpperCase();
 
                 // Generate HTML
                 const htmlContent = `
         <div class="user-circle">
           <span>${initials}</span>
           <div class="tooltip">
-            <p>Name: ${firstName}</p>
-            <p>Last Name: ${lastName}</p>
+            <p>Username: ${userName}</p>
             <p>Email: ${email}</p>
             <p>${userAdd}</p>
           </div>
@@ -384,9 +381,15 @@
                 console.log(userType);
                 if (userType === "Government" && createBtn) {
                     console.log("Government Active");
+                    linkT.classList.remove('hidden');
                 }
-                else if ((userType !== "Government" && userType !== "Admin" && userType !== "User") && linkT) {
-                    linkT.classList.add('hidden');
+                else if ((userType === "Admin" || userType === "User")) {
+                    createBtn.classList.add('hidden');
+                    linkT.classList.remove('hidden');
+                }
+                else if ((userType === "Government" || userType === "Admin" || userType === "User")) {
+                    console.log("User log");
+                    linkT.classList.remove('hidden');
                 }
                 else {
                     createBtn.classList.add('hidden');
@@ -441,7 +444,7 @@
         });
 
 
-        
+
 
         // Modified DOMContentLoaded event listener to include updateUserType
         document.addEventListener('DOMContentLoaded', async () => {
@@ -491,8 +494,8 @@
             localStorage.removeItem('user');
             localStorage.removeItem('userEmail'); // Eliminar el correo guardado
             window.location.href = '/login';
-           
-            
+
+
 
         });
     </script>

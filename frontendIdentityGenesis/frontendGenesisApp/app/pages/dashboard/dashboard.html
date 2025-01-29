@@ -67,8 +67,7 @@
     position: absolute;
     top: 70px;
     /* Position tooltip below the circle */
-    left: 50%;
-    transform: translateX(-50%);
+    left: 25%;
     background-color: #333;
     color: #fff;
     padding: 6px;
@@ -111,14 +110,7 @@
 
           <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"
             id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log Out</button>
-          <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"><i
-              class="fas fa-cog"></i> Configuration</button>
-          <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"><i
-              class="fas fa-user"></i> Account</button>
-          <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"><i
-              class="fas fa-info-circle"></i> About</button>
-          <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"><i
-              class="fas fa-envelope"></i> Contact</button>
+          
 
           <!-- Toggle Switch for Dark Mode -->
           <label class="switch">
@@ -132,9 +124,9 @@
       </div>
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-2xl font-bold">Genesis Identity Addresses</h1>
+          <h1 class="text-2xl font-bold">Birth Certificate Addresses</h1>
           <p class="text-gray-600 dark:text-gray-400">Contracts. Please use this page
-            to view clients' genesis Identities.</p>
+            to view clients' Birth Certificates.</p>
         </div>
         <div class="flex items-center space-x-4">
           <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"><i
@@ -522,37 +514,43 @@
     }
 
 
-    function displayUserInfoInSideBar(userInfoDef) {
+    async function displayUserInfoInSideBar(userInfoDef) {
       console.log(userInfoDef.Data.getType);
       const userType = getUserTypeString(userInfoDef.Data.getType);
 
       if (userType === "Error") {
         console.log("No user logged");
       } else {
-        const firstName = userInfoDef.Data.getName || "N";
-        const lastName = userInfoDef.Data.getLastName || "L";
+        const userName = userInfoDef.Data.getUserName || "N";
         const email = userInfoDef.Data.getEmail || "No email";
 
+        const userAdd = await getUserAdd();
+
+
+
         // Generate initials
-        const initials = firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
+        const initials = userName.charAt(0).toUpperCase();
 
         // Generate HTML
         const htmlContent = `
         <div class="user-circle">
           <span>${initials}</span>
           <div class="tooltip">
-            <p>Name: ${firstName}</p>
-            <p>Last Name: ${lastName}</p>
+            <p>Username: ${userName}</p>
             <p>Email: ${email}</p>
+            <p>${userAdd}</p>
           </div>
         </div>
         <div class="access-text">
-          Access: ${userType}
+          <p>${email}</p>
+          <p>Access: ${userType}</p>
         </div>
       `;
 
         // Insert HTML into the container
         resultSideContainer.innerHTML = htmlContent;
+
+
       }
     }
 

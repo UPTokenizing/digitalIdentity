@@ -9,8 +9,7 @@ async function callingRegisterUser(req) {
     const contractAdd = req.body.contractAdd;
     const publicMethod = req.body.publicMethod;
     const userAddress = req.body.userAddress;
-    const name = req.body.name;
-    const lastName = req.body.lastName;
+    const username = req.body.username;
     const email = req.body.email;
     const userType = req.body.userType;
     const government = req.body.government;
@@ -31,8 +30,7 @@ async function callingRegisterUser(req) {
                 const userContract = new web3.eth.Contract(contractABI, contractAdd);
                 const contractAnswer = await userContract.methods[publicMethod](
                     userAddress,
-                    name,
-                    lastName,
+                    username,
                     email,
                     userType
                 ).send({ from: government, gas: gas })
@@ -81,8 +79,7 @@ initializer.registerUser = async function(req, res) {
     const contractAdd = req.body.contractAdd;
     const publicMethod = req.body.publicMethod;
     const userAddress = req.body.userAddress;
-    const name = req.body.name;
-    const lastName = req.body.lastName;
+    const username = req.body.username;
     const email = req.body.email;
     const userType = req.body.userType;
     const government = req.body.government;
@@ -94,8 +91,7 @@ initializer.registerUser = async function(req, res) {
             contractAdd: contractAdd,
             publicMethod: publicMethod,
             userAddress: userAddress,
-            name: name,
-            lastName: lastName,
+            username: username,
             email: email,
             userType: userType,
             government: government

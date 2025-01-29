@@ -5,7 +5,7 @@ pragma solidity 0.8.23;
 import "./OwnerInterface.sol";
 import "./UsersInterface.sol";
 
-contract GenesisIdentity is OwnerInterface{  
+contract BirthCertificate is OwnerInterface{  
     //attributes
     string public name; 
     string public fLastName; 
@@ -23,7 +23,7 @@ contract GenesisIdentity is OwnerInterface{
    address public tokenDigIdentity;
    address public government;
    address public owner;
-    string public nameToken="GenesisIdentity";
+    string public nameToken="BirthCertificate";
    
   constructor(string memory _name, string memory _fLastName, string memory _mLastName, bool _gender, 
               uint16 _day, uint16 _month, uint16 _year, string memory _state, string memory _municipality, 

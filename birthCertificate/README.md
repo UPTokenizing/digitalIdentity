@@ -1,6 +1,6 @@
-# Genesis Identity Microservice
+# Birth Certificate Microservice
 ## General description
-  This application contains all services to store information in the Blockchain to the system called Genesis Identity. This offers a solution using a microservice architecture.
+  This application contains all services to store information in the Blockchain to the system called birth Certificate. This offers a solution using a microservice architecture.
 
 ## Pre-requirements
   Althouth it should have been installed previously. Check if you have the network created:    
@@ -19,7 +19,7 @@
       
       cd PATHL  
   
-  You must see Dockerfile, README.md file, folder genesisIdentityApp and genesisIdentityServices.pdf:
+  You must see Dockerfile, README.md file, folder birthCertificateApp and birthCertificateServices.pdf:
       
       ls 
   
@@ -29,15 +29,15 @@
     
   Build the ubuntu image in a repository:
       
-      sudo docker build -t genesisidentity  <PATHL>
+      sudo docker build -t birthcertificate  <PATHL>
 
   Run ubuntu: 
       
-      docker run -it --network TokPhyAppNetwork -p 5501:5501 -v <PATHL>:/genesisidentity  genesisidentity
+      docker run -it --network TokPhyAppNetwork -p 5501:5501 -v <PATHL>:/birthcertificate  birthcertificate
 
   Then, go to the ubuntu instance path:
       
-      cd /genesisidentity/genesisidentityApp
+      cd /birthcertificate/birthcertificateApp
 
   You must update some package lists before installing npm:
       sudo apt-get update
@@ -60,7 +60,7 @@
 
   After this, you must see something like this:
     
-    > didentity@0.0.0 start
+    > dcertificate@0.0.0 start
     > node ./bin/www
 
   You can execute ctrl+C to exit
@@ -70,17 +70,17 @@
     
     sudo docker ps -a
 
-  Identify the container id of **genesisidentity** and set the following command:
+  Identify the container id of **birthcertificate** and set the following command:
     
     sudo docker start <containerid>
 
-  Go into container **genesisidentity** by executing the following:
+  Go into container **birthcertificate** by executing the following:
     
     sudo docker exec -it <containerid> /bin/bash
 
   Go to the following path:
     
-    cd /genesisidentity/genesisIdentityApp
+    cd /birthcertificate/birthCertificateApp
 
   Then, execute the following command:
     

@@ -98,9 +98,15 @@
     /* Adjust font size */
     font-weight: bold;
   }
+
+  #overlay {
+    display: none;
+    /* Initially hidden */
+  }
 </style>
 
 <body class="bg-gray-100 dark:bg-gray-900 dark:text-white font-sans">
+  <div id="overlay" class="hidden fixed inset-0 bg-gray-500 bg-opacity-50 z-50"></div>
   <div class="flex">
     <!-- Sidebar -->
     <div class="w-64 bg-white dark:bg-gray-800 h-screen shadow-md">
@@ -119,6 +125,11 @@
               id="homeBtn">
               Users consult information
             </button>
+          </li>
+          <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
+            <button
+              class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
+              id="userList">User List</button>
           </li>
         </ul>
       </nav>
@@ -168,16 +179,10 @@
                 class="w-full p-2 rounded text-black bg-gray-200 dark:bg-gray-700 dark:text-white" value="" required>
             </div>
             <div class="mb-4">
-              <label for="firstName" class="block dark:text-gray-400 mb-2 text-gray-600">Name</label>
-              <input type="text" id="name"
-                class="w-full p-2 rounded text-black bg-gray-200 dark:bg-gray-700 dark:text-white" placeholder="Name"
-                required>
-            </div>
-            <div class="mb-4">
-              <label for="lastName" class="block dark:text-gray-400 mb-2 text-gray-600">Last Name</label>
-              <input type="text" id="lastName"
+              <label for="username" class="block dark:text-gray-400 mb-2 text-gray-600">Username</label>
+              <input type="text" id="username"
                 class="w-full p-2 rounded text-black bg-gray-200 dark:bg-gray-700 dark:text-white"
-                placeholder="Last Name" required>
+                placeholder="Username" required>
             </div>
             <div class="mb-4">
               <label for="userAddress" class="block dark:text-gray-400 mb-2 text-gray-600">User Address</label>
@@ -374,8 +379,7 @@
       if (userType === "Error") {
         console.log("No user logged");
       } else {
-        const firstName = userInfoDef.Data.getName || "N";
-        const lastName = userInfoDef.Data.getLastName || "L";
+        const userName = userInfoDef.Data.getUserName || "N";
         const email = userInfoDef.Data.getEmail || "No email";
 
         const userAdd = await getUserAdd();
@@ -383,15 +387,14 @@
 
 
         // Generate initials
-        const initials = firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
+        const initials = userName.charAt(0).toUpperCase();
 
         // Generate HTML
         const htmlContent = `
         <div class="user-circle">
           <span>${initials}</span>
           <div class="tooltip">
-            <p>Name: ${firstName}</p>
-            <p>Last Name: ${lastName}</p>
+            <p>Username: ${userName}</p>
             <p>Email: ${email}</p>
             <p>${userAdd}</p>
           </div>
@@ -485,6 +488,9 @@
     document.getElementById('linkTok').addEventListener('click', function () {
       window.location.href = '/dashboard'; // Navigate to the dashboard page
     });
+    document.getElementById('userList').addEventListener('click', function () {
+      window.location.href = '/users';
+    });
 
     document.getElementById('logoutBtn').addEventListener('click', function () {
 
@@ -502,88 +508,118 @@
   </script>
 
   <script>
-    
+
 
 
     document.getElementById('RegisterForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      document.getElementById('overlay').style.display = 'block'; // Show overlay
 
       try {
-        // Wait for the contract address
-        const contractAdd = await getContractAdd();
+        try {
+          // Fetch data from the backend API
+          const response = await fetch('/api/getAllEmails');
+          if (!response.ok) {
+            throw new Error('Failed to fetch data from the server');
+          }
 
-        // Prepare the data for registration
-        const createData = {
-          gas: 3000000,
-          contractAdd: contractAdd, // Use the fetched contract address
-          publicMethod: "registerUser",
-          userAddress: document.getElementById('userAddress').value,
-          name: document.getElementById('name').value,
-          lastName: document.getElementById('lastName').value,
-          email: document.getElementById('email').value,
-          userType: document.getElementById('userType').value,
-          government: document.getElementById('government').value,
-        };
+          const data = await response.json();
 
-        //verificar que el correo usado para el register del contrato no este siedno usado por firebase
+          // Extract email data from the response
+          const emails = data.emails || [];
+          console.log('Fetched Emails:', emails);
+          // if document.getElementById('email').value is in emails then return
+          if (emails.includes(document.getElementById('email').value)) {
+            alert('Email already exists');
+            document.getElementById('overlay').style.display = 'none'; // Hide overlay
+            return;
+          }
+          else {
 
-        console.log('Data sent:', createData);
+            // Wait for the contract address
+            const contractAdd = await getContractAdd();
 
-        // Send the registration request
-        const response = await fetch('/registerUser', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(createData)
-        });
-
-        const result = await response.json();
-
-        console.log(result);
-        
-        if (result.hasOwnProperty('Result')&& result.Result !== "Error") {
-          console.log("Success Response");
-          console.log(result.Result);
-          if (result.Result == "Success") {
-            console.log("Creating user");
-            const formData = {
+            // Prepare the data for registration
+            const createData = {
+              gas: 3000000,
+              contractAdd: contractAdd, // Use the fetched contract address
+              publicMethod: "registerUser",
+              userAddress: document.getElementById('userAddress').value,
+              username: document.getElementById('username').value,
               email: document.getElementById('email').value,
-              password: document.getElementById('password').value
-              , UserAddress: document.getElementById('userAddress').value,
-              Type: " ",
-              contractAdd: " "
+              userType: document.getElementById('userType').value,
+              government: document.getElementById('government').value,
             };
 
-            console.log(formData);
-            try {
-              const response = await fetch('/api/registerUser2', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-              });
-              console.log(response);
-              if (response.ok) {
-                alert('User registered successfully');
-                window.location.href = '/login';
+            //verificar que el correo usado para el register del contrato no este siedno usado por firebase
 
-              } else {
-                const error = await response.json();
-                alert(error.message);
+            console.log('Data sent:', createData);
+
+            // Send the registration request
+            const response = await fetch('/registerUser', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(createData)
+            });
+
+            const result = await response.json();
+
+            console.log(result);
+
+            if (result.hasOwnProperty('Result') && result.Result !== "Error") {
+              console.log("Success Response");
+              console.log(result.Result);
+              if (result.Result == "Success") {
+                console.log("Creating user");
+                const formData = {
+                  email: document.getElementById('email').value,
+                  password: document.getElementById('password').value
+                  , UserAddress: document.getElementById('userAddress').value,
+                  Type: " ",
+                  contractAdd: " "
+                };
+
+                console.log(formData);
+                try {
+                  const response = await fetch('/api/registerUser2', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                  });
+                  console.log(response);
+                  if (response.ok) {
+                    alert('User registered successfully');
+                    document.getElementById('overlay').style.display = 'none';
+                    window.location.href = '/users';
+
+                  } else {
+                    const error = await response.json();
+                    alert(error.message);
+                  }
+                } catch (error) {
+                  console.error('Error:', error);
+                  alert('Registration failed');
+                }
+                document.getElementById('overlay').style.display = 'none';
               }
-            } catch (error) {
-              console.error('Error:', error);
-              alert('Registration failed');
             }
+            else {
+              alert('Invalid Input');
+            }
+            console.log(result);
+
           }
+
+
+        } catch (error) {
+          console.error('Error fetching emails:', error);
+
+
         }
-        else{
-          alert('Invalid Input');
-        }
-        console.log(result);
-       
 
       } catch (error) {
         console.error('Error:', error);
@@ -626,6 +662,9 @@
       const passwordInput = document.getElementById('password');
       passwordInput.value = generatePassword(); // Assign generated password
     };
+
+
+
   </script>
 
 

@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users Interface</title>
-    <script src="/tokenListScript.js"></script>
+    <title>Users List</title>
     <link rel="stylesheet" href="/style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/styleDashboard.css">
@@ -27,9 +26,6 @@
                 document.documentElement.classList.add('dark');
                 document.getElementById('darkModeToggle').checked = true; // Check the toggle switch
             }
-
-            // Check login status and update the UI accordingly
-            checkAuth();
         });
 
         // Toggle the dark mode
@@ -41,25 +37,6 @@
                 localStorage.setItem('darkMode', 'disabled'); // Save light mode preference
             }
         }
-
-        // Check if the user is logged in
-        const checkAuth = () => {
-            const token = localStorage.getItem('authToken');
-            if (token) {
-                // If logged in, show restricted buttons
-                document.getElementById('registerUserBtn').classList.remove('hidden');
-                document.getElementById('userList').classList.remove('hidden');
-                document.getElementById('logoutBtn').classList.remove('hidden');
-                document.getElementById('loginBtn').classList.add('hidden');
-
-            } else {
-                // If not logged in, show "Login" button and hide restricted buttons
-                document.getElementById('userList').classList.add('hidden');
-                document.getElementById('registerUserBtn').classList.add('hidden');
-                document.getElementById('logoutBtn').classList.add('hidden');
-                document.getElementById('loginBtn').classList.remove('hidden');
-            }
-        };
     </script>
 </head>
 
@@ -117,55 +94,31 @@
         /* Adjust font size */
         font-weight: bold;
     }
-
-    .moreInfo {
-        position: relative;
-    }
-
-    .moreInfo::after {
-        content: "Search user address or press Enter to see public methods when search bar in blank";
-        position: absolute;
-        top: 150%;
-        right: 10px;
-        transform: translateX(-7%);
-        padding: 5px 10px;
-        background-color: white;
-        color: black;
-        border-color: #333;
-        border-width: 2px;
-        border-radius: 10px;
-        font-size: 14px;
-        white-space: nowrap;
-        visibility: hidden;
-        margin-bottom: 5px;
-    }
-
-    .moreInfo:hover::after {
-        visibility: visible;
-    }
 </style>
 
 <body class="bg-gray-100 dark:bg-gray-900 dark:text-white font-sans">
     <div class="flex">
         <!-- Sidebar -->
         <div class="w-64 bg-white dark:bg-gray-800 h-screen shadow-md">
-            <div id="resultSideContainer"></div>
             <nav class="mt-6">
                 <ul>
+                    <div id="resultSideContainer"></div>
+                    <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
+                        <button class="w-full h-8 text-left flex items-center px-4 rounded-lg " id="linkTok">
+                            Register user
+                        </button>
+                    </li>
                     <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
                         <button
                             class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-                            id="registerUserBtn">Register user</button>
+                            id="homeBtn">
+                            Users consult information
+                        </button>
                     </li>
                     <li
                         class="px-4 py-2 text-gray-200 dark:text-gray-700 hover:bg-gray-600 dark:hover:bg-gray-100 dark:bg-gray-100 bg-gray-600">
-                        <button class="w-full h-8 text-left flex items-center px-4 rounded-lg " id="homeBtn">Users
-                            consult information</button>
-                    </li>
-                    <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
-                        <button
-                            class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-                            id="userList">User List</button>
+                        <button class="w-full h-8 text-left flex items-center px-4 rounded-lg " id="userList">User
+                            List</button>
                     </li>
                 </ul>
             </nav>
@@ -183,18 +136,12 @@
                 </div>
                 <div class="flex items-center space-x-4">
 
-                    <input type="search" id="search"
-                        placeholder="Search user email or without email to see public methods"
-                        class="w-64 h-8 pl-10 text-sm text-gray-700 dark:text-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 dark:focus:ring-orange-700">
-                    <button class="moreInfo" id="searchBtn">
-                        🔍
-                    </button>
 
                     <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"
-                        id="loginBtn"><i class="fas fa-sign-in-alt"></i> LogIn</button>
-                    <button
-                        class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded hidden"
-                        id="logoutBtn"><i class="fas fa-sign-out-alt"></i> LogOut</button>
+                        id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> LogOut
+                    </button>
+
 
 
 
@@ -209,8 +156,31 @@
                 </div>
             </div>
             <div>
-                <div>
-                    <div id="resultContainer"></div>
+
+
+                <div class="mt-6 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+                    <table class="min-w-full bg-white dark:bg-gray-800">
+                        <thead>
+                            <tr>
+                                <th
+                                    class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
+                                    Email
+                                </th>
+                                <th
+                                    class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
+                                    User Address
+                                </th>
+                                <th
+                                    class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
+                                    Type
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <!-- Dynamic rows will be added here -->
+                        </tbody>
+                    </table>
+                    <div id="response-container"></div>
                 </div>
 
 
@@ -238,7 +208,6 @@
 
                 // Parse the response JSON
                 const data = await response.json();
-                console.log('Contract Address:', data.contractAdd);
                 return data.contractAdd; // Return the contract address
 
             } catch (error) {
@@ -269,7 +238,6 @@
 
                 // Parse the response JSON
                 const data = await response.json();
-                console.log('User Address:', data.UserAddress);
                 return data.UserAddress; // Return the user address
 
             } catch (error) {
@@ -277,9 +245,6 @@
             }
         };
 
-        // Get references to the search input and search button
-        const searchInput = document.getElementById('search');
-        const searchBtn = document.getElementById('searchBtn');
         const resultContainer = document.getElementById('resultContainer'); // To display results
         const resultSideContainer = document.getElementById('resultSideContainer'); // To display results
 
@@ -325,37 +290,24 @@
 
         // Function to display results in a table
         function displayResultsInTable(contractAddress, methods, results) {
-
-
             let tableHTML = `
-            <div class="mt-6 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
-                    <table class="min-w-full bg-white dark:bg-gray-800">
-                        <thead>
-                            <tr>
-                                <th
-                                    class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
-                                    User Contract Info
-                                </th>
-                                <th
-                                    class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
-                                    Value
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white dark:bg-gray-800">
-                            `;
-
-
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                `;
 
             // Loop through the methods and display the results
             methods.forEach((method, index) => {
                 tableHTML += `
-
-                <tr>
-                        <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${method}</td>
-                        <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${results[index] && results[index].Value ? results[index].Value : 'Error fetching'}</td>
-                    </tr>
-            <tr>`;
+            <tr>
+                <td>${method}</td>
+                <td>${results[index] && results[index].Value ? results[index].Value : 'Error fetching'}</td>
+            </tr>`;
             });
 
             tableHTML += `</tbody></table>`;
@@ -365,7 +317,6 @@
         }
         // Function to display user info in a table
         function getUserTypeString(type) {
-            console.log("Tipo: ", type);
             switch (type) {
                 case '0':
                     return "Government";
@@ -382,48 +333,26 @@
             const userType = getUserTypeString(userInfo.Data.getType);
 
             let tableHTML = `
-            <div class="mt-6 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
-                    <table class="min-w-full bg-white dark:bg-gray-800">
-                        <thead>
-                            <tr>
-                                <th
-                                    class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
-                                    Info
-                                </th>
-                                <th
-                                    class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
-                                    User Result
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white dark:bg-gray-800">
-                    <tr>
-                        <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">Type</td>
-                        <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${userType}</td>
-                    </tr>
-                    <tr>
-                        <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">Username</td>
-                        <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${userInfo.Data.getUserName}</td>
-                    </tr>
-                    <tr>
-                        <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">Email</td>
-                        <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${userInfo.Data.getEmail}</td>
-                    </tr>
-                    <tr>
-                        <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">Creator</td>
-                        <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${userInfo.Data.getCreator}</td>
-                    </tr>
-                </tbody>
-                    </table>
-                    <div id="response-container"></div>
-                </div>    `;
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Type</td><td>${userType}</td></tr>
+            <tr><td>Username</td><td>${userInfo.Data.getUserName}</td></tr>
+            <tr><td>Email</td><td>${userInfo.Data.getEmail}</td></tr>
+            <tr><td>Creator</td><td>${userInfo.Data.getCreator}</td></tr>
+        </tbody>
+    </table>`;
 
             // Insert table HTML into the container
             resultContainer.innerHTML = tableHTML;
         }
 
         async function displayUserInfoInSideBar(userInfoDef) {
-            console.log(userInfoDef.Data.getType);
             const userType = getUserTypeString(userInfoDef.Data.getType);
 
             if (userType === "Error") {
@@ -459,11 +388,15 @@
                 resultSideContainer.innerHTML = htmlContent;
 
                 const registerUserBtn = document.getElementById('registerUserBtn');
-                if (userType === "User" && registerUserBtn) {
+                const userList = document.getElementById('userList');
+                if (userType === "User") {
                     registerUserBtn.classList.add('hidden');
+                    userList.classList.add('hidden');
                 }
             }
         }
+
+
 
         document.addEventListener('DOMContentLoaded', async () => {
             try {
@@ -473,7 +406,6 @@
                 if (contractAddress && userAddress) {
                     const userInfoDef = await getUserInfo(contractAddress, userAddress);
                     if (userInfoDef) {
-                        console.log('User Info:', userInfoDef);
                         displayUserInfoInSideBar(userInfoDef); // Display the user info in the sidebar
                     } else {
                         console.error('No user info found');
@@ -486,55 +418,60 @@
             }
         });
 
-        // Main search functionality
-        searchBtn.addEventListener('click', async function () {
-            const searchTerm = searchInput.value.trim();
-            try {
-                // Get contract address using getContractAdd() and wait for it to resolve
-                const contractAddress = await getContractAdd(); // Wait for contract address
 
-                if (!searchTerm) {
-                    console.log('Search term is empty');
-                    try {
-                        // Array of methods to consult
-                        const methods = ['owner', 'nameToken', 'government'];
 
-                        // Promises to consult each method
-                        const consultPromises = methods.map(method =>
-                            consultContractMethod(contractAddress, method)
-                        );
 
-                        // Wait for all consultations to complete
-                        const results = await Promise.all(consultPromises);
+        // Navigate buttons
+        document.getElementById('homeBtn').addEventListener('click', function () {
+            window.location.href = '/';
+        });
 
-                        // Display results in table with contract address
-                        displayResultsInTable(contractAddress, methods, results);
 
-                    } catch (error) {
-                        console.error('Error in search process:', error);
-                    }
-                } else {
-                    console.log("Search for : ", searchTerm);
-                    const userAddres = await getUserAddfromEmail(searchTerm);
-                    console.log("Address ", userAddres);
-                    console.log(`Requesting user info for contractAdd: ${contractAddress} and userAddress: ${userAddres}`);
+        document.getElementById('userList').addEventListener('click', function () {
+            window.location.href = '/users';
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const registerUserBtn = document.getElementById('registerUserBtn');
+            if (registerUserBtn) {
+                registerUserBtn.addEventListener('click', function () {
+                    window.location.href = '/dashboard';
+                });
+            }
 
-                    const userInfo = await getUserInfo(contractAddress, userAddres);
-
-                    if (userInfo) {
-                        console.log('User Info:', userInfo);
-                        displayUserInfoInTable(userInfo); // Display the user info in table
-                    } else {
-                        console.log('No user info found');
-                    }
-                }
-            } catch (error) {
-                console.error('Error in search process:', error);
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function () {
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('userEmail');
+                    checkAuth();
+                    window.location.href = '/login';
+                });
             }
         });
-        const getUserAddfromEmail = async (email) => {
+
+
+
+
+        const checkAuth = () => {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                // Si no está logueado, redirigir a la página de login
+                window.location.href = '/login';
+            }
+        };
+
+        // Ejecutar al cargar la página
+        checkAuth();
+    </script>
+    <script>
+
+        const getUserAdd2 = async (email) => {
             try {
 
+                if (!email) {
+                    throw new Error('No email found in localStorage');
+                }
 
                 // Send a POST request to the server to get the user address
                 const response = await fetch('/api/getUserAdd', {
@@ -551,40 +488,73 @@
 
                 // Parse the response JSON
                 const data = await response.json();
-                console.log('User Address:', data.UserAddress);
                 return data.UserAddress; // Return the user address
 
             } catch (error) {
                 console.error('Error fetching user address:', error);
             }
         };
-        // Navigate buttons
-        document.getElementById('homeBtn').addEventListener('click', function () {
-            window.location.href = '/';
-        });
-        document.getElementById('registerUserBtn').addEventListener('click', function () {
-            window.location.href = '/dashboard';
-        });
-        document.getElementById('loginBtn').addEventListener('click', function () {
-            window.location.href = '/login';
-        });
-        document.getElementById('userList').addEventListener('click', function () {
-            window.location.href = '/users';
-        });
-        searchInput.addEventListener('keypress', function (event) {
-            if (event.key === 'Enter') {
-                searchBtn.click();
-            }
-        });
-        document.getElementById('logoutBtn').addEventListener('click', function () {
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('user');
-            localStorage.removeItem('userEmail'); // Eliminar el correo guardado
-            checkAuth();
-            window.location.href = '/login';
 
-        });
+        const fetchEmails = async () => {
+            try {
+                // Fetch data from the backend API
+                const response = await fetch('/api/getAllEmails');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data from the server');
+                }
+
+                const data = await response.json();
+
+                // Extract email data from the response
+                const emails = data.emails || [];
+
+                // Get the table body element
+                const tableBody = document.getElementById('table-body');
+
+                // Clear existing rows
+                tableBody.innerHTML = "";
+
+                // Get contract address here
+                const contractAddress = await getContractAdd();
+
+                // Use a for...of loop to handle asynchronous operations
+                for (const email of emails) {
+                    try {
+                        // Ensure getUserAdd() is called correctly with email
+                        const userAdd = await getUserAdd2(email); // Assuming getUserAdd will work correctly now with email
+
+                        const userInfo = await getUserInfo(contractAddress, userAdd); // Assuming userAdd is valid
+                        const userType = getUserTypeString(userInfo.Data.getType);
+
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                    <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${email}</td>
+                    <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${userAdd}</td>
+                    <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${userType}</td>
+                `;
+                        tableBody.appendChild(row);
+                    } catch (innerError) {
+                        console.error(`Error fetching address for email ${email}:`, innerError);
+                    }
+                }
+            } catch (error) {
+
+                // Display error message in the response container
+                const responseContainer = document.getElementById('response-container');
+                responseContainer.innerHTML = `<p class="text-red-500 text-sm">${error.message}</p>`;
+            }
+        };
+
+
+
+        fetchEmails();
+
+
+
+
+
     </script>
+
 
 </body>
 

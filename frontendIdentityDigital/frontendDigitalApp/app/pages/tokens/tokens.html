@@ -48,10 +48,10 @@
 
             if (token) {
                 // If logged in, show restricted buttons
-               
+
                 document.getElementById('logoutBtn').classList.remove('hidden');
                 document.getElementById('loginBtn').classList.add('hidden');
-                
+
 
 
 
@@ -59,10 +59,10 @@
 
             } else {
                 // If not logged in, show "Login" button and hide restricted buttons
-               
+
                 document.getElementById('logoutBtn').classList.add('hidden');
                 document.getElementById('loginBtn').classList.remove('hidden');
-                
+
             }
             if (!token) {
                 // Si no está logueado, redirigir a la página de login
@@ -206,7 +206,7 @@
 
                             <div class="mb-4">
                                 <label for="nameToken" class="block text-gray-700 dark:text-gray-300">Token Name</label>
-                                <select id="nameToken" name="nameToken" 
+                                <select id="nameToken" name="nameToken"
                                     class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-900 dark:text-white"
                                     required>
                                     <option value="GenesisIdentity">GenesisIdentity</option>
@@ -377,8 +377,7 @@
             if (userType === "Error") {
                 console.log("No user logged");
             } else {
-                const firstName = userInfoDef.Data.getName || "N";
-                const lastName = userInfoDef.Data.getLastName || "L";
+                const userName = userInfoDef.Data.getUserName || "N";
                 const email = userInfoDef.Data.getEmail || "No email";
 
                 const userAdd = await getUserAdd();
@@ -386,15 +385,14 @@
 
 
                 // Generate initials
-                const initials = firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
+                const initials = userName.charAt(0).toUpperCase();
 
                 // Generate HTML
                 const htmlContent = `
         <div class="user-circle">
           <span>${initials}</span>
           <div class="tooltip">
-            <p>Name: ${firstName}</p>
-            <p>Last Name: ${lastName}</p>
+            <p>Username: ${userName}</p>
             <p>Email: ${email}</p>
             <p>${userAdd}</p>
           </div>
@@ -405,8 +403,19 @@
         </div>
       `;
                 const createBtn = document.getElementById('linkTokenBtn');
+                const linkT = document.getElementById('linkT');
+                console.log(userType);
                 if (userType === "Government" && createBtn) {
                     console.log("Government Active");
+                    linkT.classList.remove('hidden');
+                }
+                else if ((userType === "Admin" || userType === "User")) {
+                    createBtn.classList.add('hidden');
+                    linkT.classList.remove('hidden');
+                }
+                else if ((userType === "Government" || userType === "Admin" || userType === "User")) {
+                    console.log("User log");
+                    linkT.classList.remove('hidden');
                 }
                 else {
                     createBtn.classList.add('hidden');

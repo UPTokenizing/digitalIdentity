@@ -16,7 +16,6 @@ var app = express();
 
 //global variable
 global.contractABIPath = "./smartContract/digitalidentity.abi";
-//global.contractJSONPath = "./smartContract/genesisidentity.json";
 global.contractByteCodeSource = "./smartContract/digitalidentity.bytecode";
 global.blockchainAddress = "ws://172.18.1.2:8546";
 

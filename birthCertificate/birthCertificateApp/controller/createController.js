@@ -3,7 +3,7 @@ var utilities = require('./utilities');
 var initializer = {};
 
 
-async function createGIdentitySC(req) {
+async function createBCdentitySC(req) {
 
 	contractABI = utilities.getContainFileJSON(contractABIPath);	//contractABIPath is a global variable	
 	//contractJSONCode = utilities.getContainFile(contractJSONPath); //contractJSONPath  is a global variable
@@ -117,7 +117,7 @@ async function createGIdentitySC(req) {
 }
 
 
-initializer.createGIdentity = async function (req, res) {
+initializer.createBCdentity = async function (req, res) {
 	const gas = req.body.gas;
 	const name = req.body.name;
 	const fLastName = req.body.fLastName;
@@ -163,7 +163,7 @@ initializer.createGIdentity = async function (req, res) {
 	} else {
 		console.log("Processing request from: " + from);
 		try {
-			const response = await createGIdentitySC(obj).then(resul => {
+			const response = await createBCdentitySC(obj).then(resul => {
 				let resHE = errorControl.handlingErrorOrNot(resul, from);
 				return resHE;
 			}).catch((e) => {

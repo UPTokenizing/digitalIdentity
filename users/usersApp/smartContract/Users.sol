@@ -7,8 +7,7 @@ import "./UsersInterface.sol";
 
 contract Users is OwnerInterface, UsersInterface{
     struct User {
-        string name;
-        string lastName;
+        string username;
         string email;
         address creator; //who create the user
         int userType; //int (0 = Government, 1 = Admin, others = regular users)
@@ -63,7 +62,7 @@ contract Users is OwnerInterface, UsersInterface{
         government = msg.sender; // The government deploy the contract
         owner = government; //The government is also the owner
         // Setting government userType to 0
-        users[government] = User("Government", "Root", _email, government, 0,true); 
+        users[government] = User("Government", _email, government, 0,true); 
     }
 
     // Modifier to ensure the government and/or admin can execute some actions
@@ -84,38 +83,32 @@ contract Users is OwnerInterface, UsersInterface{
 
     //modifier to validate that users exist
     modifier userExists(address _address) {
-        require(bytes(users[_address].name).length != 0, "User does not exist.");
+        require(bytes(users[_address].username).length != 0, "User does not exist.");
         _; 
     }
 
     // Function to add new users
     function registerUser(
         address _userAddress,
-        string memory _name,
-        string memory _lastName,
+        string memory _username,
         string memory _email,
         int _userType
     ) public onlyGovernmentOrAdmin(_userType)  emailIsValid(_email) {
         require(!users[_userAddress].exists,"User already exists");
-        require(bytes(_name).length > 0, "Name cannot be empty.");
-        require(bytes(_lastName).length > 0, "LastName cannot be empty.");
+        require(bytes(_username).length > 0, "Name cannot be empty.");
         require(_userType >= 0, "UserType must be a non-negative integer."); // Validation for userType
         
-        users[_userAddress] = User(_name, _lastName, _email, msg.sender, _userType,true);
+        users[_userAddress] = User(_username, _email, msg.sender, _userType,true);
     }
 
     function getType(address _address) public view userExists(_address) returns (int) {
         return users[_address].userType;
     }
 
-    function getName(address _address) public view userExists(_address) returns (string memory) {
-        return users[_address].name;
+    function getUserName(address _address) public view userExists(_address) returns (string memory) {
+        return users[_address].username;
     }
-
-    function getLastName(address _address) public view userExists(_address) returns (string memory) {
-        return users[_address].lastName;
-    }
-    
+   
     function getEmail(address _address) public view userExists(_address) returns (string memory) {
         return users[_address].email;
     }    

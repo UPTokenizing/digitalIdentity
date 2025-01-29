@@ -8,35 +8,35 @@ apiEndpoints:
     host: localhost
     paths: '/ip'
 
-  genesisidentityproof:
+  birthcertificateproof:
     host: localhost
     paths: '/proof'    
 
-  genesisidentityproofB:
+  birthcertificateproofB:
     host: '172.18.1.3'
     paths: '/proof'    
 
-  genesisidentityCreate:
+  birthcertificateCreate:
     host:  localhost
     paths: '/create' 
 
-  genesisidentityCreateB:
+  birthcertificateCreateB:
     host:  '172.18.1.3'
     paths: '/create' 
 
-  genesisidentitySetAddress:
+  birthcertificateSetAddress:
     host:  localhost
     paths: '/setAddress' 
 
-  genesisidentitySetAddressB:
+  birthcertificateSetAddressB:
     host:  '172.18.1.3'
     paths: '/setAddress' 
 
-  genesisidentityConsult:
+  birthcertificateConsult:
     host:  localhost
     paths: '/consult' 
 
-  genesisidentityConsultB:
+  birthcertificateConsultB:
     host:  '172.18.1.3'
     paths: '/consult' 
 
@@ -178,7 +178,7 @@ serviceEndpoints:
   didentity:
     url: 'http://172.18.1.5:5502'
 
-  genesisidentity:
+  birthcertificate:
     url: 'http://172.18.1.4:5501'   #this is the name of the host   
 
 policies:
@@ -203,21 +203,21 @@ pipelines:
               changeOrigin: true
   genesisPipeline:
     apiEndpoints:
-      - genesisidentityproof
-      - genesisidentityCreate
-      - genesisidentityConsult
-      - genesisidentitySetAddress
-      - genesisidentityproofB
-      - genesisidentityCreateB
-      - genesisidentityConsultB
-      - genesisidentitySetAddressB
+      - birthcertificateproof
+      - birthcertificateCreate
+      - birthcertificateConsult
+      - birthcertificateSetAddress
+      - birthcertificateproofB
+      - birthcertificateCreateB
+      - birthcertificateConsultB
+      - birthcertificateSetAddressB
 
     policies:
     # Uncomment `key-auth:` when instructed to in the Getting Started guide.
     # - key-auth:
       - proxy:
           - action:
-              serviceEndpoint: genesisidentity 
+              serviceEndpoint: birthcertificate 
               changeOrigin: true
 
   didentityPipeline:

@@ -11,6 +11,12 @@
 </head>
 
 <!-- Dark Mode Configuration -->
+<style>
+    #overlay {
+        display: none;
+        /* Initially hidden */
+    }
+</style>
 <script>
     tailwind.config = {
         darkMode: 'class',
@@ -38,6 +44,7 @@
 </script>
 
 <body class="bg-gray-100 dark:bg-gray-900 dark:text-white font-sans flex items-center justify-center h-screen">
+    <div id="overlay" class="hidden fixed inset-0 bg-gray-500 bg-opacity-50 z-50"></div>
     <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-96">
         <h2 class="text-2xl font-bold mb-6 text-center">Initial Admin Registration</h2>
         <form id="adminRegisterForm">
@@ -99,9 +106,17 @@
 
 
     <script>
-        
+        localStorage.setItem('criticCreated', '0'); //commnet this for normal use active for testing
+
+        if (localStorage.getItem('criticCreated') === 'true') {
+            window.location.href = '/login';
+        }
+
+
         document.getElementById('adminRegisterForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            document.getElementById('overlay').style.display = 'block'; // Show overlay
+
             let criticUserAdd = "0x00000";
             const createData = {
                 gas: 30000000,
@@ -160,6 +175,11 @@
 
                         if (response.ok) {
                             alert('Govern registered successfully');
+                            //make a local host variable name criticCreated and save it wit the word true
+                            localStorage.setItem('criticCreated', 'true');
+                            //make a local host list variable name usedEmails and save the email in it
+//                            localStorage.setItem('usedEmails', document.getElementById('email').value);
+
                             window.location.href = '/login';
 
                         } else {
@@ -180,6 +200,7 @@
                 console.error('Error:', error);
             }
 
+            document.getElementById('overlay').style.display = 'none'; // Hide overlay
 
         });
     </script>

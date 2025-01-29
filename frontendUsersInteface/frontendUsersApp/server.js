@@ -29,10 +29,8 @@ app.get('/login', (req, res) => {
 app.get('/registerGovernment', (req, res) => {
   res.sendFile(path.join(__dirname, 'app/pages/register/registerCriticUsers.html'));
 });
-
-
-app.get('/loading', (req, res) => {
-  res.sendFile(path.join(__dirname, 'app/pages/loading/loading.html'));
+app.get('/users', (req, res) => {
+  res.sendFile(path.join(__dirname, 'app/pages/userList/userList.html'));
 });
 app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, 'app/pages/dashboard/dashboard.html'));
@@ -98,8 +96,7 @@ app.post('/registerUser', async (req, res) => {
       contractAdd,
       publicMethod,
       userAddress,
-      name,
-      lastName,
+      username,
       email,
       userType,
       government } = req.body;
@@ -109,8 +106,7 @@ app.post('/registerUser', async (req, res) => {
       contractAdd,
       publicMethod,
       userAddress,
-      name,
-      lastName,
+      username,
       email,
       userType,
       government
@@ -356,6 +352,29 @@ app.post('/api/getUserAdd', async (req, res) => {
     res.status(500).send({ message: 'Error retrieving user address.' });
   }
 });
+
+app.get('/api/getAllEmails', async (req, res) => {
+  try {
+    const db = admin.firestore();
+
+    // Retrieve all documents in the 'users' collection
+    const usersSnapshot = await db.collection('users').get();
+
+    if (usersSnapshot.empty) {
+      return res.status(404).send({ message: 'No users found.' });
+    }
+
+    // Extract emails from the documents
+    const emails = usersSnapshot.docs.map((doc) => doc.data().email);
+
+    console.log('Registered Emails:', emails); // Log the emails to the console
+    res.status(200).send({ emails }); // Send the emails as a response
+  } catch (error) {
+    console.error('Error fetching emails:', error);
+    res.status(500).send({ message: 'Error fetching emails.' });
+  }
+});
+
 
 
 

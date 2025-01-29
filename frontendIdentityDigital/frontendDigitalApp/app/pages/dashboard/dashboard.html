@@ -168,10 +168,10 @@
 
                 <div class="mb-4">
                   <label for="from" class="block text-gray-400 dark:text-gray-300">Owner of token *Needs to be the same
-                    token as the owner in the token to add 
+                    token as the owner in the token to add
                     <p><a href="http://localhost:5510" class="text-blue-600">Users</a></p>
-                    
-                    </label>
+
+                  </label>
                   <input type="text" id="from" name="from" placeholder="email@email.com"
                     class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-900 dark:text-white"
                     required>
@@ -308,8 +308,7 @@
       if (userType === "Error") {
         console.log("No user logged");
       } else {
-        const firstName = userInfoDef.Data.getName || "N";
-        const lastName = userInfoDef.Data.getLastName || "L";
+        const userName = userInfoDef.Data.getUserName || "N";
         const email = userInfoDef.Data.getEmail || "No email";
 
         const userAdd = await getUserAdd();
@@ -317,15 +316,14 @@
 
 
         // Generate initials
-        const initials = firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
+        const initials = userName.charAt(0).toUpperCase();
 
         // Generate HTML
         const htmlContent = `
         <div class="user-circle">
           <span>${initials}</span>
           <div class="tooltip">
-            <p>Name: ${firstName}</p>
-            <p>Last Name: ${lastName}</p>
+            <p>Username: ${userName}</p>
             <p>Email: ${email}</p>
             <p>${userAdd}</p>
           </div>
@@ -335,17 +333,26 @@
           <p>Access: ${userType}</p>
         </div>
       `;
-
-        // Insert HTML into the container
-        resultSideContainer.innerHTML = htmlContent;
-
         const createBtn = document.getElementById('linkTokenBtn');
-        if (userType === "Government") {
+        const linkT = document.getElementById('linkT');
+        console.log(userType);
+        if (userType === "Government" && createBtn) {
           console.log("Government Active");
+          linkT.classList.remove('hidden');
+        }
+        else if ((userType === "Admin" || userType === "User")) {
+          createBtn.classList.add('hidden');
+          linkT.classList.remove('hidden');
+        }
+        else if ((userType === "Government" || userType === "Admin" || userType === "User")) {
+          console.log("User log");
+          linkT.classList.remove('hidden');
         }
         else {
-          window.location.href = '/';
+          createBtn.classList.add('hidden');
         }
+        // Insert HTML into the container
+        resultSideContainer.innerHTML = htmlContent;
       }
     }
 
