@@ -5,7 +5,8 @@ This repository will have all projects about digitizing physical objects and lin
   This is an architecture containing the following parts: 
   - An API-Gateway service;
   - A blockchain server access. This uses Ganache program (application part of Truffle Suite).
-  - A genesis identity.
+  - A birth certificate.
+
 
 
 ## Folders
@@ -13,7 +14,7 @@ This repository will have all projects about digitizing physical objects and lin
 
   - ganache/
   - apigateway/
-  - genesisIdentity/
+  - birthCertificate/
   - smartContracts/
   - users/
   - digitalIdentity/
@@ -27,7 +28,7 @@ This repository will have all projects about digitizing physical objects and lin
   1. First, install docker, a guide for that visit [docker install](https://docs.docker.com/engine/install/).   
   2. Install Ganache: follow the instructions explained in file README.md within folder [ganache/](https://github.com/UPTokenizing/digitalIdentity/tree/main/ganache).
   3. Then, install API-Gateway, follow the instructions explained in file README.md within folder [apigateway/](https://github.com/UPTokenizing/digitalIdentity/tree/main/apigateway).
-  4. Next, install GenesisIdentity, follow the instructions explained in file README.md within folder [genesisIdenity/](https://github.com/UPTokenizing/digitalIdentity/tree/main/genesisIdentity).
+  4. Next, install BirthCertificate, follow the instructions explained in file README.md within folder [birthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/birthCertificate).
 
 The next table illustrates the platforms that were already installed and tested the proofs successfully:
 
@@ -45,7 +46,7 @@ Ubuntu 24.04 LTS(AWS)| Amazon Web Service, m5.large, 2 vCPUs, 8GB RAM, 18GB SSD,
   Execute orderly the following instructions:    
   1. Follow the **Deployment** instructions explained in file README.md within folder [ganache/](https://github.com/UPTokenizing/digitalIdentity/tree/main/ganache).
   2. Then, follow the **Deployment** instructions explained in file README.md within folder [apigateway/](https://github.com/UPTokenizing/digitalIdentity/tree/main/apigateway).
-  3. Next, follow the **Deployment** instructions explained in file README.md within folder [genesisIdenity/](https://github.com/UPTokenizing/digitalIdentity/tree/main/genesisIdentity).
+  3. Next, follow the **Deployment** instructions explained in file README.md within folder [birthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/birthCertificate).
   4. Following with the **Deployment** instructions explained in file README.md within folder [digitalIdentity/](https://github.com/UPTokenizing/digitalIdentity/tree/Tokenizing-Temp-Main/digitalIdentity).
   5. After digital Identity, follow the **Deployment** instructions explained in file README.md within folder [users/](https://github.com/UPTokenizing/digitalIdentity/tree/Tokenizing-Temp-Main/users).
   6. Lastly, follow the **Deployment** instructions explained in file README.md within the folders of for the user interactions [frontendIdentityGenesis/](https://github.com/UPTokenizing/digitalIdentity/tree/Tokenizing-Temp-Main/frontendIdentityGenesis), [frontendIdentityDigital/](https://github.com/UPTokenizing/digitalIdentity/tree/Tokenizing-Temp-Main/frontendIdentityDigital), [frontendUsersInteface/](https://github.com/UPTokenizing/digitalIdentity/tree/Tokenizing-Temp-Main/frontendUsersInteface).
@@ -67,7 +68,7 @@ It must return:
 ## Example to consume the services
 To consume a list of services, check the following:
   
-  1. Follow the instructions explained in file genesisIdentityServices.pdf within folder [genesisIdenity/genesisIdentityServices.pdf](https://github.com/UPTokenizing/digitalIdentity/blob/main/genesisIdentity/genesisIdentityServices.pdf)
-  2. Follow the instructions explained in file genesisIdentityServices.pdf within folder [digitalIdentity/digitalIdentityServices.pdf](https://github.com/UPTokenizing/digitalIdentity/blob/Tokenizing-Temp-Main/digitalIdentity/digitalIdentityServices.pdf)
-  3. Follow the instructions explained in file genesisIdentityServices.pdf within folder [users/usersServices.pdf](https://github.com/UPTokenizing/digitalIdentity/blob/Tokenizing-Temp-Main/users/usersServices.pdf)
+  1. Follow the instructions explained in file birthCertificateServices.pdf within folder [birthCertificate/birthCertificateServices.pdf](https://github.com/UPTokenizing/digitalIdentity/blob/main/birthCertificate/birthCertificateServices.pdf)
+  2. Follow the instructions explained in file digitalIdentityServices.pdf within folder [digitalIdentity/digitalIdentityServices.pdf](https://github.com/UPTokenizing/digitalIdentity/blob/Tokenizing-Temp-Main/digitalIdentity/digitalIdentityServices.pdf)
+  3. Follow the instructions explained in file usersServices.pdf within folder [users/usersServices.pdf](https://github.com/UPTokenizing/digitalIdentity/blob/Tokenizing-Temp-Main/users/usersServices.pdf)
         
