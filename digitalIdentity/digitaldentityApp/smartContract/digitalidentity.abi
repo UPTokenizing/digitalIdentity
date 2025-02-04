@@ -42,7 +42,26 @@
 				"type": "address"
 			}
 		],
-		"name": "getGovernmentOfToken",
+		"name": "creatorIsGovernment",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_tokenAdd",
+				"type": "address"
+			}
+		],
+		"name": "getCreatorOfToken",
 		"outputs": [
 			{
 				"internalType": "address",
@@ -91,11 +110,6 @@
 				"internalType": "address",
 				"name": "contractAdd",
 				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "_nameToken",
-				"type": "string"
 			}
 		],
 		"name": "linkToken",

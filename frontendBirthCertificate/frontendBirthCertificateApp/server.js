@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'app/pages/home/home.html'));
 });
 app.get('/home', (req, res) => {
-  res.sendFile(path.join(__dirname, 'app/pages/home/home.html'));
+  res.sendFile(path.join(__dirname, 'app/pages/home/homeGuest.html'));
 });
 app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, 'app/pages/login/login.html'));
@@ -274,6 +274,67 @@ app.get('/getInfoUser', async (req, res) => {
     res.status(500).send('Error fetching the data');
   }
 });
+
+app.get('/api/getAllEmails', async (req, res) => {
+  try {
+    const db = admin.firestore();
+
+    // Retrieve all documents in the 'users' collection
+    const usersSnapshot = await db.collection('users').get();
+
+    if (usersSnapshot.empty) {
+      return res.status(404).send({ message: 'No users found.' });
+    }
+
+    // Extract emails from the documents
+    const emails = usersSnapshot.docs.map((doc) => doc.data().email);
+
+    console.log('Registered Emails:', emails); // Log the emails to the console
+    res.status(200).send({ emails }); // Send the emails as a response
+  } catch (error) {
+    console.error('Error fetching emails:', error);
+    res.status(500).send({ message: 'Error fetching emails.' });
+  }
+});
+
+
+app.post('/api/registerCertificate', async (req, res) => {
+  const { certificateString } = req.body;
+  
+  try {
+    const db = admin.firestore();
+
+    // Create a new document in the `BirthCertificates` collection with the certificate string as the document ID
+    const docRef = db.collection('BirthCertificates').doc(certificateString);
+
+    // Set the document data (it can be an empty object or you can add additional metadata)
+    await docRef.set({ createdAt: admin.firestore.FieldValue.serverTimestamp() });
+
+    res.status(201).send({ message: 'Certificate added successfully', certificateString });
+  } catch (error) {
+    console.error('Error adding certificate:', error);
+    res.status(400).send({ message: error.message });
+  }
+});
+
+
+app.get('/api/getCertificates', async (req, res) => {
+  try {
+    const db = admin.firestore();
+    const certificatesSnapshot = await db.collection('BirthCertificates').get();
+
+    // Extract the document IDs (certificate strings)
+    const certificates = certificatesSnapshot.docs.map(doc => doc.id);
+
+    console.log('All certificates:', certificates);
+    res.status(200).send({ certificates });
+  } catch (error) {
+    console.error('Error retrieving certificates:', error);
+    res.status(400).send({ message: error.message });
+  }
+});
+
+
 
 
 

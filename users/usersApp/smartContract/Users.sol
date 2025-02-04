@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
-
 //importing the interface
 import "./OwnerInterface.sol";
 import "./UsersInterface.sol";
-
 contract Users is OwnerInterface, UsersInterface{
     struct User {
         string username;
@@ -15,14 +13,12 @@ contract Users is OwnerInterface, UsersInterface{
     }
    
     mapping(address => User) private users;
-
     address public owner;
     string public nameToken="Users";
     address public government;
-
     // Function to validate an email format
-        // Ensures there’s an @ symbol.
-        // Ensures there’s a . symbol after the @.
+        // Ensures there is an @ symbol.
+        // Ensures there is a . symbol after the @.
         // Ensures neither the @ symbol nor the . symbol are at the start or end of the email string.
     function isValidEmail(string memory email) private pure returns (bool) {
         bytes memory emailBytes = bytes(email);
@@ -51,20 +47,11 @@ contract Users is OwnerInterface, UsersInterface{
         // The email is valid if we found both @ and a . after @
         return atFound && dotAfterAtFound;
     }    
-
     // Modifier to ensure that an email is valid
     modifier emailIsValid(string memory _email) {
         require(isValidEmail(_email),"Email is not valid");
         _;
     }
-
-    constructor(string memory _email) emailIsValid(_email) {        
-        government = msg.sender; // The government deploy the contract
-        owner = government; //The government is also the owner
-        // Setting government userType to 0
-        users[government] = User("Government", _email, government, 0,true); 
-    }
-
     // Modifier to ensure the government and/or admin can execute some actions
     modifier onlyGovernmentOrAdmin(int _userType) {
         if(_userType==0){
@@ -80,13 +67,17 @@ contract Users is OwnerInterface, UsersInterface{
         }
         _;
     }
-
     //modifier to validate that users exist
     modifier userExists(address _address) {
         require(bytes(users[_address].username).length != 0, "User does not exist.");
         _; 
     }
-
+    constructor(string memory _email) emailIsValid(_email) {        
+        government = msg.sender; // The government deploy the contract
+        owner = government; //The government is also the owner
+        // Setting government userType to 0
+        users[government] = User("Government", _email, government, 0,true); 
+    }
     // Function to add new users
     function registerUser(
         address _userAddress,
@@ -100,11 +91,9 @@ contract Users is OwnerInterface, UsersInterface{
         
         users[_userAddress] = User(_username, _email, msg.sender, _userType,true);
     }
-
     function getType(address _address) public view userExists(_address) returns (int) {
         return users[_address].userType;
     }
-
     function getUserName(address _address) public view userExists(_address) returns (string memory) {
         return users[_address].username;
     }
@@ -112,7 +101,6 @@ contract Users is OwnerInterface, UsersInterface{
     function getEmail(address _address) public view userExists(_address) returns (string memory) {
         return users[_address].email;
     }    
-
     function getCreator(address _address) public view userExists(_address) returns (address) {
         return users[_address].creator;
     }    

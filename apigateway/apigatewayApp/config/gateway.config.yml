@@ -75,14 +75,23 @@ apiEndpoints:
 
 
   #consult token government
-  didentityconsultTokenGovernment:
+  didentityconsultTokenCreator:
     host:  localhost
-    paths: '/consultTokenGovernment'    
+    paths: '/consultTokenCreator'    
 
-  didentityconsultTokenGovernmentB:
+  didentityconsultTokenCreatorB:
     host:  '172.18.1.3'
-    paths: '/consultTokenGovernment'      
+    paths: '/consultTokenCreator'      
 
+
+  #consult token government
+  didentityconsultCreatorIsGovernment:
+    host:  localhost
+    paths: '/consultCreatorIsGovernment'    
+
+  didentityconsultCreatorIsGovernmentB:
+    host:  '172.18.1.3'
+    paths: '/consultCreatorIsGovernment'      
 
 
   #consult number of tokens
@@ -228,8 +237,10 @@ pipelines:
       - didentitylinkTokenB  
       - didentityconsultTokens
       - didentityconsultTokensB
-      - didentityconsultTokenGovernment
-      - didentityconsultTokenGovernmentB
+      - didentityconsultTokenCreator
+      - didentityconsultTokenCreatorB
+      - didentityconsultCreatorIsGovernment
+      - didentityconsultCreatorIsGovernmentB
       - didentityconsultNumberToken
       - didentityconsultNumberTokenB
       - didentityConsult

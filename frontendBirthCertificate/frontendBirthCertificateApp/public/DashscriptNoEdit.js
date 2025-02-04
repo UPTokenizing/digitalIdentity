@@ -4,22 +4,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const modalView = document.getElementById("viewServiceModal");
 
-
     // Get close button
+
     const closeModal2 = document.getElementById("closeModal2");
 
 
+
     // Get cancel button
+
     const cancelButton2 = document.getElementById("cancelButton2");
 
 
-    console.log("genesis");
-
-
-    // Listen for open click
-
-
-    // Listen for close click
 
 
 
@@ -41,73 +36,20 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    
 
 
-    function loadContent(page) {
-        fetch(page)
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('content').innerHTML = data;
-            })
-            .catch(error => console.error('Error loading content:', error));
-    }
-
-
-
-    // Repeat for any additional cancel buttons as needed
-
-
-    // Create an array to store contract addresses
-
-    // Create an array to store contract addresses
-
-    // To save the addresses
-
-    // Usage
+   
     let contractAddresses = [];
 
-    // Function to load addresses from txt file
-    async function loadAddressesFromTxt() {
-        console.log(contractAddresses);
-        contractAddresses = [];
-        try {
-            const response = await fetch('/contractAddresses.txt');
-            if (!response.ok) {
-                throw new Error('Could not fetch contract addresses from file');
-            }
-            const text = await response.text();
-            // Split the text by newlines, trim each address, and filter out any empty lines
-            const addresses = text.split('\n').map(address => address.trim()).filter(address => address);
-            return addresses;
-        } catch (error) {
-            console.error('Error loading addresses from file:', error);
-            return [];
-        }
-    }
-
-    // Function to remove duplicates and update storage
-    function removeDuplicates(addresses) {
-        // Convert to Set and back to Array to remove duplicates
-        const uniqueAddresses = [...new Set(addresses)];
-
-        // Update localStorage with cleaned array
-        if (uniqueAddresses.length > 0) {
-            localStorage.setItem('contractAddresses', JSON.stringify(uniqueAddresses));
-        }
-
-        return uniqueAddresses;
-    }
 
     // Load contract addresses from localStorage when the page loads
     window.addEventListener('load', async () => {
-        let contractAddresses = [];
-        // Load from txt file only if contractAddresses is empty
-
-        contractAddresses = await loadAddressesFromTxt();
-        console.log(contractAddresses)
-        contractAddresses = contractAddresses;
+        contractAddresses = await getCertificates();
+        console.log("from teh event: ", contractAddresses);
         updateTableRows(contractAddresses); // Update the table with the cleaned data
     });
+
     const getContractAdd = async () => {
         try {
             // Send a POST request to the server to get the contract address
@@ -126,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Parse the response JSON
             const data = await response.json();
-            console.log('Contract Address:', data.contractAdd);
+            console.log('Contract Address Users:', data.contractAdd);
             return data.contractAdd; // Return the contract address
 
         } catch (error) {
@@ -135,56 +77,64 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    document.getElementById('create-service-form').addEventListener('submit', async (event) => {
-        event.preventDefault();
+    
 
-        // Get form data
-        const formData = new FormData(event.target);
-        const data = Object.fromEntries(formData.entries());
-
-        data.contractUser = await getContractAdd();
-        data.gas = 3000000;
-        data.government = "0x2CFcBB9Cf2910fBa7E7E7a8092aa1a40BC5BA341"
-
-
-        console.log('Data:', data); // For debugging
-
+    async function getCertificates() {
         try {
-            const response = await fetch('/createService', {
-                method: 'POST',
+            const response = await fetch('/api/getCertificates', {
+                method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data)
             });
-
+    
             // Await the response.json() to get the actual result
             const result = await response.json();
-            console.log("resultado", result); // Log the actual result
-
-            if (result.contractAddress && !contractAddresses.includes(result.contractAddress)) {
-                contractAddresses.push(result.contractAddress);
-                // contractAddresses = removeDuplicates(contractAddresses);
-                saveContractAddresses(contractAddresses);
-                localStorage.setItem('contractAddresses', JSON.stringify(contractAddresses));
-
-                await updateContractAddressesFile(contractAddresses);
-
-                clearModalFields();
-
-                window.location.reload();
+    
+            if (response.ok) {
+                return result.certificates;  // Return the certificates array
+            } else {
+                throw new Error("Error retrieving certificates: " + result.message);
             }
-
-            updateTableRows(contractAddresses);
-            alert('Service created successfully!');
-
         } catch (error) {
-            updateTableRows(contractAddresses);
-            console.error('Error:', error);
+            console.error("Error in API call:", error);
+            throw error;  // Rethrow the error for handling elsewhere
         }
-    });
+    }
+    
+    const getUserAdd = async () => {
+        try {
+          const email = localStorage.getItem('userEmail'); // Get the email from localStorage
+          if (!email) {
+            throw new Error('No email found in localStorage');
+          }
+  
+          // Send a POST request to the server to get the user address
+          const response = await fetch('/api/getUserAdd', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json', // Set content type to JSON
+            },
+            body: JSON.stringify({ email: email }),
+          });
+  
+          if (!response.ok) {
+            throw new Error('Failed to retrieve user address');
+          }
+  
+          // Parse the response JSON
+          const data = await response.json();
+          console.log('User Address:', data.UserAddress);
+          return data.UserAddress; // Return the user address
+  
+        } catch (error) {
+          console.error('Error fetching user address:', error);
+        }
+      };
 
+  
 
+ 
 
     async function GetInfo(address, publicMethod) {
         try {
@@ -200,9 +150,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Parse the response as JSON
             const result = await response.json();
-
             // Check if the result indicates success
             if (result.Result === "Success") {
+
                 if (typeof result.Value === 'object' && result.Value !== null) {
                     // If Value is an object, return the nested "value"
                     return result.Value.value; // Extract the value property
@@ -224,6 +174,7 @@ document.addEventListener("DOMContentLoaded", function () {
         tbody.innerHTML = ''; // Clear existing rows
 
         for (const address of contractAddresses) {
+            
             // Fetch all required information
             const name = await GetInfo(address, "name");
             const fLastName = await GetInfo(address, "fLastName");
@@ -241,9 +192,7 @@ document.addEventListener("DOMContentLoaded", function () {
             tr.className = 'border-t dark:border-gray-600';
 
             tr.innerHTML = `
-          <td class="py-2 px-4 text-sm text-gray-700 dark:text-white">
-              <input type="checkbox">
-          </td>
+          
           <td class="py-2 px-4 text-sm text-gray-700 dark:text-white flex items-center">
               ${name} ${fLastName} ${mLastName}
           </td>
@@ -251,7 +200,6 @@ document.addEventListener("DOMContentLoaded", function () {
           <td class="py-2 px-4 text-sm text-gray-700 dark:text-white">${date.toLocaleString()}</td>
           <td class="py-2 px-4 text-sm text-gray-700 dark:text-white text-right">
               <div>
-                  
                   <button class="dark:text-white dark:hover:text-gray-400 hover:text-gray-500 text-gray-700 button-spacing" onclick="viewDetails('${address}')">
                       <i class="fas fa-eye"></i> View  
                   </button>
@@ -261,35 +209,25 @@ document.addEventListener("DOMContentLoaded", function () {
       `;
             tbody.appendChild(tr);
 
-           
+            
         }
     }
+
+
 
     // Function to get gender and show modal with token fields updated
     async function updateToken(address, tokenToChange) {
 
-
+        console.log(address, tokenToChange);
 
         try {
             console.log("aqui va el cambio ");
+            isChild = true;
+            tempAdd = address;
+            replace = tokenToChange;
             // Fetch gender information (true for male, false for female)
-
-            if (tokenToChange === "tokenFather") {
-                // Male: Set tokenFather to the address, disable the field, and clear tokenMother
-                tokenFatherField.value = address;
-                tokenFatherField.disabled = true;
-                tokenMotherField.value = ''; // Clear tokenMother field
-                tokenMotherField.disabled = false;
-            } else {
-                // Female: Set tokenMother to the address, disable the field, and clear tokenFather
-                tokenMotherField.value = address;
-                tokenMotherField.disabled = true;
-                tokenFatherField.value = ''; // Clear tokenFather field
-                tokenFatherField.disabled = false;
-            }
-
             // Show the modal
-
+            modal.style.display = 'block';
         } catch (error) {
             console.error('Error fetching gender information:', error);
         }

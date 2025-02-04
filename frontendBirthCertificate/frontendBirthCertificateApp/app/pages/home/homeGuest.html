@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel Contracts</title>
-  <script src="/Dashscript.js"></script>
+  <title>Panel Contracts</title>
+  <script src="/DashscriptNoEdit.js"></script>
   <link rel="stylesheet" href="/style.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/styleDashboard.css">
@@ -109,7 +109,7 @@
         <div class="flex items-center space-x-4">
 
           <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"
-            id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log Out</button>
+            id="login"><i class="fas fa-sign-out-alt"></i> Log In</button>
           
 
           <!-- Toggle Switch for Dark Mode -->
@@ -128,21 +128,13 @@
           <p class="text-gray-600 dark:text-gray-400">Contracts. Please use this page
             to view clients' Birth Certificates.</p>
         </div>
-        <div class="flex items-center space-x-4">
-          <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"><i
-              class="fas fa-trash"></i> Delete</button>
-          <button class="bg-blue-500 text-white hover:bg-blue-700 dark:bg-blue-700  dark:hover:bg-blue-500 p-2 rounded"
-            id="newServiceButton">New</button>
-        </div>
+        
       </div>
       <div class="mt-6 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
         <table class="min-w-full bg-white dark:bg-gray-800">
           <thead>
             <tr>
-              <th
-                class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
-                <input type="checkbox">
-              </th>
+              
               <th
                 class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
                 Complete Name</th>
@@ -370,11 +362,7 @@
               class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
               required>
           </div>
-          <!-- gas -->
-          <div class="mb-4">
-            <label for="gas3" class="block text-gray-500 dark:text-gray-300">Gas</label>
-            <span id="gas3" class="block text-gray-700 dark:text-white">30000</span>
-          </div>
+          
           <!-- government -->
           <div class="mb-4">
             <label for="government3" class="block text-gray-500 dark:text-gray-300">Government</label>
@@ -441,7 +429,6 @@
 
         // Parse the response JSON
         const data = await response.json();
-        console.log('Contract Address:', data.contractAdd);
         return data.contractAdd; // Return the contract address
 
       } catch (error) {
@@ -500,7 +487,6 @@
 
     // Function to display user info in a table
     function getUserTypeString(type) {
-      console.log("Tipo: ", type);
       switch (type) {
         case '0':
           return "Government";
@@ -515,7 +501,6 @@
 
 
     async function displayUserInfoInSideBar(userInfoDef) {
-      console.log(userInfoDef.Data.getType);
       const userType = getUserTypeString(userInfoDef.Data.getType);
 
       if (userType === "Error") {
@@ -564,7 +549,7 @@
         if (contractAddress && userAddress) {
           const userInfoDef = await getUserInfo(contractAddress, userAddress);
           if (userInfoDef) {
-            console.log('User Info:', userInfoDef);
+            
             displayUserInfoInSideBar(userInfoDef); // Display the user info in the sidebar
           } else {
             console.error('No user info found');
@@ -578,12 +563,16 @@
     });
 
 
+    document.getElementById('login').addEventListener('click', function () {
+      window.location.href = '/login';
+    });
 
     const checkAuth = () => {
       const token = localStorage.getItem('authToken');
-      if (!token) {
+      if (token) {
         // Si no está logueado, redirigir a la página de login
-        window.location.href = '/login';
+        window.location.href = '/';
+        
       }
     };
 
@@ -591,16 +580,7 @@
     checkAuth();
 
 
-    document.getElementById('logoutBtn').addEventListener('click', function () {
-
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('user');
-      localStorage.removeItem('userEmail'); // Eliminar el correo guardado
-
-      // Redirigir al login
-
-      window.location.href = '/login'; // Redirect to the login page
-    });
+  
   </script>
 </body>
 

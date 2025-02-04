@@ -7,7 +7,8 @@ var createRouter = require('./routes/create');
 var consult = require('./routes/consult');
 var indexRouter = require('./routes/index');
 var consultTokens = require('./routes/consultToken');
-var consultTokenGovernment = require('./routes/consultTokenGovernment');
+var consultTokenCreator = require('./routes/consultTokenCreator');
+var consultCreatorIsGovernment = require('./routes/consultCreatorIsGovernment');
 var consultNumberToken = require('./routes/consultNumberToken');
 var linkToken = require('./routes/linkToken');
 var proof = require('./routes/proof');
@@ -34,7 +35,8 @@ app.use('/', indexRouter);
 app.use('/createDigitalIdentity', createRouter);
 app.use('/consultDigitalIdentity', consult);
 
-app.use('/consultTokenGovernment', consultTokenGovernment);
+app.use('/consultCreatorIsGovernment', consultCreatorIsGovernment);
+app.use('/consultTokenCreator', consultTokenCreator);
 app.use('/consultNumberToken', consultNumberToken);
 
 app.use('/consultTokens', consultTokens);

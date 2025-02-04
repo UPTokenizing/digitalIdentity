@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Users List</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/DashscriptSimple.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/styleDashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <!-- Dark Mode change -->
+  <script>
+    // Tailwind Configuration
+    tailwind.config = {
+      darkMode: 'class', // Use the 'class' strategy for dark mode
+      theme: {
+        extend: {},
+      },
+    };
+
+    // Check if the user has a previously saved preference
+    document.addEventListener('DOMContentLoaded', function () {
+      const darkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+      if (darkModeEnabled) {
+        document.documentElement.classList.add('dark');
+        document.getElementById('darkModeToggle').checked = true; // Check the toggle switch
+      }
+    });
+
+    // Toggle the dark mode
+    function toggleDarkMode() {
+      const isDarkMode = document.documentElement.classList.toggle('dark');
+      if (isDarkMode) {
+        localStorage.setItem('darkMode', 'enabled'); // Save dark mode preference
+      } else {
+        localStorage.setItem('darkMode', 'disabled'); // Save light mode preference
+      }
+    }
+  </script>
+</head>
+
+<style>
+  /* Circle styling */
+  .user-circle {
+    width: 60px;
+    /* Smaller circle */
+    height: 60px;
+    /* Smaller circle */
+    border-radius: 50%;
+    background-color: rgb(255, 102, 0);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    /* Adjust font size for initials */
+    font-weight: bold;
+    margin: 10px auto;
+    position: relative;
+    cursor: pointer;
+  }
+
+  /* Tooltip styling */
+  .tooltip {
+    position: absolute;
+    top: 70px;
+    /* Position tooltip below the circle */
+    left: 150%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 6px;
+    /* Adjust padding */
+    border-radius: 4px;
+    font-size: 12px;
+    /* Adjust font size */
+    display: none;
+    white-space: nowrap;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    /* Add a shadow for better visibility */
+  }
+
+  .user-circle:hover .tooltip {
+    display: block;
+  }
+
+  /* Access text styling */
+  .access-text {
+    text-align: center;
+    margin-top: 5px;
+    /* Reduce margin */
+    font-size: 14px;
+    /* Adjust font size */
+    font-weight: bold;
+  }
+</style>
+
+<body class="bg-gray-100 dark:bg-gray-900 dark:text-white font-sans">
+  <div class="flex">
+    <!-- Sidebar -->
+    <div class="w-64 bg-white dark:bg-gray-800 h-screen shadow-md">
+      <nav class="mt-6">
+        <ul>
+          <div id="resultSideContainer"></div>
+          <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
+            <button
+              class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
+              id="homeBtn">
+              Birth Certificate Addresses
+            </button>
+          </li>
+          <li
+            class="px-4 py-2 text-gray-200 dark:text-gray-700 hover:bg-gray-600 dark:hover:bg-gray-100 dark:bg-gray-100 bg-gray-600">
+            <button class="w-full h-8 text-left flex items-center px-4 rounded-lg " id="userList">User
+              List</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-6">
+      <!-- Navbar -->
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-2xl font-bold">Create Birth Certificates for Users</h1>
+            <!-- <p class="text-gray-600 dark:text-gray-400">List of users in firebase</p> -->
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+
+
+          <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"
+            id="logoutBtn">
+            <i class="fas fa-sign-out-alt"></i> LogOut
+          </button>
+
+
+
+
+          <!-- Toggle Switch for Dark Mode -->
+          <label class="switch">
+            <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()">
+            <span class="slider">
+              <!-- Moon Icon -->
+              <i class="fas fa-moon moon"></i>
+            </span>
+          </label>
+        </div>
+      </div>
+      <div>
+
+
+        <div class="mt-6 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+          <table class="min-w-full bg-white dark:bg-gray-800">
+            <thead>
+              <tr>
+                <th
+                  class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
+                  Email
+                </th>
+                <th
+                  class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
+                  User Address
+                </th>
+                <th
+                  class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
+                  Type
+                </th>
+                <th
+                  class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
+
+                </th>
+              </tr>
+            </thead>
+            <tbody id="table-body">
+              <!-- Dynamic rows will be added here -->
+            </tbody>
+          </table>
+          <div id="response-container"></div>
+        </div>
+        
+
+        <!-- New Service Modal -->
+        <div id="newServiceModal" class="modal hidden fixed inset-0 flex items-center justify-center z-50">
+          <div class="modal-content p-6 rounded-lg shadow-lg bg-white dark:bg-gray-800 dark:text-white relative">
+            <span class="close cursor-pointer text-gray-500 dark:text-gray-300 text-lg font-bold absolute top-2 right-2"
+              id="closeModal">&times;</span>
+            <h2 class="text-xl font-semibold mb-4">Create Service</h2>
+            <div class="form-container">
+              <form id="create-service-form">
+
+                <!-- Name -->
+                <div class="mb-4">
+                  <label for="name" class="block text-gray-700 dark:text-gray-300">Name</label>
+                  <input type="text" id="name" name="name"
+                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                    required>
+                </div>
+                <!-- Father's Last Name -->
+                <div class="mb-4">
+                  <label for="fLastName" class="block text-gray-700 dark:text-gray-300">Father's Last Name</label>
+                  <input type="text" id="fLastName" name="fLastName"
+                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                    required>
+                </div>
+                <!-- Mother's Last Name -->
+                <div class="mb-4">
+                  <label for="mLastName" class="block text-gray-700 dark:text-gray-300">Mother's Last Name</label>
+                  <input type="text" id="mLastName" name="mLastName"
+                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                    required>
+                </div>
+                <!-- Sex -->
+                <div class="mb-4">
+                  <label for="sex" class="block text-gray-700 dark:text-gray-300">Sex</label>
+                  <select id="sex" name="sex"
+                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                    required>
+                    <option value="true">Male</option>
+                    <option value="false">Female</option>
+                  </select>
+                </div>
+                <!-- Day -->
+                <div class="mb-4">
+                  <label for="day" class="block text-gray-700 dark:text-gray-300">Day</label>
+                  <input type="number" id="day" name="day" min="1" max="31"
+                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                    required>
+                </div>
+                <!-- Month -->
+                <div class="mb-4">
+                  <label for="month" class="block text-gray-700 dark:text-gray-300">Month</label>
+                  <input type="number" id="month" name="month" min="1" max="12"
+                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                    required>
+                </div>
+                <!-- Year -->
+                <div class="mb-4">
+                  <label for="year" class="block text-gray-700 dark:text-gray-300">Year</label>
+                  <input type="number" id="year" name="year" min="1900"
+                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                    required>
+                </div>
+                <!-- State -->
+                <div class="mb-4">
+                  <label for="state" class="block text-gray-700 dark:text-gray-300">State</label>
+                  <input type="text" id="state" name="state"
+                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                    required>
+                </div>
+                <!-- Municipality -->
+                <div class="mb-4">
+                  <label for="municipality" class="block text-gray-700 dark:text-gray-300">Municipality</label>
+                  <input type="text" id="municipality" name="municipality"
+                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                    required>
+                </div>
+                <!-- Buttons -->
+                <button type="submit"
+                  class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-500">
+                  Create Contract
+                </button>
+                <button type="button" id="cancelButton"
+                  class="bg-red-500 text-white font-semibold px-4 py-2 rounded hover:bg-red-600">Cancel</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    const getContractAdd = async () => {
+      try {
+        // Send a POST request to the server to get the contract address
+        const response = await fetch('/api/getContractAdd', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Set content type to JSON
+          },
+          body: JSON.stringify({}), // No need to send any data
+        });
+
+        // Handle the response
+        if (!response.ok) {
+          throw new Error('Failed to retrieve contract address');
+        }
+
+        // Parse the response JSON
+        const data = await response.json();
+        return data.contractAdd; // Return the contract address
+
+      } catch (error) {
+        console.error('Error:', error);
+        //alert('An error occurred while fetching contract address');
+      }
+    };
+
+    const getUserAdd = async () => {
+      try {
+        const email = localStorage.getItem('userEmail'); // Get the email from localStorage
+        if (!email) {
+          throw new Error('No email found in localStorage');
+        }
+
+        // Send a POST request to the server to get the user address
+        const response = await fetch('/api/getUserAdd', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Set content type to JSON
+          },
+          body: JSON.stringify({ email: email }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to retrieve user address');
+        }
+
+        // Parse the response JSON
+        const data = await response.json();
+        return data.UserAddress; // Return the user address
+
+      } catch (error) {
+        console.error('Error fetching user address:', error);
+      }
+    };
+
+    const resultContainer = document.getElementById('resultContainer'); // To display results
+    const resultSideContainer = document.getElementById('resultSideContainer'); // To display results
+
+    // Function to get user info
+    async function getUserInfo(contractAdd, userAddress) {
+      try {
+        const response = await fetch(`/getInfoUser?contractAdd=${encodeURIComponent(contractAdd)}&userAddress=${encodeURIComponent(userAddress)}`);
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+      } catch (error) {
+        console.error('Error getting user info:', error);
+        return null;
+      }
+    }
+
+    // Function to consult a contract method
+    async function consultContractMethod(contractAdd, publicMethod) {
+      try {
+        const response = await fetch(`/consultuser?contractAdd=${encodeURIComponent(contractAdd)}&publicMethod=${encodeURIComponent(publicMethod)}`);
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+
+        // Return only the Value property if the request is successful
+        if (data.Result === 'Success') {
+          return { Value: data.Value };
+        } else {
+          console.error(`Error in ${publicMethod}:`, data.Description || 'Unknown error');
+          return null;
+        }
+      } catch (error) {
+        console.error(`Error consulting ${publicMethod}:`, error);
+        return null;
+      }
+    }
+
+    // Function to display results in a table
+    function displayResultsInTable(contractAddress, methods, results) {
+      let tableHTML = `
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                `;
+
+      // Loop through the methods and display the results
+      methods.forEach((method, index) => {
+        tableHTML += `
+            <tr>
+                <td>${method}</td>
+                <td>${results[index] && results[index].Value ? results[index].Value : 'Error fetching'}</td>
+            </tr>`;
+      });
+
+      tableHTML += `</tbody></table>`;
+
+      // Insert table HTML into the container
+      resultContainer.innerHTML = tableHTML;
+    }
+    // Function to display user info in a table
+    function getUserTypeString(type) {
+      switch (type) {
+        case '0':
+          return "Government";
+        case '1':
+          return "Admin";
+        case '2':
+          return "User";
+        default:
+          return "Unknown"; // Handle unexpected types
+      }
+    }
+
+    function displayUserInfoInTable(userInfo) {
+      const userType = getUserTypeString(userInfo.Data.getType);
+
+      let tableHTML = `
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Type</td><td>${userType}</td></tr>
+            <tr><td>Username</td><td>${userInfo.Data.getUserName}</td></tr>
+            <tr><td>Email</td><td>${userInfo.Data.getEmail}</td></tr>
+            <tr><td>Creator</td><td>${userInfo.Data.getCreator}</td></tr>
+        </tbody>
+    </table>`;
+
+      // Insert table HTML into the container
+      resultContainer.innerHTML = tableHTML;
+    }
+
+    async function displayUserInfoInSideBar(userInfoDef) {
+      const userType = getUserTypeString(userInfoDef.Data.getType);
+
+      if (userType === "Error") {
+        console.log("No user logged");
+      } else {
+        const userName = userInfoDef.Data.getUserName || "N";
+        const email = userInfoDef.Data.getEmail || "No email";
+
+        const userAdd = await getUserAdd();
+
+
+
+        // Generate initials
+        const initials = userName.charAt(0).toUpperCase();
+
+        // Generate HTML
+        const htmlContent = `
+        <div class="user-circle">
+          <span>${initials}</span>
+          <div class="tooltip">
+            <p>Username: ${userName}</p>
+            <p>Email: ${email}</p>
+            <p>${userAdd}</p>
+          </div>
+        </div>
+        <div class="access-text">
+          <p>${email}</p>
+          <p>Access: ${userType}</p>
+        </div>
+      `;
+
+        // Insert HTML into the container
+        resultSideContainer.innerHTML = htmlContent;
+
+        const registerUserBtn = document.getElementById('registerUserBtn');
+        const userList = document.getElementById('userList');
+        if (userType === "User") {
+          registerUserBtn.classList.add('hidden');
+          userList.classList.add('hidden');
+        }
+      }
+    }
+
+
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const contractAddress = await getContractAdd(); // Wait for contract address
+        const userAddress = await getUserAdd(); // Wait for user address
+
+        if (contractAddress && userAddress) {
+          const userInfoDef = await getUserInfo(contractAddress, userAddress);
+          if (userInfoDef) {
+            displayUserInfoInSideBar(userInfoDef); // Display the user info in the sidebar
+          } else {
+            console.error('No user info found');
+          }
+        } else {
+          console.error('Missing contract address or user address');
+        }
+      } catch (error) {
+        console.error('Error during DOMContentLoaded:', error);
+      }
+    });
+
+
+
+
+    // Navigate buttons
+    document.getElementById('homeBtn').addEventListener('click', function () {
+      window.location.href = '/';
+    });
+
+
+    document.getElementById('userList').addEventListener('click', function () {
+      window.location.href = '/users';
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+      const registerUserBtn = document.getElementById('registerUserBtn');
+      if (registerUserBtn) {
+        registerUserBtn.addEventListener('click', function () {
+          window.location.href = '/dashboard';
+        });
+      }
+
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function () {
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('user');
+          localStorage.removeItem('userEmail');
+          checkAuth();
+          window.location.href = '/login';
+        });
+      }
+    });
+
+
+
+
+    const checkAuth = () => {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        // Si no está logueado, redirigir a la página de login
+        window.location.href = '/login';
+      }
+    };
+
+    // Ejecutar al cargar la página
+    checkAuth();
+  </script>
+
+
+
+</body>
+
+</html>

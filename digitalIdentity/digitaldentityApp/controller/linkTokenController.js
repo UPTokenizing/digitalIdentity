@@ -10,7 +10,7 @@ async function linkTokenSC(req) {
     const from = req.body.from;
     const contractAdd = req.body.contractAdd;
     const contract2Add = req.body.contract2Add;  // Address of the token contract to be linked
-    const _nameToken = req.body.nameToken;  // Name of the token to be linked
+    
     var y = "";
 
     try {
@@ -36,7 +36,7 @@ async function linkTokenSC(req) {
                 console.log("Entró3: " + from);
 
                 // Calling the linkToken method in DigitalIdentity contract
-                const contractAnswer = await userContract.methods.linkToken(contract2Add, _nameToken).send({
+                const contractAnswer = await userContract.methods.linkToken(contract2Add).send({
                     from: from,
                     gas: gas,
                     gasLimit: "6721975",
@@ -116,7 +116,6 @@ initializer.linkToken = async function (req, res) {
     const from = req.body.from; //owner
     const contract2Add = req.body.contract2Add; 
     const contractAdd = req.body.contractAdd;  // Address of the token contract to link
-    const _nameToken = req.body.nameToken;  // Token name to link
     console.log("Request from: " + from);
     var resul = { "Result": "Success" };
 
@@ -126,8 +125,7 @@ initializer.linkToken = async function (req, res) {
             gas: gas,
             from: from,
             contract2Add: contract2Add,
-            contractAdd: contractAdd,
-            nameToken: _nameToken
+            contractAdd: contractAdd
         }
     };
 

@@ -19,7 +19,7 @@ This repository will have all projects about digitizing physical objects and lin
   - users/
   - digitalIdentity/
   - frontendUsersInteface/
-  - frontendIdentityGenesis/
+  - frontendBirthCertificate/
   - frontendIdentityDigital/
 
 ## Install
@@ -38,7 +38,7 @@ Windows 10 Pro       | 11th Gen Intel(R) Core(TM) i7-1165G7,  @2.80GHz 1.69GHz, 
 Windows 10 Home      | AMD Ryzen 3 2300U with Radeon Vega, Mobile Gfx, 2000Mhz, 4CPUs AMI F.48, 12GB RAM, x64-based PC.|   Yes 
 MACOS 14.4.1 (23E224)| Intel Iris Plus Graphics 1536 MB, 1.2 GHz Quad-Core Intel Core i7,  16 GB 3733 MHz LPDDR4X      |   Yes    
 Windows 10 Home      |  i7-11800H, @2.80GHz, 32GB RAM, 64-bit, x64-based processor, with NVIDIA RTX 3070, x64-based PC.|   Yes
-Windows 10 Home      | AMD Ryzen 3600 with NVIDIA RTX 2060, 3.6GHz, 6 Cores, 32GB RAM, x64-based PC                    |   Yes
+Windows 10 Home      | AMD Ryzen 3600 with NVIDIA RTX 2060, 3.6GHz, 6 Cores, 16GB RAM, x64-based PC                    |   Yes
 Ubuntu 24.04 LTS(AWS)| Amazon Web Service, m5.large, 2 vCPUs, 8GB RAM, 18GB SSD, x64-based instance                    |   Yes
 
 
@@ -49,7 +49,7 @@ Ubuntu 24.04 LTS(AWS)| Amazon Web Service, m5.large, 2 vCPUs, 8GB RAM, 18GB SSD,
   3. Next, follow the **Deployment** instructions explained in file README.md within folder [birthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/birthCertificate).
   4. Following with the **Deployment** instructions explained in file README.md within folder [digitalIdentity/](https://github.com/UPTokenizing/digitalIdentity/tree/Tokenizing-Temp-Main/digitalIdentity).
   5. After digital Identity, follow the **Deployment** instructions explained in file README.md within folder [users/](https://github.com/UPTokenizing/digitalIdentity/tree/Tokenizing-Temp-Main/users).
-  6. Lastly, follow the **Deployment** instructions explained in file README.md within the folders of for the user interactions [frontendIdentityGenesis/](https://github.com/UPTokenizing/digitalIdentity/tree/Tokenizing-Temp-Main/frontendIdentityGenesis), [frontendIdentityDigital/](https://github.com/UPTokenizing/digitalIdentity/tree/Tokenizing-Temp-Main/frontendIdentityDigital), [frontendUsersInteface/](https://github.com/UPTokenizing/digitalIdentity/tree/Tokenizing-Temp-Main/frontendUsersInteface).
+  6. Lastly, follow the **Deployment** instructions explained in file README.md within the folders of for the user interactions [frontendBirthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/Tokenizing-Temp-Main/frontendBirthCertificate), [frontendIdentityDigital/](https://github.com/UPTokenizing/digitalIdentity/tree/Tokenizing-Temp-Main/frontendIdentityDigital), [frontendUsersInteface/](https://github.com/UPTokenizing/digitalIdentity/tree/Tokenizing-Temp-Main/frontendUsersInteface).
 
 
 You can execute the following command in the host operating system to check if every service is ok:

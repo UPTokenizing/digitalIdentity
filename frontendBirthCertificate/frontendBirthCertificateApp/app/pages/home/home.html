@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Panel Contracts</title>
-  <script src="/DashscriptNoEdit.js"></script>
+  <script src="/Dashscript.js"></script>
   <link rel="stylesheet" href="/style.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/styleDashboard.css">
@@ -67,8 +67,7 @@
     position: absolute;
     top: 70px;
     /* Position tooltip below the circle */
-    left: 50%;
-    transform: translateX(-50%);
+    left: 25%;
     background-color: #333;
     color: #fff;
     padding: 6px;
@@ -99,6 +98,26 @@
 
 <body class="bg-gray-100 dark:bg-gray-900 dark:text-white font-sans">
   <div class="flex">
+    <!-- Sidebar -->
+    <div class="w-64 bg-white dark:bg-gray-800 h-screen shadow-md">
+      <nav class="mt-6">
+        <ul>
+          <div id="resultSideContainer"></div>
+          <li class="px-4 py-2 text-gray-200 dark:text-gray-700 hover:bg-gray-600 dark:hover:bg-gray-100 dark:bg-gray-100 bg-gray-600">
+            <button
+              class="w-full h-8 text-left flex items-center px-4 rounded-lg"
+              id="homeBtn">
+              Birth Certificate Addresses
+            </button>
+          </li>
+          <li
+            class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
+            <button class="hidden w-full h-8 text-left flex items-center px-4 rounded-lg " id="userList">User
+              List</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
     <!-- Main Content -->
     <div class="flex-1 p-6">
       <!-- Navbar -->
@@ -110,8 +129,8 @@
         <div class="flex items-center space-x-4">
 
           <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"
-            id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log In</button>
-          
+            id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log Out</button>
+
 
           <!-- Toggle Switch for Dark Mode -->
           <label class="switch">
@@ -125,20 +144,23 @@
       </div>
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-2xl font-bold">Genesis Identity Addresses</h1>
+          <h1 class="text-2xl font-bold">Birth Certificate Addresses</h1>
           <p class="text-gray-600 dark:text-gray-400">Contracts. Please use this page
-            to view clients' genesis Identities.</p>
+            to view clients' Birth Certificates.</p>
         </div>
-
+        <div class="flex items-center space-x-4">
+          <button id="trashbtn"
+            class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"><i
+              class="fas fa-trash"></i> Delete</button>
+          <button class="bg-blue-500 text-white hover:bg-blue-700 dark:bg-blue-700  dark:hover:bg-blue-500 p-2 rounded"
+            id="newServiceButton">New</button>
+        </div>
       </div>
       <div class="mt-6 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
         <table class="min-w-full bg-white dark:bg-gray-800">
           <thead>
             <tr>
-              <th
-                class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
-                <input type="checkbox">
-              </th>
+
               <th
                 class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
                 Complete Name</th>
@@ -170,13 +192,7 @@
       <h2 class="text-xl font-semibold mb-4">Create Service</h2>
       <div class="form-container">
         <form id="create-service-form">
-          <!-- Gas -->
-          <div class="mb-4">
-            <label for="gas" class="block text-gray-700 dark:text-gray-300">Gas</label>
-            <input type="number" id="gas" name="gas"
-              class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-              required>
-          </div>
+
           <!-- Name -->
           <div class="mb-4">
             <label for="name" class="block text-gray-700 dark:text-gray-300">Name</label>
@@ -243,27 +259,6 @@
               class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
               required>
           </div>
-          <!-- Token Father -->
-          <div class="mb-4">
-            <label for="tokenFather" class="block text-gray-700 dark:text-gray-300">Token Father</label>
-            <input type="text" id="tokenFather" name="tokenFather"
-              class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-              required>
-          </div>
-          <!-- Token Mother -->
-          <div class="mb-4">
-            <label for="tokenMother" class="block text-gray-700 dark:text-gray-300">Token Mother</label>
-            <input type="text" id="tokenMother" name="tokenMother"
-              class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-              required>
-          </div>
-          <!-- From -->
-          <div class="mb-4">
-            <label for="from" class="block text-gray-700 dark:text-gray-300">From</label>
-            <input type="text" id="from" name="from"
-              class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-              required>
-          </div>
           <!-- Buttons -->
           <button type="submit"
             class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-500">
@@ -276,6 +271,7 @@
     </div>
   </div>
 
+  <!-- View all Service Modal -->
   <div id="viewServiceModal" class="modalView hidden fixed inset-0 flex items-center justify-center z-50">
     <div class="modal-content p-6 rounded-lg shadow-lg bg-white dark:bg-gray-800 dark:text-white relative">
       <span class="close cursor-pointer text-gray-500 dark:text-gray-300 text-lg font-bold absolute top-2 right-2"
@@ -372,6 +368,69 @@
   </div>
 
 
+  <!-- Edit address Modal -->
+  <div id="editAdress" class="modalEdit hidden fixed inset-0 flex items-center justify-center z-50">
+    <div class="modal-content p-6 rounded-lg shadow-lg bg-white dark:bg-gray-800 dark:text-white relative">
+      <span class="close cursor-pointer text-gray-500 dark:text-gray-300 text-lg font-bold absolute top-2 right-2"
+        id="closeModal3">&times;</span>
+      <h2 class="text-xl font-semibold mb-4">Edit Address Details</h2>
+      <div class="form-container">
+        <form id="editAddressForm">
+          <div id="show-service-form">
+            <!-- Contract Address -->
+            <div class="mb-4">
+              <label for="address3" class="block text-gray-500 dark:text-gray-300">Contract Address</label>
+              <span id="address3" class="block text-gray-700 dark:text-white"></span>
+            </div>
+            <!-- input address -->
+            <label for="newAdd" class="block text-gray-500 dark:text-gray-300">New Address</label>
+            <input type="text" id="newAdd" name="newAdd"
+              class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+              required>
+          </div>
+
+          <!-- government -->
+          <div class="mb-4">
+            <label for="government3" class="block text-gray-500 dark:text-gray-300">Government</label>
+            <span id="government3" class="block text-gray-700 dark:text-white"></span>
+          </div>
+          <!-- Token to Change -->
+          <div class="mb-4">
+            <label for="tokenChange" class="block text-gray-500 dark:text-gray-300">Token to Change</label>
+            <select id="tokenChange2" class="block w-full p-2 mt-1
+              text-sm text-gray-700 bg-gray-50 rounded-lg border border-gray-300
+              focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-
+              600 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:focus
+              :ring-gray-600 dark:focus:border-gray-500">
+              <option value="setMotherAddress">
+                <label for="setMotherAddress" class="block text-gray-500 dark:text-gray-300">Mother Address</label>
+              </option>
+              <option value="setFatherAddress">
+                <label for="setFatherAddress" class="block text-gray-500 dark:text-gray-300">Father Address</label>
+              </option>
+              <option value="setDigitalIdentityAddress">
+                <label for="setDigitalIdentityAddress" class="block text-gray-500 dark:text-gray-300">Digital Identity
+                  Address</label>
+              </option>
+              <option value="setOwner">
+                <label for="setOwner" class="block text-gray-500 dark:text-gray-300">Owner Address</label>
+            </select>
+          </div>
+
+
+
+          <!-- Button -->
+          <button type="button" id="cancelButton3"
+            class="bg-red-500 text-white font-semibold px-4 py-2 rounded hover:bg-red-600">Cancel</button>
+          <button type="submit"
+            class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-500">
+            Edit Address
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  </div>
 
   <script>
 
@@ -396,12 +455,11 @@
 
         // Parse the response JSON
         const data = await response.json();
-        console.log('Contract Address:', data.contractAdd);
         return data.contractAdd; // Return the contract address
 
       } catch (error) {
         console.error('Error:', error);
-        //alert('An error occurred while fetching contract address');
+        alert('An error occurred while fetching contract address');
       }
     };
 
@@ -455,7 +513,6 @@
 
     // Function to display user info in a table
     function getUserTypeString(type) {
-      console.log("Tipo: ", type);
       switch (type) {
         case '0':
           return "Government";
@@ -469,39 +526,64 @@
     }
 
 
-    function displayUserInfoInSideBar(userInfoDef) {
-      console.log(userInfoDef.Data.getType);
+    async function displayUserInfoInSideBar(userInfoDef) {
       const userType = getUserTypeString(userInfoDef.Data.getType);
 
       if (userType === "Error") {
         console.log("No user logged");
       } else {
-        const firstName = userInfoDef.Data.getName || "N";
-        const lastName = userInfoDef.Data.getLastName || "L";
+        const userName = userInfoDef.Data.getUserName || "N";
         const email = userInfoDef.Data.getEmail || "No email";
+        const userAdd = await getUserAdd();
+        const initials = userName.charAt(0).toUpperCase();
 
-        // Generate initials
-        const initials = firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
-
-        // Generate HTML
         const htmlContent = `
         <div class="user-circle">
           <span>${initials}</span>
           <div class="tooltip">
-            <p>Name: ${firstName}</p>
-            <p>Last Name: ${lastName}</p>
+            <p>Username: ${userName}</p>
             <p>Email: ${email}</p>
+            <p>${userAdd}</p>
           </div>
         </div>
         <div class="access-text">
-          Access: ${userType}
+          <p>${email}</p>
+          <p>Access: ${userType}</p>
         </div>
       `;
 
-        // Insert HTML into the container
         resultSideContainer.innerHTML = htmlContent;
+
+        function updateButtonsVisibility() {
+          // Comprobar el tipo de usuario
+          if (userInfoDef.Data.getType !== '0') {
+            
+            // Ocultar botones con data-id 1 y 3
+            document.getElementById('newServiceButton')?.classList.add('hidden');
+            document.getElementById('trashbtn')?.classList.add('hidden');
+            document.getElementById('userList')?.classList.add('hidden');
+            document.querySelectorAll('[data-id="1"],[data-id="2"], [data-id="3"]').forEach(button => {
+              button.classList.add('hidden');
+            });
+          } else {
+            // Mostrar botones con data-id 1 y 3
+            document.getElementById('newServiceButton')?.classList.remove('hidden');
+            document.getElementById('trashbtn')?.classList.remove('hidden');
+            document.getElementById('userList')?.classList.remove('hidden');
+            document.querySelectorAll('[data-id="1"],[data-id="2"], [data-id="3"]').forEach(button => {
+              button.classList.remove('hidden');
+            });
+          }
+        }
+
+        // Ejecutar cada 2 segundos
+        setInterval(updateButtonsVisibility, 200);
+
+
+       
       }
     }
+
 
 
 
@@ -513,7 +595,7 @@
         if (contractAddress && userAddress) {
           const userInfoDef = await getUserInfo(contractAddress, userAddress);
           if (userInfoDef) {
-            console.log('User Info:', userInfoDef);
+
             displayUserInfoInSideBar(userInfoDef); // Display the user info in the sidebar
           } else {
             console.error('No user info found');
@@ -530,22 +612,38 @@
 
     const checkAuth = () => {
       const token = localStorage.getItem('authToken');
-      if (token) {
+      if (!token) {
         // Si no está logueado, redirigir a la página de login
-        window.location.href = '/dashboard';
+        window.location.href = '/login';
       }
     };
 
     // Ejecutar al cargar la página
     checkAuth();
 
+     // Navigate buttons
+     document.getElementById('homeBtn').addEventListener('click', function () {
+      window.location.href = '/';
+    });
+
+
+    document.getElementById('userList').addEventListener('click', function () {
+      window.location.href = '/dashboard';
+    });
 
     document.getElementById('logoutBtn').addEventListener('click', function () {
+
       localStorage.removeItem('authToken');
       localStorage.removeItem('user');
       localStorage.removeItem('userEmail'); // Eliminar el correo guardado
+
+      // Redirigir al login
+
       window.location.href = '/login'; // Redirect to the login page
     });
+
+
+
   </script>
 </body>
 

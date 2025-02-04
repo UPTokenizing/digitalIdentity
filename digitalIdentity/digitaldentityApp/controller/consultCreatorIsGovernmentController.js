@@ -2,8 +2,8 @@ var errorControl = require('./errors');
 var utilities = require('./utilities');
 var initializer = {};
 
-// Function to get the name of the token from a contract using getGovernmentOfToken
-async function callgetGovernmentOfToken(req) {
+// Function to get the name of the token from a contract using getCreatorIsGovern
+async function callgetCreatorIsGovern(req) {
     const contractABI = utilities.getContainFileJSON(contractABIPath); // Get ABI for the contract
     const contractAdd = req.query.contractAdd; // Get the contract address from the query
     const contractToken = req.query.contractToken;
@@ -22,8 +22,8 @@ async function callgetGovernmentOfToken(req) {
         const web3 = new Web3(Web3.givenProvider || blockchainAddress);
         const userContract = new web3.eth.Contract(contractABI, contractAdd); // Create contract instance
         
-        // Call the getGovernmentOfToken function using the contract address
-        const result = await userContract.methods.getGovernmentOfToken(contractToken).call();
+        // Call the getCreatorIsGovern function using the contract address
+        const result = await userContract.methods.getCreatorIsGovern(contractToken).call();
 
         // Prepare the successful response
         response = {
@@ -36,7 +36,7 @@ async function callgetGovernmentOfToken(req) {
         return response;
         
     } catch (error) {
-        console.log("Error during getGovernmentOfToken call:", error);
+        console.log("Error during getCreatorIsGovern call:", error);
 
         // Return an error if anything fails
         response = {
@@ -47,8 +47,8 @@ async function callgetGovernmentOfToken(req) {
     }
 }
 
-// Route handler for the getGovernmentOfToken API
-initializer.getGovernmentOfToken = async function (req, res) {
+// Route handler for the getCreatorIsGovern API
+initializer.getCreatorIsGovern = async function (req, res) {
     const contractAdd = req.query.contractAdd; // Contract address from query params
     const contractToken = req.query.contractToken;
     
@@ -62,13 +62,13 @@ initializer.getGovernmentOfToken = async function (req, res) {
 
     try {
         // Call the contract method to get the token's name
-        const response = await callgetGovernmentOfToken(req);
+        const response = await callgetCreatorIsGovern(req);
 
         // Return the response (Success or Error)
         res.send(response);
         
     } catch (error) {
-        console.log("Error in getGovernmentOfToken route:", error);
+        console.log("Error in getCreatorIsGovern route:", error);
 
         // If there's any issue during the process, send an error response
         res.send({
