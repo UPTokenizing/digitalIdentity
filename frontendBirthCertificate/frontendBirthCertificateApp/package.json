@@ -19,7 +19,7 @@
     "firebase": "^11.2.0",
     "firebase-admin": "^12.7.0",
     "http-proxy-middleware": "^3.0.2",
-    "node-libcurl": "^4.0.0",
+    "node-libcurl": "^4.1.0",
     "nodemon": "^3.1.9"
   }
 }

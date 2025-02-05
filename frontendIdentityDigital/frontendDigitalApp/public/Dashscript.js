@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 gas: 3000000, // Get gas amount
                 contractAdd: data.contractAddress, // Get contract address
                 contract2Add: data.tokenAddress, // Get token address
-                nameToken: data.nameToken, // Get token name
                 from: userAddress // Use the awaited address
             };
 
