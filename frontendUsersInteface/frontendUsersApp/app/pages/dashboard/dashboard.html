@@ -175,9 +175,10 @@
             </div>
             <div class="mb-4">
               <label for="password" class="block dark:text-white mb-2 text-gray-600">Password</label>
-              <input type="text" id="password"
-                class="w-full p-2 rounded text-black bg-gray-200 dark:bg-gray-700 dark:text-white" value="" required>
+              <input type="text" id="password" minlength="8" maxlength="18" required
+                class="w-full p-2 rounded text-black bg-gray-200 dark:bg-gray-700 dark:text-white">
             </div>
+
             <div class="mb-4">
               <label for="username" class="block dark:text-gray-400 mb-2 text-gray-600">Username</label>
               <input type="text" id="username"
@@ -506,6 +507,16 @@
 
 
   </script>
+  <script>
+    document.getElementById("password").addEventListener("input", function () {
+      if (this.value.length < 8 || this.value.length > 18) {
+        this.setCustomValidity("Password must be between 8 and 18 characters.");
+      } else {
+        this.setCustomValidity("");
+      }
+    });
+  </script>
+
 
   <script>
 

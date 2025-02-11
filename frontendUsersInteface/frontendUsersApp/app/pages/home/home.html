@@ -325,44 +325,44 @@
 
         // Function to display results in a table
         function displayResultsInTable(contractAddress, methods, results) {
-
-
             let tableHTML = `
-            <div class="mt-6 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
-                    <table class="min-w-full bg-white dark:bg-gray-800">
-                        <thead>
-                            <tr>
-                                <th
-                                    class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
-                                    User Contract Info
-                                </th>
-                                <th
-                                    class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
-                                    Value
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white dark:bg-gray-800">
-                            `;
-
-
+    <div class="mt-6 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+        <table class="min-w-full bg-white dark:bg-gray-800">
+            <thead>
+                <tr>
+                    <th class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
+                        User Contract Info
+                    </th>
+                    <th class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
+                        Value
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="bg-white dark:bg-gray-800">
+    `;
 
             // Loop through the methods and display the results
             methods.forEach((method, index) => {
-                tableHTML += `
+                let value = results[index] && results[index].Value ? results[index].Value : "Unknown";
 
-                <tr>
-                        <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${method}</td>
-                        <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${results[index] && results[index].Value ? results[index].Value : 'Error fetching'}</td>
-                    </tr>
-            <tr>`;
+                // Check if the value contains an error message
+                if (typeof value === "string" && value.startsWith("Error: Web3 validator found")) {
+                    value = "Unknown";
+                }
+
+                tableHTML += `
+        <tr>
+            <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${method}</td>
+            <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${value}</td>
+        </tr>`;
             });
 
-            tableHTML += `</tbody></table>`;
+            tableHTML += `</tbody></table></div>`;
 
             // Insert table HTML into the container
             resultContainer.innerHTML = tableHTML;
         }
+
         // Function to display user info in a table
         function getUserTypeString(type) {
             console.log("Tipo: ", type);
@@ -471,13 +471,21 @@
                 const userAddress = await getUserAdd(); // Wait for user address
 
                 if (contractAddress && userAddress) {
-                    const userInfoDef = await getUserInfo(contractAddress, userAddress);
-                    if (userInfoDef) {
-                        console.log('User Info:', userInfoDef);
-                        displayUserInfoInSideBar(userInfoDef); // Display the user info in the sidebar
+                    let userInfoDef = await getUserInfo(contractAddress, userAddress);
+
+                    if (!userInfoDef || !userInfoDef.Data) {
+                        console.error('No valid user info found');
+                        userInfoDef = { Data: { getType: "Unknown", getUserName: "Unknown", getEmail: "Unknown", getCreator: "Unknown" } };
                     } else {
-                        console.error('No user info found');
+                        // Ensure all fields are set to "Unknown" if missing
+                        userInfoDef.Data.getType = userInfoDef.Data.getType || "Unknown";
+                        userInfoDef.Data.getUserName = userInfoDef.Data.getUserName || "Unknown";
+                        userInfoDef.Data.getEmail = userInfoDef.Data.getEmail || "Unknown";
+                        userInfoDef.Data.getCreator = userInfoDef.Data.getCreator || "Unknown";
                     }
+
+                    console.log('User Info:', userInfoDef);
+                    displayUserInfoInSideBar(userInfoDef); // Display the user info in the sidebar
                 } else {
                     console.error('Missing contract address or user address');
                 }
@@ -485,6 +493,7 @@
                 console.error('Error during DOMContentLoaded:', error);
             }
         });
+
 
         // Main search functionality
         searchBtn.addEventListener('click', async function () {
@@ -515,18 +524,41 @@
                     }
                 } else {
                     console.log("Search for : ", searchTerm);
-                    const userAddres = await getUserAddfromEmail(searchTerm);
-                    console.log("Address ", userAddres);
+                    let userAddres;
+
+                    if (searchTerm.startsWith("0x")) {
+                        userAddres = searchTerm;
+                    } else {
+                        userAddres = await getUserAddfromEmail(searchTerm);
+                    }
+
+                    console.log("Address:", userAddres);
                     console.log(`Requesting user info for contractAdd: ${contractAddress} and userAddress: ${userAddres}`);
 
                     const userInfo = await getUserInfo(contractAddress, userAddres);
 
-                    if (userInfo) {
+
+                    if (userInfo && userInfo.Data) {
+                        // Function to check if a value contains a Web3 validation error
+                        const sanitizeValue = (value) => {
+                            if (!value || typeof value !== "string") return "Unknown";
+                            if (value.startsWith("Error: Web3 validator found")) return "Unknown";
+                            return value;
+                        };
+
+                        // Ensure all fields are sanitized
+                        userInfo.Data.getType = sanitizeValue(userInfo.Data.getType);
+                        userInfo.Data.getUserName = sanitizeValue(userInfo.Data.getUserName);
+                        userInfo.Data.getEmail = sanitizeValue(userInfo.Data.getEmail);
+                        userInfo.Data.getCreator = sanitizeValue(userInfo.Data.getCreator);
+
                         console.log('User Info:', userInfo);
                         displayUserInfoInTable(userInfo); // Display the user info in table
                     } else {
                         console.log('No user info found');
+                        displayUserInfoInTable({ Data: { getType: "Unknown", getUserName: "Unknown", getEmail: "Unknown", getCreator: "Unknown" } });
                     }
+
                 }
             } catch (error) {
                 console.error('Error in search process:', error);
