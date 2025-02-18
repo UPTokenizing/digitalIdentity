@@ -8,31 +8,17 @@
 			},
 			{
 				"internalType": "address",
-				"name": "_contractUser",
+				"name": "_contractOfUsers",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "gover",
 				"type": "address"
 			}
 		],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "addressesTokens",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
 	},
 	{
 		"inputs": [

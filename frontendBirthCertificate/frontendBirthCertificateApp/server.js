@@ -71,7 +71,7 @@ app.get('/fetch-proof', async (req, res) => {
 // Route to handle the POST request from the form
 app.post('/createService', async (req, res) => {
   try {
-    const { gas, name, fLastName, mLastName, sex, day, month, year, state, municipality, contractUser, government } = req.body;
+    const { gas, name, fLastName, mLastName, sex, day, month, year, state, municipality, contractUser, government, owner } = req.body;
 
     const requestData = {
       gas,
@@ -85,7 +85,8 @@ app.post('/createService', async (req, res) => {
       state,
       municipality,
       contractUser,
-      government
+      government,
+      owner
     };
 
 

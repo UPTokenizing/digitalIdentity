@@ -99,6 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('year').value = '';
         document.getElementById('state').value = '';
         document.getElementById('municipality').value = '';
+        document.getElementById('owner').value = '';
     }
 
     function loadContent(page) {

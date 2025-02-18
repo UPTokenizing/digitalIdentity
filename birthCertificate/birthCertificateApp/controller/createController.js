@@ -22,6 +22,7 @@ async function createBCdentitySC(req) {
 	const state = req.body.state;
 	const municipality = req.body.municipality;
 	const contractUser = req.body.contractUser;
+	const owner = req.body.owner;
 	const from = req.body.from;
 	var y = "";
 	try {
@@ -43,7 +44,7 @@ async function createBCdentitySC(req) {
 				const userContract = new web3.eth.Contract(contractABI);
 				console.log("Entró3: " + from);
 				const nonce = await web3.eth.getTransactionCount(from);
-				const contractAnswer = await userContract.deploy({ data: contractByteCodeObj, arguments: [name, fLastName, mLastName, sex, day, month, year, state, municipality, contractUser] }).send(
+				const contractAnswer = await userContract.deploy({ data: contractByteCodeObj, arguments: [name, fLastName, mLastName, sex, day, month, year, state, municipality,contractUser,owner ] }).send(
 					{ from: from, gas: gas, gasLimit: "6721975", gasPrice: "20000000000", nonce: nonce }).on('receipt', function (receipt) {
 						console.log("Entró4: " + from);
 						//from = from.toUpperCase();
@@ -126,10 +127,10 @@ initializer.createBCdentity = async function (req, res) {
 	const day = req.body.day;
 	const month = req.body.month;
 	const year = req.body.year;
-
 	const state = req.body.state;
 	const municipality = req.body.municipality;
 	const contractUser = req.body.contractUser;
+	const owner = req.body.owner;
 
 	const from = req.body.government;
 	console.log("Request from: " + from);
@@ -149,6 +150,7 @@ initializer.createBCdentity = async function (req, res) {
 			state: state,
 			municipality: municipality,
 			contractUser: contractUser,
+			owner: owner,
 			from: from
 		}
 	};

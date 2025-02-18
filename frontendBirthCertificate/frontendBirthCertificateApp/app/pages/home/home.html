@@ -152,8 +152,8 @@
           <button id="trashbtn"
             class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"><i
               class="fas fa-trash"></i> Delete</button>
-          <button class="bg-blue-500 text-white hover:bg-blue-700 dark:bg-blue-700  dark:hover:bg-blue-500 p-2 rounded"
-            id="newServiceButton">New</button>
+          <!-- <button class="bg-blue-500 text-white hover:bg-blue-700 dark:bg-blue-700  dark:hover:bg-blue-500 p-2 rounded"
+            id="newServiceButton">New</button> -->
         </div>
       </div>
       <div class="mt-6 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
@@ -412,8 +412,8 @@
                 <label for="setDigitalIdentityAddress" class="block text-gray-500 dark:text-gray-300">Digital Identity
                   Address</label>
               </option>
-              <option value="setOwner">
-                <label for="setOwner" class="block text-gray-500 dark:text-gray-300">Owner Address</label>
+              <!-- <option value="setOwner">
+                <label for="setOwner" class="block text-gray-500 dark:text-gray-300">Owner Address</label> -->
             </select>
           </div>
 
@@ -465,6 +465,7 @@
 
     const getUserAdd = async () => {
       try {
+        
         const email = localStorage.getItem('userEmail'); // Get the email from localStorage
         if (!email) {
           throw new Error('No email found in localStorage');
@@ -528,20 +529,17 @@
 
     async function displayUserInfoInSideBar(userInfoDef) {
       const userType = getUserTypeString(userInfoDef.Data.getType);
-
       if (userType === "Error") {
         console.log("No user logged");
       } else {
-        const userName = userInfoDef.Data.getUserName || "N";
-        const email = userInfoDef.Data.getEmail || "No email";
+        const email = localStorage.getItem('userEmail') || "No email";
         const userAdd = await getUserAdd();
-        const initials = userName.charAt(0).toUpperCase();
+        const initials = email.charAt(0).toUpperCase();
 
         const htmlContent = `
         <div class="user-circle">
           <span>${initials}</span>
           <div class="tooltip">
-            <p>Username: ${userName}</p>
             <p>Email: ${email}</p>
             <p>${userAdd}</p>
           </div>

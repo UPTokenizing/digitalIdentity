@@ -225,7 +225,7 @@ document.addEventListener("DOMContentLoaded", function () {
         data.contractUser = await getContractAdd();
         data.gas = 3000000;
         data.government = await getUserAdd();
-
+        data.owner = addresToOwner;
 
         console.log('Data:', data); // For debugging
 
@@ -249,65 +249,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 clearModalFields();
                 modal.style.display = "none";
+                window.location.href = "/";
 
-
-
-                try {
-                    console.log("creating child service");
-
-                    const contractAdd = result.contractAddress; // Ensure result is defined
-                    const replaceAdd = addresToOwner;
-                    const gas = 300000;
-                    const government = await getUserAdd();
-
-                    // Check if replace is defined
-                    if (typeof replace === 'undefined') {
-                        console.error('The variable "replace" is not defined.');
-                        return; // Exit if replace is not defined
-                    }
-
-                    const publicMethod = "setOwner"; // Use let instead of const
-                    
-
-                    const requestData = {
-                        contractAdd,
-                        replaceAdd,
-                        gas,
-                        government,
-                        publicMethod
-                    };
-
-                    console.log(requestData);
-                    const response = await fetch('/setAddress', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(requestData)
-                    });
-
-                    const apiResponse = await response.json();
-
-                    console.log("Lo seteado", apiResponse);
-
-                    // Check if apiResponse is defined and has the expected structure
-                    if (apiResponse && apiResponse.Result === 'Success') {
-                        tempAdd = "";
-                        replace = "";
-                        alert("Contract Address correclty created for user selected  ", contractAdd);
-                        // send me home
-                        window.location.href = "/";
-                        
-                    } else {
-                        // Show error alert
-                        alert('Invalid Data');
-                    }
-
-                } catch (error) {
-                    console.error('Error:', error);
-                    // Show error alert
-                    alert('Invalid Data');
-                }
 
 
 

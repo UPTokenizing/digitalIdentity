@@ -22,7 +22,7 @@ const login = async () => {
         // Guardar el token y la información del usuario
         localStorage.setItem('authToken', token);
         localStorage.setItem('user', JSON.stringify(user));
-	localStorage.setItem('userEmail', user.email); // Asume que el objeto `user` tiene un campo `email`
+	    localStorage.setItem('userEmail', user.email); // Asume que el objeto `user` tiene un campo `email`
 
         // Redirigir al dashboard
         window.location.href = '/';

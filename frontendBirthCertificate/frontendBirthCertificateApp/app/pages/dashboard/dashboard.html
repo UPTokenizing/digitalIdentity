@@ -417,51 +417,27 @@
       }
     }
 
-    function displayUserInfoInTable(userInfo) {
-      const userType = getUserTypeString(userInfo.Data.getType);
-
-      let tableHTML = `
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Field</th>
-                <th>Value</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr><td>Type</td><td>${userType}</td></tr>
-            <tr><td>Username</td><td>${userInfo.Data.getUserName}</td></tr>
-            <tr><td>Email</td><td>${userInfo.Data.getEmail}</td></tr>
-            <tr><td>Creator</td><td>${userInfo.Data.getCreator}</td></tr>
-        </tbody>
-    </table>`;
-
-      // Insert table HTML into the container
-      resultContainer.innerHTML = tableHTML;
-    }
-
+  
     async function displayUserInfoInSideBar(userInfoDef) {
       const userType = getUserTypeString(userInfoDef.Data.getType);
 
       if (userType === "Error") {
         console.log("No user logged");
       } else {
-        const userName = userInfoDef.Data.getUserName || "N";
-        const email = userInfoDef.Data.getEmail || "No email";
+        const email = localStorage.getItem('userEmail') || "No email";
 
         const userAdd = await getUserAdd();
 
 
 
         // Generate initials
-        const initials = userName.charAt(0).toUpperCase();
+        const initials = email.charAt(0).toUpperCase();
 
         // Generate HTML
         const htmlContent = `
         <div class="user-circle">
           <span>${initials}</span>
           <div class="tooltip">
-            <p>Username: ${userName}</p>
             <p>Email: ${email}</p>
             <p>${userAdd}</p>
           </div>

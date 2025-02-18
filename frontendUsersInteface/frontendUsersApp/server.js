@@ -66,11 +66,10 @@ app.get('/fetch-proof', async (req, res) => {
 
 app.post('/createUser', async (req, res) => {
   try {
-    const { gas, email, government } = req.body;
+    const { gas, government } = req.body;
 
     const requestData = {
       gas,
-      email,
       government
     };
 
@@ -96,8 +95,6 @@ app.post('/registerUser', async (req, res) => {
       contractAdd,
       publicMethod,
       userAddress,
-      username,
-      email,
       userType,
       government } = req.body;
 
@@ -106,8 +103,6 @@ app.post('/registerUser', async (req, res) => {
       contractAdd,
       publicMethod,
       userAddress,
-      username,
-      email,
       userType,
       government
     };
@@ -319,6 +314,8 @@ app.post('/api/getContractAdd', async (req, res) => {
     res.status(400).send({ message: error.message });
   }
 });
+
+
 
 
 app.post('/api/getUserAdd', async (req, res) => {

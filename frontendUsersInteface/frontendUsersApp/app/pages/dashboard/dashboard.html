@@ -178,13 +178,6 @@
               <input type="text" id="password" minlength="8" maxlength="18" required
                 class="w-full p-2 rounded text-black bg-gray-200 dark:bg-gray-700 dark:text-white">
             </div>
-
-            <div class="mb-4">
-              <label for="username" class="block dark:text-gray-400 mb-2 text-gray-600">Username</label>
-              <input type="text" id="username"
-                class="w-full p-2 rounded text-black bg-gray-200 dark:bg-gray-700 dark:text-white"
-                placeholder="Username" required>
-            </div>
             <div class="mb-4">
               <label for="userAddress" class="block dark:text-gray-400 mb-2 text-gray-600">User Address</label>
               <input type="text" id="userAddress"
@@ -380,7 +373,6 @@
       if (userType === "Error") {
         console.log("No user logged");
       } else {
-        const userName = userInfoDef.Data.getUserName || "N";
         const email = userInfoDef.Data.getEmail || "No email";
 
         const userAdd = await getUserAdd();
@@ -388,14 +380,13 @@
 
 
         // Generate initials
-        const initials = userName.charAt(0).toUpperCase();
+        const initials = email.charAt(0).toUpperCase();
 
         // Generate HTML
         const htmlContent = `
         <div class="user-circle">
           <span>${initials}</span>
           <div class="tooltip">
-            <p>Username: ${userName}</p>
             <p>Email: ${email}</p>
             <p>${userAdd}</p>
           </div>
@@ -556,8 +547,6 @@
               contractAdd: contractAdd, // Use the fetched contract address
               publicMethod: "registerUser",
               userAddress: document.getElementById('userAddress').value,
-              username: document.getElementById('username').value,
-              email: document.getElementById('email').value,
               userType: document.getElementById('userType').value,
               government: document.getElementById('government').value,
             };

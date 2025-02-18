@@ -277,6 +277,9 @@
             }
         };
 
+
+
+
         // Get references to the search input and search button
         const searchInput = document.getElementById('search');
         const searchBtn = document.getElementById('searchBtn');
@@ -378,8 +381,13 @@
             }
         }
 
-        function displayUserInfoInTable(userInfo) {
+        
+
+
+
+        async function displayUserInfoInTable(userInfo, userAddres) {
             const userType = getUserTypeString(userInfo.Data.getType);
+            //const email = await getUserEmail(userAddres);
 
             let tableHTML = `
             <div class="mt-6 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
@@ -402,12 +410,8 @@
                         <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${userType}</td>
                     </tr>
                     <tr>
-                        <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">Username</td>
-                        <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${userInfo.Data.getUserName}</td>
-                    </tr>
-                    <tr>
-                        <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">Email</td>
-                        <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${userInfo.Data.getEmail}</td>
+                        <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">Digital Identity Address</td>
+                        <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${userInfo.Data.getDigIdentityAdd}</td>
                     </tr>
                     <tr>
                         <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">Creator</td>
@@ -429,22 +433,20 @@
             if (userType === "Error") {
                 console.log("No user logged");
             } else {
-                const userName = userInfoDef.Data.getUserName || "N";
-                const email = userInfoDef.Data.getEmail || "No email";
+                const email = localStorage.getItem('userEmail') || "No email";
 
                 const userAdd = await getUserAdd();
 
 
 
                 // Generate initials
-                const initials = userName.charAt(0).toUpperCase();
+                const initials = email.charAt(0).toUpperCase();
 
                 // Generate HTML
                 const htmlContent = `
         <div class="user-circle">
           <span>${initials}</span>
           <div class="tooltip">
-            <p>Username: ${userName}</p>
             <p>Email: ${email}</p>
             <p>${userAdd}</p>
           </div>
@@ -475,12 +477,10 @@
 
                     if (!userInfoDef || !userInfoDef.Data) {
                         console.error('No valid user info found');
-                        userInfoDef = { Data: { getType: "Unknown", getUserName: "Unknown", getEmail: "Unknown", getCreator: "Unknown" } };
+                        userInfoDef = { Data: { getType: "Unknown", getCreator: "Unknown" } };
                     } else {
                         // Ensure all fields are set to "Unknown" if missing
                         userInfoDef.Data.getType = userInfoDef.Data.getType || "Unknown";
-                        userInfoDef.Data.getUserName = userInfoDef.Data.getUserName || "Unknown";
-                        userInfoDef.Data.getEmail = userInfoDef.Data.getEmail || "Unknown";
                         userInfoDef.Data.getCreator = userInfoDef.Data.getCreator || "Unknown";
                     }
 
@@ -548,15 +548,14 @@
 
                         // Ensure all fields are sanitized
                         userInfo.Data.getType = sanitizeValue(userInfo.Data.getType);
-                        userInfo.Data.getUserName = sanitizeValue(userInfo.Data.getUserName);
-                        userInfo.Data.getEmail = sanitizeValue(userInfo.Data.getEmail);
+                        userInfo.Data.getDigIdentityAdd = sanitizeValue(userInfo.Data.getDigIdentityAdd);
                         userInfo.Data.getCreator = sanitizeValue(userInfo.Data.getCreator);
 
                         console.log('User Info:', userInfo);
-                        displayUserInfoInTable(userInfo); // Display the user info in table
+                        displayUserInfoInTable(userInfo, userAddres); // Display the user info in table
                     } else {
                         console.log('No user info found');
-                        displayUserInfoInTable({ Data: { getType: "Unknown", getUserName: "Unknown", getEmail: "Unknown", getCreator: "Unknown" } });
+                        displayUserInfoInTable({ Data: { getType: "Unknown", getDigIdentityAdd: "Unknown", getCreator: "Unknown" } });
                     }
 
                 }

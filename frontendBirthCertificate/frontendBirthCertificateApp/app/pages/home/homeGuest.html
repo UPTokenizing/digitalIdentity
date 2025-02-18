@@ -506,22 +506,15 @@
       if (userType === "Error") {
         console.log("No user logged");
       } else {
-        const userName = userInfoDef.Data.getUserName || "N";
-        const email = userInfoDef.Data.getEmail || "No email";
+        const email = localStorage.getItem('userEmail') || "No email";
 
         const userAdd = await getUserAdd();
-
-
-
-        // Generate initials
-        const initials = userName.charAt(0).toUpperCase();
 
         // Generate HTML
         const htmlContent = `
         <div class="user-circle">
           <span>${initials}</span>
           <div class="tooltip">
-            <p>Username: ${userName}</p>
             <p>Email: ${email}</p>
             <p>${userAdd}</p>
           </div>
