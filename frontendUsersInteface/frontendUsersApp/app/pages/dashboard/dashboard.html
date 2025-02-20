@@ -373,7 +373,7 @@
       if (userType === "Error") {
         console.log("No user logged");
       } else {
-        const email = userInfoDef.Data.getEmail || "No email";
+        const email = localStorage.getItem('userEmail') || "No email";
 
         const userAdd = await getUserAdd();
 

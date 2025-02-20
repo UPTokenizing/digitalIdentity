@@ -70,6 +70,7 @@ app.get('/fetch-proof', async (req, res) => {
 
 // Route to handle the POST request from the form
 app.post('/createService', async (req, res) => {
+
   try {
     const { gas, name, fLastName, mLastName, sex, day, month, year, state, municipality, contractUser, government, owner } = req.body;
 
@@ -88,7 +89,9 @@ app.post('/createService', async (req, res) => {
       government,
       owner
     };
-
+    
+    console.log(requestData);
+    
 
 
     const response = await axios.post('http://172.18.1.3:5500/create', requestData, {

@@ -6,9 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const modalView = document.getElementById("viewServiceModal");
     const modalEdit = document.getElementById("editAdress");
 
-    // Get open modal button
-    const newServiceButton = document.getElementById("newServiceButton");
-
+        
     // Get close button
     const closeModal = document.getElementById("closeModal");
     const closeModal2 = document.getElementById("closeModal2");
@@ -23,11 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-    // Listen for open click
-    newServiceButton.onclick = function () {
-        // Open modal
-        modal.style.display = "block";
-    }
+    
 
     // Listen for close click
     closeModal.onclick = function () {
@@ -119,8 +113,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Load contract addresses from localStorage when the page loads
     window.addEventListener('load', async () => {
+        console.log("Entro en load");
         contractAddresses = await getCertificates();
-        console.log("from teh event: ", contractAddresses);
+        console.log("from the event: ", contractAddresses);
         updateTableRows(contractAddresses); // Update the table with the cleaned data
     });
 
@@ -177,6 +172,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     async function getCertificates() {
+        console.log("Entro en busqueda");
         try {
             const response = await fetch('/api/getCertificates', {
                 method: 'GET',
@@ -187,7 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
             // Await the response.json() to get the actual result
             const result = await response.json();
-    
+            console.log(result);
             if (response.ok) {
                 return result.certificates;  // Return the certificates array
             } else {

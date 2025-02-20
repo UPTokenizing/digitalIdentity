@@ -43,10 +43,13 @@ async function createBCdentitySC(req) {
 				const web3 = new Web3(Web3.givenProvider || blockchainAddress);
 				const userContract = new web3.eth.Contract(contractABI);
 				console.log("Entró3: " + from);
+				console.log(req.body);
 				const nonce = await web3.eth.getTransactionCount(from);
+				
 				const contractAnswer = await userContract.deploy({ data: contractByteCodeObj, arguments: [name, fLastName, mLastName, sex, day, month, year, state, municipality,contractUser,owner ] }).send(
 					{ from: from, gas: gas, gasLimit: "6721975", gasPrice: "20000000000", nonce: nonce }).on('receipt', function (receipt) {
 						console.log("Entró4: " + from);
+				
 						//from = from.toUpperCase();
 						const fromRet = receipt.from.toUpperCase();
 						if (from.toUpperCase() === fromRet) {
@@ -90,7 +93,7 @@ async function createBCdentitySC(req) {
 				console.log(y);
 				web3.currentProvider.disconnect(); //after a request the connection must be closed
 				resolve(y);
-			} catch (error) {
+			} catch (error) {		
 				console.log("Entre al error de conexión 10" + error);
 				resul = {
 					Result: "Error",
@@ -154,6 +157,9 @@ initializer.createBCdentity = async function (req, res) {
 			from: from
 		}
 	};
+
+	console.log("Request body: " + JSON.stringify(obj.body));
+	
 	const errNum = errorControl.someFieldIsEmpty(obj);
 	if (errNum) {  //				
 		resul = {

@@ -411,15 +411,15 @@
           <p>Access: ${userType}</p>
         </div>
       `;
-                const createBtn = document.getElementById('linkTokenBtn');
+                // const createBtn = document.getElementById('linkTokenBtn');
                 const linkT = document.getElementById('linkT');
                 console.log(userType);
-                if (userType === "Government" && createBtn) {
+                if (userType === "Government") {
                     console.log("Government Active");
                     linkT.classList.remove('hidden');
                 }
                 else if ((userType === "Admin" || userType === "User")) {
-                    createBtn.classList.add('hidden');
+                    //createBtn.classList.add('hidden');
                     linkT.classList.remove('hidden');
                 }
                 else if ((userType === "Government" || userType === "Admin" || userType === "User")) {
@@ -427,7 +427,7 @@
                     linkT.classList.remove('hidden');
                 }
                 else {
-                    createBtn.classList.add('hidden');
+                    //createBtn.classList.add('hidden');
                 }
                 // Insert HTML into the container
                 resultSideContainer.innerHTML = htmlContent;

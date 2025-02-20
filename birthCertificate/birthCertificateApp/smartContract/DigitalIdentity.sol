@@ -45,8 +45,11 @@ contract DigitalIdentity is OwnerInterface{
         require(msg.sender==contractFrom.owner(),INCORRECT_OWNER_OF_CONTRACTADDRESS);        
         require(contractFrom.government()!=address(0),NOT_GOVERNMENT);
         require(!linkedTokens[contractAdd].exists,TOKEN_ALREADY_EXIST);
-        UsersInterface contractUsers = UsersInterface(contractAddOfUsers);        
-        bool gcert = (contractUsers.getType(contractUsers.getCreator(msg.sender))==0?true:false);
+        UsersInterface contractUsers = UsersInterface(contractAddOfUsers);
+        bool gcert=false;
+        if(contractUsers.userExists(contractFrom.government())){
+            gcert = (contractUsers.getType(contractFrom.government())==0?true:false);
+        }        
         linkedTokens[contractAdd] = LinkedToken(contractAdd,contractFrom.nameToken(),
             contractFrom.government(),gcert,true);
         addressesTokens.push(contractAdd);

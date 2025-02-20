@@ -326,7 +326,7 @@
             }
         }
 
-        async function changeDI(){
+        async function changeDI() {
             try {
                 const contractAddress = await getContractAdd(); // Wait for contract address
                 const userAddress = await getUserAdd(); // Wait for user address
@@ -383,27 +383,28 @@
 
                 // Generate HTML
                 const htmlContent = `
-        <div class="user-circle">
-          <span>${initials}</span>
-          <div class="tooltip">
-            <p>Email: ${email}</p>
-            <p>${userAdd}</p>
-          </div>
-        </div>
-        <div class="access-text">
-          <p>${email}</p>
-          <p>Access: ${userType}</p>
-        </div>
-      `;
-                const createBtn = document.getElementById('linkTokenBtn');
+                <div class="user-circle">
+                <span>${initials}</span>
+                <div class="tooltip">
+                    <p>Email: ${email}</p>
+                    <p>${userAdd}</p>
+                </div>
+                </div>
+                <div class="access-text">
+                <p>${email}</p>
+                <p>Access: ${userType}</p>
+                </div>
+            `;
+
+                // const createBtn = document.getElementById('linkTokenBtn');
                 const linkT = document.getElementById('linkT');
                 console.log(userType);
-                if (userType === "Government" && createBtn) {
+                if (userType === "Government") {
                     console.log("Government Active");
                     linkT.classList.remove('hidden');
                 }
                 else if ((userType === "Admin" || userType === "User")) {
-                    createBtn.classList.add('hidden');
+                    //createBtn.classList.add('hidden');
                     linkT.classList.remove('hidden');
                 }
                 else if ((userType === "Government" || userType === "Admin" || userType === "User")) {
@@ -411,7 +412,7 @@
                     linkT.classList.remove('hidden');
                 }
                 else {
-                    createBtn.classList.add('hidden');
+                    //createBtn.classList.add('hidden');
                 }
                 // Insert HTML into the container
                 resultSideContainer.innerHTML = htmlContent;
