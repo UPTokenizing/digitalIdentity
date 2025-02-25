@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const modalView = document.getElementById("viewServiceModal");
     const modalEdit = document.getElementById("editAdress");
 
-        
+
     // Get close button
     const closeModal = document.getElementById("closeModal");
     const closeModal2 = document.getElementById("closeModal2");
@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-    
+
 
     // Listen for close click
     closeModal.onclick = function () {
@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-   
+
     let contractAddresses = [];
 
 
@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     async function registerCertificate(certificateString) {
-        console.log("To add ",certificateString)
+        console.log("To add ", certificateString)
         try {
             const response = await fetch('/api/registerCertificate', {
                 method: 'POST',
@@ -180,7 +180,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     'Content-Type': 'application/json',
                 },
             });
-    
+
             // Await the response.json() to get the actual result
             const result = await response.json();
             console.log(result);
@@ -194,36 +194,36 @@ document.addEventListener("DOMContentLoaded", function () {
             throw error;  // Rethrow the error for handling elsewhere
         }
     }
-    
+
     const getUserAdd = async () => {
         try {
-          const email = localStorage.getItem('userEmail'); // Get the email from localStorage
-          if (!email) {
-            throw new Error('No email found in localStorage');
-          }
-  
-          // Send a POST request to the server to get the user address
-          const response = await fetch('/api/getUserAdd', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json', // Set content type to JSON
-            },
-            body: JSON.stringify({ email: email }),
-          });
-  
-          if (!response.ok) {
-            throw new Error('Failed to retrieve user address');
-          }
-  
-          // Parse the response JSON
-          const data = await response.json();
-          console.log('User Address:', data.UserAddress);
-          return data.UserAddress; // Return the user address
-  
+            const email = localStorage.getItem('userEmail'); // Get the email from localStorage
+            if (!email) {
+                throw new Error('No email found in localStorage');
+            }
+
+            // Send a POST request to the server to get the user address
+            const response = await fetch('/api/getUserAdd', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // Set content type to JSON
+                },
+                body: JSON.stringify({ email: email }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to retrieve user address');
+            }
+
+            // Parse the response JSON
+            const data = await response.json();
+            console.log('User Address:', data.UserAddress);
+            return data.UserAddress; // Return the user address
+
         } catch (error) {
-          console.error('Error fetching user address:', error);
+            console.error('Error fetching user address:', error);
         }
-      };
+    };
 
     document.getElementById('create-service-form').addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -231,7 +231,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Get form data
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
-        
+
         data.contractUser = await getContractAdd();
         data.gas = 3000000;
         data.government = await getUserAdd();
@@ -255,7 +255,9 @@ document.addEventListener("DOMContentLoaded", function () {
             if (result.contractAddress) {
 
                 await registerCertificate(result.contractAddress);
-//                console.log('Contract Address:', await getCertificates());
+                await updateBirthCertificate(data.contractUser,result.contractAddress);
+
+                //                console.log('Contract Address:', await getCertificates());
 
                 clearModalFields();
                 modal.style.display = "none";
@@ -421,6 +423,19 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(error);
         }
     }
+    async function getBirthCertificate(usAd) {
+        const userAddress = usAd;  // Replace with actual user address
+
+        const response = await fetch('/api/getBirthCertificate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userAddress }),
+        });
+
+        const data = await response.json();
+        console.log(data);
+        return(data.BirthCertificate);
+    }
 
     // Function to update the table rows based on contractAddresses array
     async function updateTableRows(contractAddresses) {
@@ -428,7 +443,7 @@ document.addEventListener("DOMContentLoaded", function () {
         tbody.innerHTML = ''; // Clear existing rows
 
         for (const address of contractAddresses) {
-            
+
             // Fetch all required information
             const name = await GetInfo(address, "name");
             const fLastName = await GetInfo(address, "fLastName");
@@ -439,9 +454,9 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!name || !fLastName || !mLastName || !dateOfCreation) {
                 continue; // Skip to the next address
             }
-
-            let date = new Date(dateOfCreation * 1000);
-
+            let owner = await GetInfo(address, "owner");
+            // let date = new Date(dateOfCreation * 1000);
+            
             const tr = document.createElement('tr');
             tr.className = 'border-t dark:border-gray-600';
 
@@ -451,7 +466,7 @@ document.addEventListener("DOMContentLoaded", function () {
               ${name} ${fLastName} ${mLastName}
           </td>
           <td class="py-2 px-4 text-sm text-blue-500 dark:text-blue-400">${address}</td>
-          <td class="py-2 px-4 text-sm text-gray-700 dark:text-white">${date.toLocaleString()}</td>
+          <td class="py-2 px-4 text-sm text-gray-700 dark:text-white">${owner}</td>
           <td class="py-2 px-4 text-sm text-gray-700 dark:text-white text-right">
               <div>
                   <button data-id="1" class="hidden dark:text-white dark:hover:text-gray-400 hover:text-gray-500 text-gray-700 button-spacing new-child-button">
@@ -593,6 +608,11 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error('Error in EditAddress:', error);
         }
     }
+
+    
+
+    
+
 
 
 });

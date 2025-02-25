@@ -36,10 +36,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    
 
 
-   
+
+
     let contractAddresses = [];
 
 
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    
+
 
     async function getCertificates() {
         try {
@@ -87,10 +87,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     'Content-Type': 'application/json',
                 },
             });
-    
+
             // Await the response.json() to get the actual result
             const result = await response.json();
-    
+
             if (response.ok) {
                 return result.certificates;  // Return the certificates array
             } else {
@@ -101,40 +101,40 @@ document.addEventListener("DOMContentLoaded", function () {
             throw error;  // Rethrow the error for handling elsewhere
         }
     }
-    
+
     const getUserAdd = async () => {
         try {
-          const email = localStorage.getItem('userEmail'); // Get the email from localStorage
-          if (!email) {
-            throw new Error('No email found in localStorage');
-          }
-  
-          // Send a POST request to the server to get the user address
-          const response = await fetch('/api/getUserAdd', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json', // Set content type to JSON
-            },
-            body: JSON.stringify({ email: email }),
-          });
-  
-          if (!response.ok) {
-            throw new Error('Failed to retrieve user address');
-          }
-  
-          // Parse the response JSON
-          const data = await response.json();
-          console.log('User Address:', data.UserAddress);
-          return data.UserAddress; // Return the user address
-  
+            const email = localStorage.getItem('userEmail'); // Get the email from localStorage
+            if (!email) {
+                throw new Error('No email found in localStorage');
+            }
+
+            // Send a POST request to the server to get the user address
+            const response = await fetch('/api/getUserAdd', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // Set content type to JSON
+                },
+                body: JSON.stringify({ email: email }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to retrieve user address');
+            }
+
+            // Parse the response JSON
+            const data = await response.json();
+            console.log('User Address:', data.UserAddress);
+            return data.UserAddress; // Return the user address
+
         } catch (error) {
-          console.error('Error fetching user address:', error);
+            console.error('Error fetching user address:', error);
         }
-      };
+    };
 
-  
 
- 
+
+
 
     async function GetInfo(address, publicMethod) {
         try {
@@ -169,12 +169,27 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Function to update the table rows based on contractAddresses array
+    async function getBirthCertificate(usAd) {
+        const userAddress = usAd;  // Replace with actual user address
+
+        const response = await fetch('/api/getBirthCertificate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userAddress }),
+        });
+
+        const data = await response.json();
+        console.log(data);
+        return (data.BirthCertificate);
+    }
+
+    // Function to update the table rows based on contractAddresses array
     async function updateTableRows(contractAddresses) {
         const tbody = document.querySelector('tbody');
         tbody.innerHTML = ''; // Clear existing rows
 
         for (const address of contractAddresses) {
-            
+
             // Fetch all required information
             const name = await GetInfo(address, "name");
             const fLastName = await GetInfo(address, "fLastName");
@@ -185,8 +200,9 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!name || !fLastName || !mLastName || !dateOfCreation) {
                 continue; // Skip to the next address
             }
-
-            let date = new Date(dateOfCreation * 1000);
+            let owner = await GetInfo(address, "owner");
+            // let date = new Date(dateOfCreation * 1000);
+            let date = await getBirthCertificate(owner);
 
             const tr = document.createElement('tr');
             tr.className = 'border-t dark:border-gray-600';
@@ -209,7 +225,7 @@ document.addEventListener("DOMContentLoaded", function () {
       `;
             tbody.appendChild(tr);
 
-            
+
         }
     }
 

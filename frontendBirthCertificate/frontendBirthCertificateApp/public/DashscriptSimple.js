@@ -4,21 +4,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let addresToOwner = "";
     // Función para agregar el eventListener a los botones
-    function attachButtonListeners() {
+    async function attachButtonListeners() {
         const newServiceButtons = document.querySelectorAll(".newServiceButton");
 
-        newServiceButtons.forEach((button) => {
+        newServiceButtons.forEach(async (button) => {
             if (!button.dataset.listenerAdded) { // Evitar eventos duplicados
                 button.addEventListener("click", function () {
                     console.log("Botón clickeado:", this.value);
-                    addresToOwner = this.value;
                     modal.style.display = "block"; // Mostrar modal
+                    addresToOwner = this.value;
                 });
 
                 button.dataset.listenerAdded = "true"; // Marcar como procesado
             }
+
+            // Check if the button should be disabled
+            let bt = await getBirthCertificate(button.value);
+            console.log(bt);
+            if (bt !== null && bt !== "" && bt !== undefined && bt !== "null" && bt !== "No Birth Certificate found") {
+                button.disabled = true;
+                button.style.cursor = "cursor";
+                button.style.opacity = 0;
+                
+            }
         });
     }
+
 
 
 
@@ -245,6 +256,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (result.contractAddress) {
 
                 await registerCertificate(result.contractAddress);
+                await updateBirthCertificate(data.owner, result.contractAddress);
                 //                console.log('Contract Address:', await getCertificates());
 
                 clearModalFields();
@@ -498,6 +510,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     fetchEmails();
+
+    async function updateBirthCertificate(usAdd, bt) {
+        console.log(usAdd, bt);
+        const userAddress = usAdd;  // Replace with actual user address
+        const birthCertificate = bt;  // Replace with actual certificate value
+
+        const response = await fetch('/api/updateBirthCertificate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userAddress, birthCertificate }),
+        });
+
+        const data = await response.json();
+
+        console.log(data);
+    }
+
+    async function getBirthCertificate(usAd) {
+        const userAddress = usAd;  // Replace with actual user address
+
+        const response = await fetch('/api/getBirthCertificate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userAddress }),
+        });
+
+        const data = await response.json();
+        console.log(data);
+        return(data.BirthCertificate);
+    }
+
+
 
 
 

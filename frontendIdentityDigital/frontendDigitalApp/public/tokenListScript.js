@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Get form data
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
-        console.log(formData);
+    
         console.log(data);
 
         // Check contractToken
@@ -45,21 +45,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
             try {
                 for (let i = 0; i < fetchEndpoints.length; i++) {
+                    console.log(`Fetching: ${fetchEndpoints[i]}`); // Log each request
+                    
                     const response = await fetch(fetchEndpoints[i], { method: 'GET' });
+                    console.log(`Response status for ${fetchEndpoints[i]}:`, response.status); // Log status
+                    
                     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                    const result = await response.json();
-
+            
+                    const resultText = await response.text(); // Read as text first
+                    console.log(`Raw response text from ${fetchEndpoints[i]}:`, resultText); // Log raw response
+            
+                    const result = JSON.parse(resultText); // Convert to JSON manually
+                    console.log(`Parsed JSON from ${fetchEndpoints[i]}:`, result); // Log parsed JSON
+            
                     const resultElement = document.getElementById('result');
                     const resultContentElement = document.getElementById(`resultContent${i === 0 ? '' : i}`);
-
+            
                     if (result.Result === "Error") {
                         resultElement.classList.remove('hidden');
                         resultContentElement.textContent = 'Failed to retrieve info. Please try again or check the input data.';
                     } else if (result.Result === "Success") {
-                        console.log(result);
                         resultElement.classList.remove('hidden');
-
-                        // Modify the output based on the index
+            
                         if (i === 0) {
                             resultContentElement.textContent = `Linked Tokens to this Identity -> ${result.Value}`;
                         } else if (i === 1) {
@@ -73,8 +80,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Error during fetch:', error);
             }
+            
         }
     });
 });

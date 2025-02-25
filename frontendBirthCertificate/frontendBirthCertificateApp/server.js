@@ -339,6 +339,65 @@ app.get('/api/getCertificates', async (req, res) => {
 });
 
 
+app.post('/api/updateBirthCertificate', async (req, res) => {
+  try {
+    const { userAddress, birthCertificate } = req.body;
+
+    if (!userAddress || !birthCertificate) {
+      return res.status(400).send({ message: 'UserAddress and BirthCertificate are required.' });
+    }
+    console.log('Registered birth:', birthCertificate);
+    const db = admin.firestore();
+
+    // Find the user document with the given UserAddress
+    const userSnapshot = await db.collection('users')
+      .where('UserAddress', '==', userAddress)
+      .get();
+
+    if (userSnapshot.empty) {
+      return res.status(404).send({ message: 'User not found with the provided UserAddress.' });
+    }
+
+    // Update the first found user document (assuming UserAddress is unique)
+    const userDoc = userSnapshot.docs[0].ref;
+    await userDoc.update({ BirthCertificate: birthCertificate });
+    console.log('Registered birth: complete', birthCertificate);
+    res.status(200).send({ message: 'BirthCertificate updated successfully' });
+  } catch (error) {
+    console.error('Error updating BirthCertificate:', error);
+    res.status(500).send({ message: 'Error updating BirthCertificate.' });
+  }
+});
+
+app.post('/api/getBirthCertificate', async (req, res) => {
+  try {
+    const { userAddress } = req.body;
+
+    if (!userAddress) {
+      return res.status(400).send({ message: 'UserAddress is required.' });
+    }
+
+    const db = admin.firestore();
+
+    // Query Firestore to find the user based on UserAddress
+    const userSnapshot = await db.collection('users')
+      .where('UserAddress', '==', userAddress)
+      .get();
+
+    if (userSnapshot.empty) {
+      return res.status(404).send({ message: 'User not found with the provided UserAddress.' });
+    }
+
+    // Get BirthCertificate field from the found user document
+    const userDoc = userSnapshot.docs[0];
+    const birthCertificate = userDoc.data().BirthCertificate || 'No Birth Certificate found';
+
+    res.status(200).send({ BirthCertificate: birthCertificate });
+  } catch (error) {
+    console.error('Error retrieving BirthCertificate:', error);
+    res.status(500).send({ message: 'Error retrieving BirthCertificate.' });
+  }
+});
 
 
 
