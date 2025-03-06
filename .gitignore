@@ -6,7 +6,8 @@ scholarCurriculum/scholarCurriculumApp/node_modules
 frontendIdentityDigital/frontendDigitalApp/node_modules/
 frontendBirthCertificate/frontendBirthCertificateApp/node_modules/
 frontendUsersInteface/frontendUsersApp/node_modules/
+frontendScholarCurriculum/frontendScholarCurriculumApp/node_modules/
 frontendUsersInteface/frontendUsersApp/app/pages/config/firebase-credentials.json
 frontendIdentityDigital/frontendDigitalApp/app/pages/config/firebase-credentials.json
 frontendBirthCertificate/frontendBirthCertificateApp/app/pages/config/firebase-credentials.json
-
+frontendScholarCurriculum/frontendScholarCurriculumApp/app/pages/config/firebase-credentials.json

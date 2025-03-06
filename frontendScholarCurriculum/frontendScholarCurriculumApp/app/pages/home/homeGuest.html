@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Contracts</title>
+  <script src="/DashscriptNoEdit.js"></script>
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/styleDashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <!-- Dark Mode change -->
+  <script>
+    // Tailwind Configuration
+    tailwind.config = {
+      darkMode: 'class', // Use the 'class' strategy for dark mode
+      theme: {
+        extend: {},
+      },
+    };
+
+    // Check if the user has a previously saved preference
+    document.addEventListener('DOMContentLoaded', function () {
+      const darkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+      if (darkModeEnabled) {
+        document.documentElement.classList.add('dark');
+        document.getElementById('darkModeToggle').checked = true; // Check the toggle switch
+      }
+    });
+
+    // Toggle the dark mode
+    function toggleDarkMode() {
+      const isDarkMode = document.documentElement.classList.toggle('dark');
+      if (isDarkMode) {
+        localStorage.setItem('darkMode', 'enabled'); // Save dark mode preference
+      } else {
+        localStorage.setItem('darkMode', 'disabled'); // Save light mode preference
+      }
+    }
+  </script>
+</head>
+
+<style>
+  /* Circle styling */
+  .user-circle {
+    width: 60px;
+    /* Smaller circle */
+    height: 60px;
+    /* Smaller circle */
+    border-radius: 50%;
+    background-color: rgb(255, 102, 0);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    /* Adjust font size for initials */
+    font-weight: bold;
+    margin: 10px auto;
+    position: relative;
+    cursor: pointer;
+  }
+
+  /* Tooltip styling */
+  .tooltip {
+    position: absolute;
+    top: 70px;
+    /* Position tooltip below the circle */
+    left: 25%;
+    background-color: #333;
+    color: #fff;
+    padding: 6px;
+    /* Adjust padding */
+    border-radius: 4px;
+    font-size: 12px;
+    /* Adjust font size */
+    display: none;
+    white-space: nowrap;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    /* Add a shadow for better visibility */
+  }
+
+  .user-circle:hover .tooltip {
+    display: block;
+  }
+
+  /* Access text styling */
+  .access-text {
+    text-align: center;
+    margin-top: 5px;
+    /* Reduce margin */
+    font-size: 14px;
+    /* Adjust font size */
+    font-weight: bold;
+  }
+</style>
+
+<body class="bg-gray-100 dark:bg-gray-900 dark:text-white font-sans">
+  <div class="flex">
+    <!-- Main Content -->
+    <div class="flex-1 p-6">
+      <!-- Navbar -->
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center space-x-4">
+
+          <div id="resultSideContainer"></div>
+        </div>
+        <div class="flex items-center space-x-4">
+
+          <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"
+            id="login"><i class="fas fa-sign-out-alt"></i> Log In</button>
+          
+
+          <!-- Toggle Switch for Dark Mode -->
+          <label class="switch">
+            <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()">
+            <span class="slider">
+              <!-- Moon Icon -->
+              <i class="fas fa-moon moon"></i>
+            </span>
+          </label>
+        </div>
+      </div>
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-bold">Scholar Curriculums</h1>
+          <p class="text-gray-600 dark:text-gray-400">Contracts. Please use this page
+            to view Scholar Curriculums.</p>
+        </div>
+        
+      </div>
+      <div class="mt-6 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+        
+        <div id="response-container"></div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+  <script>
+
+    const resultSideContainer = document.getElementById('resultSideContainer'); // To display results
+
+
+    const getContractAdd = async () => {
+      try {
+        // Send a POST request to the server to get the contract address
+        const response = await fetch('/api/getContractAdd', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Set content type to JSON
+          },
+          body: JSON.stringify({}), // No need to send any data
+        });
+
+        // Handle the response
+        if (!response.ok) {
+          throw new Error('Failed to retrieve contract address');
+        }
+
+        // Parse the response JSON
+        const data = await response.json();
+        return data.contractAdd; // Return the contract address
+
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while fetching contract address');
+      }
+    };
+
+    const getUserAdd = async () => {
+      try {
+        const email = localStorage.getItem('userEmail'); // Get the email from localStorage
+        if (!email) {
+          throw new Error('No email found in localStorage');
+        }
+
+        // Send a POST request to the server to get the user address
+        const response = await fetch('/api/getUserAdd', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Set content type to JSON
+          },
+          body: JSON.stringify({ email: email }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to retrieve user address');
+        }
+
+        // Parse the response JSON
+        const data = await response.json();
+        console.log('User Address:', data.UserAddress);
+        return data.UserAddress; // Return the user address
+
+      } catch (error) {
+        console.error('Error fetching user address:', error);
+      }
+    };
+
+    // Function to get user info
+    async function getUserInfo(contractAdd, userAddress) {
+      try {
+        const response = await fetch(`/getInfoUser?contractAdd=${encodeURIComponent(contractAdd)}&userAddress=${encodeURIComponent(userAddress)}`);
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+      } catch (error) {
+        console.error('Error getting user info:', error);
+        return null;
+      }
+    }
+
+
+
+    // Function to display user info in a table
+    function getUserTypeString(type) {
+      switch (type) {
+        case '0':
+          return "Government";
+        case '1':
+          return "Admin";
+        case '2':
+          return "User";
+        default:
+          return "Unknown"; // Handle unexpected types
+      }
+    }
+
+
+    async function displayUserInfoInSideBar(userInfoDef) {
+      const userType = getUserTypeString(userInfoDef.Data.getType);
+
+      if (userType === "Error") {
+        console.log("No user logged");
+      } else {
+        const email = localStorage.getItem('userEmail') || "No email";
+
+        const userAdd = await getUserAdd();
+
+        // Generate HTML
+        const htmlContent = `
+        <div class="user-circle">
+          <span>${initials}</span>
+          <div class="tooltip">
+            <p>Email: ${email}</p>
+            <p>${userAdd}</p>
+          </div>
+        </div>
+        <div class="access-text">
+          <p>${email}</p>
+          <p>Access: ${userType}</p>
+        </div>
+      `;
+
+        // Insert HTML into the container
+        resultSideContainer.innerHTML = htmlContent;
+
+
+      }
+    }
+
+
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const contractAddress = await getContractAdd(); // Wait for contract address
+        const userAddress = await getUserAdd(); // Wait for user address
+
+        if (contractAddress && userAddress) {
+          const userInfoDef = await getUserInfo(contractAddress, userAddress);
+          if (userInfoDef) {
+            
+            displayUserInfoInSideBar(userInfoDef); // Display the user info in the sidebar
+          } else {
+            console.error('No user info found');
+          }
+        } else {
+          console.error('Missing contract address or user address');
+        }
+      } catch (error) {
+        console.error('Error during DOMContentLoaded:', error);
+      }
+    });
+
+
+    document.getElementById('login').addEventListener('click', function () {
+      window.location.href = '/login';
+    });
+
+    const checkAuth = () => {
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        // Si no está logueado, redirigir a la página de login
+        window.location.href = '/';
+        
+      }
+    };
+
+    // Ejecutar al cargar la página
+    checkAuth();
+
+
+  
+  </script>
+</body>
+
+</html>

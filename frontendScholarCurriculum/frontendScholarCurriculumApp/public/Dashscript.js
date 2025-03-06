@@ -1,12 +1,9 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
-
-    
-
-
-    document.getElementById('link-token-form').addEventListener('submit', async (event) => {
+    document.getElementById('curriculum-form').addEventListener('submit', async (event) => {
         event.preventDefault();
+        console.log("Form submission prevented!");
         // Get form data
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
@@ -18,15 +15,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Create an object with the input values
             const inputValues = {
-                gas: 3000000, // Get gas amount
-                contractAdd: data.contractAddress, // Get contract address
-                contract2Add: data.tokenAddress, // Get token address
+                gas: 300000, // Get gas amount
+                BirthCertificate: data.BirthCertificateAddress, // Get contract address
+                studentID: data.studentID, // Get token address
                 from: userAddress // Use the awaited address
             };
 
-            console.log('Input Values for link:', inputValues); // For debugging
+            console.log('Input Values for curriculum:', inputValues); // For debugging
 
-            const response = await fetch('/linkTokenService', {
+            const response = await fetch('/createCurriculum', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(inputValues)
@@ -40,13 +37,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Check if the response indicates an error
             if (result.Result === "Error") {
+                alert("Error during creation");
                 resultElement.classList.remove('hidden');
                 resultContentElement.textContent = 'Failed to create contract. Please try again or check the input data.';
             } else if (result.Result === "Success") {
                 console.log(result);
+                await updateBirthCertificateWithStudentID(data.studentID, data.BirthCertificateAddress)
+                alert("Curriculum created successfully!");
                 resultElement.classList.remove('hidden');
-                resultContentElement.textContent = `Linked Successfully`;
+                resultContentElement.textContent = `Curriculum created successfully!`;
             } else {
+                alert("Error during creation");
                 resultElement.classList.remove('hidden');
                 resultContentElement.textContent = 'Unexpected result: ' + result.Result;
             }
@@ -54,6 +55,33 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Error:', error);
         }
     });
+
+    async function updateBirthCertificateWithStudentID(studentID, birthCertificate) {
+        console.log(studentID, birthCertificate);
+
+        const response = await fetch('/api/updateBirthCertificateWithStudentID', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ studentID, birthCertificate }),
+        });
+
+        const data = await response.json();
+        console.log(data);
+    }
+
+
+    // use this to not let creat more curriculums
+    async function getStudentsIDs() {
+        const response = await fetch('/api/getStudentsIDs', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({}),
+        });
+
+        const data = await response.json();
+        console.log(data);
+        return (data.BirthCertificate);
+    }
 
     const getContractAdd = async () => {
         try {
@@ -110,6 +138,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Error fetching user address:', error);
         }
     };
+
 
 
 
