@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const fetchEndpoints = [
                 `/consultNumberToken?contractAdd=${encodeURIComponent(data.contractAdd)}`,
                 `/consultTokens?contractAdd=${encodeURIComponent(data.contractAdd)}&contractToken=${encodeURIComponent(data.contractToken)}`,
-                `/consultTokenGovernment?contractAdd=${encodeURIComponent(data.contractAdd)}&contractToken=${encodeURIComponent(data.contractToken)}`,
+                `/consultTokenCreator?contractAdd=${encodeURIComponent(data.contractAdd)}&contractToken=${encodeURIComponent(data.contractToken)}`,
             ];
 
             try {

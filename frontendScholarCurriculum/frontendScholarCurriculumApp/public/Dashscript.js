@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
             } else if (result.Result === "Success") {
                 console.log(result);
                 await updateBirthCertificateWithStudentID(data.studentID, data.BirthCertificateAddress)
+                await updateScholarCurriculum(data.BirthCertificateAddress,result.contractAddress, "UpCurriculum");
                 alert("Curriculum created successfully!");
                 resultElement.classList.remove('hidden');
                 resultContentElement.textContent = `Curriculum created successfully!`;
@@ -63,6 +64,18 @@ document.addEventListener('DOMContentLoaded', function () {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ studentID, birthCertificate }),
+        });
+
+        const data = await response.json();
+        console.log(data);
+    }
+    async function updateScholarCurriculum(birthCertificate, curriculumAdd,Institution) {
+        console.log(birthCertificate, curriculumAdd,Institution);
+
+        const response = await fetch('/api/updateScholarCurriculum', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ birthCertificate, curriculumAdd ,Institution}),
         });
 
         const data = await response.json();

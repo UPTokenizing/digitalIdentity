@@ -296,13 +296,15 @@
         function getUserTypeString(type) {
             switch (type) {
                 case '0':
-                    return "Government";
+                    return 'Government';
                 case '1':
-                    return "Admin";
+                    return 'Admin';
                 case '2':
-                    return "User";
+                    return 'Educational Administrator';
+                case '10':
+                    return 'User';
                 default:
-                    return "Unknown"; // Handle unexpected types
+                    return 'Unknown';
             }
         }
 
@@ -364,7 +366,7 @@
 
                 const registerUserBtn = document.getElementById('registerUserBtn');
                 const userList = document.getElementById('userList');
-                if (userType === "User") {
+                if (userType !=="Government" && userType !=="Admin") {
                     registerUserBtn.classList.add('hidden');
                     userList.classList.add('hidden');
                 }

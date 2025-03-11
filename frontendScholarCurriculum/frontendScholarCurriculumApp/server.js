@@ -70,7 +70,7 @@ app.get('/fetch-proof', async (req, res) => {
 app.post('/createCurriculum', async (req, res) => {
 
   try {
-    const { gas,BirthCertificate, studentID, from } = req.body;
+    const { gas, BirthCertificate, studentID, from } = req.body;
 
     const requestData = {
       gas,
@@ -78,9 +78,9 @@ app.post('/createCurriculum', async (req, res) => {
       studentID,
       from
     };
-    
+
     console.log(requestData);
-    
+
 
 
     const response = await axios.post('http://172.18.1.3:5500/createCurriculum', requestData, {
@@ -282,7 +282,7 @@ app.get('/api/getAllEmails', async (req, res) => {
 //Check to erase
 app.post('/api/registerCertificate', async (req, res) => {
   const { certificateString } = req.body;
-  
+
   try {
     const db = admin.firestore();
 
@@ -431,6 +431,39 @@ app.post('/api/updateBirthCertificateWithStudentID', async (req, res) => {
     res.status(500).send({ message: 'Error updating studentID.' });
   }
 });
+
+app.post('/api/updateScholarCurriculum', async (req, res) => {
+  try {
+    const { birthCertificate, curriculumAdd, Institution } = req.body;
+
+    if (!birthCertificate || !curriculumAdd || !Institution) {
+      return res.status(400).send({ message: 'birthCertificate, Institution, and curriculumAdd are required.' });
+    }
+
+    console.log('Registered curriculum:', curriculumAdd);
+    const db = admin.firestore();
+
+    // Find the user document with the given UserAddress
+    const userSnapshot = await db.collection('users')
+      .where('BirthCertificate', '==', birthCertificate)
+      .get();
+
+    if (userSnapshot.empty) {
+      return res.status(404).send({ message: 'User not found with the provided birthCertificate.' });
+    }
+
+    // Update the first found user document (assuming birthCertificate is unique)
+    const userDoc = userSnapshot.docs[0].ref;
+    await userDoc.update({ [Institution]: curriculumAdd });  // Dynamically add field
+
+    console.log(`Updated: ${Institution}: ${curriculumAdd}`);
+    res.status(200).send({ message: `Curriculum added under ${Institution}` });
+  } catch (error) {
+    console.error('Error updating curriculumAdd:', error);
+    res.status(500).send({ message: 'Error updating curriculumAdd.' });
+  }
+});
+
 
 
 

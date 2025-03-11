@@ -226,11 +226,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     const studentID = student.studentID; // Extract student ID
     
                     // Fetch user address using the birth certificate
-                    const userAdd = birthCertificate; // Keeping birth certificate in this column
-    
+                    const userAdd = birthCertificate; // Keeping birth certificate in    this column
+                    console.log(contractAddress, "+" , userAdd);
                     const userInfo = await getUserInfo(contractAddress, userAdd);
-                    const userType = getUserTypeString(userInfo.Data.getType);
-    
+                    
+                    console.log(userInfo);
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${studentID}</td>

@@ -328,16 +328,18 @@
               userTypeSelect.innerHTML = `
             <option value="0">Government</option>
             <option value="1">Admin</option>
-            <option value="2">User</option>
+            <option value="10">User</option>
+            <option value="2">Educational Administrator</option>
           `;
               break;
             case '1':
               userTypeSelect.innerHTML = `
             <option value="1">Admin</option>
-            <option value="2">User</option>
+            <option value="10">User</option>
+            <option value="2">Educational Administrator</option>
           `;
               break;
-            case '2':
+            case '10':
               window.location.href = "/";
               break;
             default:
@@ -360,6 +362,8 @@
         case '1':
           return 'Admin';
         case '2':
+          return 'Educational Administrator';
+        case '10':
           return 'User';
         default:
           return 'Unknown';
@@ -401,7 +405,7 @@
         resultSideContainer.innerHTML = htmlContent;
 
         const registerUserBtn = document.getElementById('registerUserBtn');
-        if (userType === "User" && registerUserBtn) {
+        if (userType !== "Government" && userType !== "Admin" && registerUserBtn) {
           registerUserBtn.classList.add('hidden');
         }
       }
@@ -592,6 +596,13 @@
                   });
                   console.log(response);
                   if (response.ok) {
+                    const contractAddress = await getContractAdd();
+                    console.log("the add is " + contractAddress);
+                    const userInfo = await getUserInfo(contractAddress, formData.UserAddress);
+                    console.log("the info is " + userInfo);
+                    await registerCertificate(userInfo.Data.getDigIdentityAdd);
+
+
                     alert('User registered successfully');
                     document.getElementById('overlay').style.display = 'none';
                     window.location.href = '/users';
@@ -628,7 +639,30 @@
 
 
 
+    async function registerCertificate(certificateString) {
+      console.log("To add ", certificateString)
+      try {
+        const response = await fetch('/api/registerDigitalIdentity', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ certificateString })
+        });
 
+        // Await the response.json() to get the actual result
+        const result = await response.json();
+        console.log("Certificate registered:", result); // Log the actual result
+
+        if (response.ok) {
+          console.log("Certificate successfully added:", certificateString);
+        } else {
+          console.error("Error adding certificate:", result.message);
+        }
+      } catch (error) {
+        console.error("Error in API call:", error);
+      }
+    }
 
     const checkAuth = () => {
       const token = localStorage.getItem('authToken');

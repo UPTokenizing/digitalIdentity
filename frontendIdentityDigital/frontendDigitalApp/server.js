@@ -96,7 +96,7 @@ app.post('/linkTokenService', async (req, res) => {
   }
 });
 
-app.get('/consultTokenGovernment', async (req, res) => {
+app.get('/consultTokenCreator', async (req, res) => {
   try {
     const { contractAdd, contractToken } = req.query;
 
@@ -106,7 +106,7 @@ app.get('/consultTokenGovernment', async (req, res) => {
     }
 
     // Send a GET request to your desired endpoint with the provided query parameters
-    const response = await axios.get('http://172.18.1.3:5500/consultTokenGovernment', {
+    const response = await axios.get('http://172.18.1.3:5500/consultTokenCreator', {
       params: {
         contractAdd,
         contractToken
@@ -308,6 +308,68 @@ app.get('/getInfoUser', async (req, res) => {
     res.status(500).send('Error fetching the data');
   }
 });
+
+app.post('/api/updateDigitalID', async (req, res) => {
+  try {
+    const { digitalIDadd, tokenAddress } = req.body;
+
+    if (!digitalIDadd || !tokenAddress) {
+      return res.status(400).send({ message: 'digitalIDadd and tokenAddress are required.' });
+    }
+
+    console.log('Updating DigitalIdentity:', digitalIDadd);
+
+    const db = admin.firestore();
+    
+    // Reference to the specific DigitalIdentity document
+    const digitalIDRef = db.collection('DigitalIdentity').doc(digitalIDadd);
+
+    // Check if the document exists
+    const docSnapshot = await digitalIDRef.get();
+    if (!docSnapshot.exists) {
+      return res.status(404).send({ message: 'DigitalIdentity not found with the provided digitalIDadd.' });
+    }
+
+    // Update the document by adding tokenAddress to an array at index 0
+    await digitalIDRef.update({
+      tokenAddresses: admin.firestore.FieldValue.arrayUnion(tokenAddress)
+    });
+
+    console.log('Update complete:', tokenAddress);
+    res.status(200).send({ message: 'DigitalIdentity updated successfully.' });
+
+  } catch (error) {
+    console.error('Error updating DigitalIdentity:', error);
+    res.status(500).send({ message: 'Error updating DigitalIdentity.' });
+  }
+});
+
+app.get('/api/getDigitalID', async (req, res) => {
+  try {
+      const { digitalIDadd } = req.query;
+
+      if (!digitalIDadd) {
+          return res.status(400).send({ message: 'digitalIDadd is required.' });
+      }
+
+      const db = admin.firestore();
+      const digitalIDRef = db.collection('DigitalIdentity').doc(digitalIDadd);
+      const docSnapshot = await digitalIDRef.get();
+
+      if (!docSnapshot.exists) {
+          return res.status(404).send({ message: 'DigitalIdentity not found.' });
+      }
+
+      const data = docSnapshot.data();
+      res.status(200).send({ tokenAddresses: data.tokenAddresses || [] });
+
+  } catch (error) {
+      console.error('Error fetching DigitalIdentity:', error);
+      res.status(500).send({ message: 'Error retrieving DigitalIdentity.' });
+  }
+});
+
+
 
 const PORT = 5511;
 app.listen(PORT, () => {

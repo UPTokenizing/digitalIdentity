@@ -373,6 +373,24 @@ app.get('/api/getAllEmails', async (req, res) => {
 });
 
 
+app.post('/api/registerDigitalIdentity', async (req, res) => {
+  const { certificateString } = req.body;
+  
+  try {
+    const db = admin.firestore();
+
+    // Create a new document in the `BirthCertificates` collection with the certificate string as the document ID
+    const docRef = db.collection('DigitalIdentity').doc(certificateString);
+
+    // Set the document data (it can be an empty object or you can add additional metadata)
+    await docRef.set({ createdAt: admin.firestore.FieldValue.serverTimestamp() });
+
+    res.status(201).send({ message: 'Certificate added successfully', certificateString });
+  } catch (error) {
+    console.error('Error adding certificate:', error);
+    res.status(400).send({ message: error.message });
+  }
+});
 
 
 

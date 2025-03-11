@@ -284,13 +284,15 @@
     function getUserTypeString(type) {
       switch (type) {
         case '0':
-          return "Government";
+          return 'Government';
         case '1':
-          return "Admin";
+          return 'Admin';
         case '2':
-          return "User";
+          return 'Educational Administrator';
+        case '10':
+          return 'User';
         default:
-          return "Unknown"; // Handle unexpected types
+          return 'Unknown';
       }
     }
 
@@ -322,8 +324,8 @@
 
         function updateButtonsVisibility() {
           // Comprobar el tipo de usuario
-          if (userInfoDef.Data.getType !== '0') {
-
+          if (userInfoDef.Data.getType !== '2') {
+            window.location.href = '/dashboard';
             // Ocultar botones con data-id 1 y 3
             document.getElementById('newServiceButton')?.classList.add('hidden');
             document.getElementById('trashbtn')?.classList.add('hidden');
@@ -332,6 +334,7 @@
               button.classList.add('hidden');
             });
           } else {
+
             // Mostrar botones con data-id 1 y 3
             document.getElementById('newServiceButton')?.classList.remove('hidden');
             document.getElementById('trashbtn')?.classList.remove('hidden');

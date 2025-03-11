@@ -200,9 +200,11 @@
                             </div>
                             <div class="mb-4">
                                 <label for="contractToken" class="block text-gray-400 dark:text-gray-300">Token to
-                                    search Address</label>
-                                <input type="text" id="contractToken" name="contractToken" placeholder="0x000..."
+                                    Search Address</label>
+                                <select id="contractToken" name="contractToken"
                                     class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-900 dark:text-white">
+                                    <option value="" disabled selected>Select a token</option>
+                                </select>
                             </div>
                             <button type="submit"
                                 class="w-full h-12 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
@@ -229,6 +231,9 @@
         }
     </style>
     <script>
+
+
+
         const resultSideContainer = document.getElementById('resultSideContainer'); // To display results
 
         // Function to handle form visibility based on email in localStorage
@@ -334,6 +339,8 @@
                 if (contractAddress && userAddress) {
                     const userInfoDef = await getUserInfo(contractAddress, userAddress);
                     if (userInfoDef) {
+                        await populateTokenDropdown(userInfoDef.Data.getDigIdentityAdd);
+
                         return userInfoDef.Data.getDigIdentityAdd;
                     } else {
                         console.error('No user info found');
@@ -358,13 +365,15 @@
             console.log("Tipo: ", type);
             switch (type) {
                 case '0':
-                    return "Government";
+                    return 'Government';
                 case '1':
-                    return "Admin";
+                    return 'Admin';
                 case '2':
-                    return "User";
+                    return 'Educational Administrator';
+                case '10':
+                    return 'User';
                 default:
-                    return "Unknown"; // Handle unexpected types
+                    return 'Unknown';
             }
         }
 
@@ -487,9 +496,85 @@
         });
 
 
+        const getTokenAddresses = async (digitalIDadd) => {
+            try {
+                if (!digitalIDadd) {
+                    throw new Error('Missing required parameter: digitalIDadd');
+                }
+
+                // Send a GET request to fetch the digital identity document
+                const response = await fetch(`/api/getDigitalID?digitalIDadd=${digitalIDadd}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Failed to retrieve DigitalIdentity: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log('Token Addresses:', data.tokenAddresses);
+                return data.tokenAddresses; // Return the list of token addresses
+
+            } catch (error) {
+                console.error('Error fetching token addresses:', error);
+                return []; // Return an empty array in case of error
+            }
+        };
 
 
+        const populateTokenDropdown = async (digitalID) => {
+            try {
+                const tokenAddresses = await getTokenAddresses(digitalID);
 
+                const selectElement = document.getElementById('contractToken');
+                selectElement.innerHTML = '<option value="" disabled selected>Select a token</option>'; // Reset options
+
+                if (tokenAddresses.length === 0) {
+                    selectElement.innerHTML += '<option value="" disabled>No tokens found</option>';
+                    return;
+                }
+
+                for (const token of tokenAddresses) {
+                    const name = await getName(token, digitalID); // Call getName function to get the display name
+                    const option = document.createElement('option');
+                    option.value = token;  // Set the value as the token address
+                    option.textContent = name || token; // Use name if available, otherwise fallback to the token address
+                    selectElement.appendChild(option);
+                }
+            } catch (error) {
+                console.error('Error populating token dropdown:', error);
+            }
+        };
+
+
+        const getName = async (tokenAddress, idadd) => {
+            try {
+                const response = await fetch(`/consultTokens?contractAdd=${encodeURIComponent(idadd)}&contractToken=${encodeURIComponent(tokenAddress)}`, {
+                    method: 'GET',
+                });
+
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+                const resultText = await response.text(); // Read response as text first
+                console.log(`Raw response text for ${tokenAddress}:`, resultText);
+
+                const result = JSON.parse(resultText); // Convert to JSON manually
+                console.log(`Parsed JSON result for ${tokenAddress}:`, result);
+
+                if (result.Result === "Success") {
+                    return result.Value; // Return the token name
+                } else {
+                    console.error(`Error retrieving name for ${tokenAddress}: ${result.Result}`);
+                    return tokenAddress; // Fallback to showing the address if name retrieval fails
+                }
+            } catch (error) {
+                console.error(`Error fetching token name for ${tokenAddress}:`, error);
+                return tokenAddress; // Fallback to showing the address in case of failure
+            }
+        };
 
 
         // Navigate buttons

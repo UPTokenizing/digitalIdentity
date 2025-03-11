@@ -43,6 +43,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 resultElement.classList.remove('hidden');
                 resultContentElement.textContent = 'Failed to create contract. Please try again or check the input data.';
             } else if (result.Result === "Success") {
+                
+                await updateDigitalID(inputValues.contractAdd, inputValues.contract2Add);
+
+
                 console.log(result);
                 resultElement.classList.remove('hidden');
                 resultContentElement.textContent = `Linked Successfully`;
@@ -54,6 +58,38 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Error:', error);
         }
     });
+
+    const updateDigitalID = async (digitalIDadd, tokenAddress) => {
+        try {
+            if (!digitalIDadd || !tokenAddress) {
+                throw new Error('Missing required parameters: digitalIDadd or tokenAddress');
+            }
+    
+            // Send a POST request to update the digital ID
+            const response = await fetch('/api/updateDigitalID', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ digitalIDadd, tokenAddress })
+            });
+    
+            // Check if the request was successful
+            if (!response.ok) {
+                throw new Error(`Failed to update DigitalIdentity: ${response.statusText}`);
+            }
+    
+            // Parse the response JSON
+            const data = await response.json();
+            console.log('Update successful:', data.message);
+            return data; // Return response data for further use if needed
+    
+        } catch (error) {
+            console.error('Error updating DigitalIdentity:', error);
+            return { error: error.message }; // Return error object
+        }
+    };
+    
 
     const getContractAdd = async () => {
         try {

@@ -371,17 +371,19 @@
             console.log("Tipo: ", type);
             switch (type) {
                 case '0':
-                    return "Government";
+                    return 'Government';
                 case '1':
-                    return "Admin";
+                    return 'Admin';
                 case '2':
-                    return "User";
+                    return 'Educational Administrator';
+                case '10':
+                    return 'User';
                 default:
-                    return "Unknown"; // Handle unexpected types
+                    return 'Unknown';
             }
         }
 
-        
+
 
 
 
@@ -461,7 +463,7 @@
                 resultSideContainer.innerHTML = htmlContent;
 
                 const registerUserBtn = document.getElementById('registerUserBtn');
-                if (userType === "User" && registerUserBtn) {
+                if (userType !=="Government" && userType !=="Admin"&& registerUserBtn) {
                     registerUserBtn.classList.add('hidden');
                 }
             }
