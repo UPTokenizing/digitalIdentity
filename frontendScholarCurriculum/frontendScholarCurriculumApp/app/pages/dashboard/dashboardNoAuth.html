@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Birth Certificate | Users List</title>
+  <title>Scholar Curriculum | Student Curriculum</title>
   <link rel="stylesheet" href="/style.css">
-  <script src="/DashscriptSimple.js"></script>
+  <script src="/DashscriptNoEditUsers.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/styleDashboard.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -104,17 +104,10 @@
       <nav class="mt-6">
         <ul>
           <div id="resultSideContainer"></div>
-          <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
-            <button
-              class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-              id="homeBtn">
-              Birth Certificate Addresses
-            </button>
-          </li>
           <li
             class="px-4 py-2 text-gray-200 dark:text-gray-700 hover:bg-gray-600 dark:hover:bg-gray-100 dark:bg-gray-100 bg-gray-600">
-            <button class="w-full h-8 text-left flex items-center px-4 rounded-lg " id="userList">User
-              List</button>
+            <button class="w-full h-8 text-left flex items-center px-4 rounded-lg " id="studentPanel">Your Curriculum
+            </button>
           </li>
         </ul>
       </nav>
@@ -126,7 +119,7 @@
       <div class="flex items-center justify-between mb-6">
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-2xl font-bold">Create Birth Certificates for Users</h1>
+            <h1 class="text-2xl font-bold">Check and add achievements to students</h1>
             <!-- <p class="text-gray-600 dark:text-gray-400">List of users in firebase</p> -->
           </div>
         </div>
@@ -160,15 +153,19 @@
               <tr>
                 <th
                   class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
-                  Email
+                  Student ID
                 </th>
                 <th
                   class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
-                  User Address
+                  Complete Name
                 </th>
                 <th
                   class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
-                  Type
+                  Curriculum Address
+                </th>
+                <th
+                  class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
+                  Achievements
                 </th>
                 <th
                   class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
@@ -182,87 +179,50 @@
           </table>
           <div id="response-container"></div>
         </div>
-        
+
 
         <!-- New Service Modal -->
         <div id="newServiceModal" class="modal hidden fixed inset-0 flex items-center justify-center z-50">
           <div class="modal-content p-6 rounded-lg shadow-lg bg-white dark:bg-gray-800 dark:text-white relative">
             <span class="close cursor-pointer text-gray-500 dark:text-gray-300 text-lg font-bold absolute top-2 right-2"
               id="closeModal">&times;</span>
-            <h2 class="text-xl font-semibold mb-4">Create Service</h2>
+            <h2 class="text-xl font-semibold mb-4">Add Achievement</h2>
             <div class="form-container">
               <form id="create-service-form">
 
-                <!-- Name -->
+                <!-- Achievement ID -->
                 <div class="mb-4">
-                  <label for="name" class="block text-gray-700 dark:text-gray-300">Name</label>
-                  <input type="text" id="name" name="name"
+                  <label for="achievementID" class="block text-gray-700 dark:text-gray-300">Achievement ID</label>
+                  <input type="text" id="achievementID" name="achievementID"
                     class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-                    required>
+                    placeholder="000000" required>
                 </div>
-                <!-- Father's Last Name -->
+                <!-- Achievement Title -->
                 <div class="mb-4">
-                  <label for="fLastName" class="block text-gray-700 dark:text-gray-300">Father's Last Name</label>
-                  <input type="text" id="fLastName" name="fLastName"
+                  <label for="title" class="block text-gray-700 dark:text-gray-300">Achievement Title</label>
+                  <input type="text" id="title" name="title"
                     class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-                    required>
+                    placeholder="Title" required>
                 </div>
-                <!-- Mother's Last Name -->
+                <!-- Achievement Details -->
                 <div class="mb-4">
-                  <label for="mLastName" class="block text-gray-700 dark:text-gray-300">Mother's Last Name</label>
-                  <input type="text" id="mLastName" name="mLastName"
+                  <label for="details" class="block text-gray-700 dark:text-gray-300">Achievement Details</label>
+                  <input type="text" id="details" name="details"
                     class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-                    required>
+                    placeholder="Details here." required>
                 </div>
-                <!-- Sex -->
+                <!-- Achievement Creation Date -->
                 <div class="mb-4">
-                  <label for="sex" class="block text-gray-700 dark:text-gray-300">Sex</label>
-                  <select id="sex" name="sex"
+                  <label for="date" class="block text-gray-700 dark:text-gray-300">Achievement Creation Date
+                    (Epchoch)</label>
+                  <input type="text" id="date" name="date"
                     class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-                    required>
-                    <option value="true">Male</option>
-                    <option value="false">Female</option>
-                  </select>
-                </div>
-                <!-- Day -->
-                <div class="mb-4">
-                  <label for="day" class="block text-gray-700 dark:text-gray-300">Day</label>
-                  <input type="number" id="day" name="day" min="1" max="31"
-                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-                    required>
-                </div>
-                <!-- Month -->
-                <div class="mb-4">
-                  <label for="month" class="block text-gray-700 dark:text-gray-300">Month</label>
-                  <input type="number" id="month" name="month" min="1" max="12"
-                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-                    required>
-                </div>
-                <!-- Year -->
-                <div class="mb-4">
-                  <label for="year" class="block text-gray-700 dark:text-gray-300">Year</label>
-                  <input type="number" id="year" name="year" min="1900"
-                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-                    required>
-                </div>
-                <!-- State -->
-                <div class="mb-4">
-                  <label for="state" class="block text-gray-700 dark:text-gray-300">State</label>
-                  <input type="text" id="state" name="state"
-                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-                    required>
-                </div>
-                <!-- Municipality -->
-                <div class="mb-4">
-                  <label for="municipality" class="block text-gray-700 dark:text-gray-300">Municipality</label>
-                  <input type="text" id="municipality" name="municipality"
-                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-                    required>
+                    placeholder="1789549814" required>
                 </div>
                 <!-- Buttons -->
                 <button type="submit"
                   class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-500">
-                  Create Contract
+                  Add to curriculum
                 </button>
                 <button type="button" id="cancelButton"
                   class="bg-red-500 text-white font-semibold px-4 py-2 rounded hover:bg-red-600">Cancel</button>
@@ -271,9 +231,49 @@
           </div>
         </div>
 
+        <!-- View info Modal -->
+        <div id="ViewModal" class="modal hidden fixed inset-0 flex items-center justify-center z-50">
+          <div class="modal-content p-6 rounded-lg shadow-lg bg-white dark:bg-gray-800 dark:text-white relative">
+            <span class="close cursor-pointer text-gray-500 dark:text-gray-300 text-lg font-bold absolute top-2 right-2"
+              id="closeModalV">&times;</span>
 
+            <h2 class="text-xl font-semibold mb-4">Achievement Details</h2>
+            <!-- Achievement Title -->
+            <div class="mb-4">
+              <label class="block text-gray-700 dark:text-gray-300">Title</label>
+              <span id="titleV" class="text-lg font-semibold">dasdsa</span>
+            </div>
+
+            <!-- Achievement ID -->
+            <div class="mb-4">
+              <label class="block text-gray-700 dark:text-gray-300">ID</label>
+              <span id="achievementIDV" class="text-lg font-semibold"></span>
+            </div>
+
+            <!-- Achievement Details -->
+            <div class="mb-4">
+              <label class="block text-gray-700 dark:text-gray-300">Details</label>
+              <span id="detailsV" class="text-lg font-semibold"></span>
+            </div>
+
+            <!-- Achievement Creation Date -->
+            <div class="mb-4">
+              <label class="block text-gray-700 dark:text-gray-300">Date</label>
+              <span id="dateV" class="text-lg font-semibold"></span>
+            </div>
+
+            <!-- Buttons -->
+            <button type="button" id="cancelButtonV"
+              class="bg-red-500 text-white font-semibold px-4 py-2 rounded hover:bg-red-600">Cancel</button>
+            </form>
+          </div>
+        </div>
       </div>
+
+
+
     </div>
+  </div>
   </div>
 
   <script>
@@ -419,10 +419,12 @@
       }
     }
 
-  
+
     async function displayUserInfoInSideBar(userInfoDef) {
       const userType = getUserTypeString(userInfoDef.Data.getType);
-
+      if (userType === "Educational Administrator") {
+        window.location.href = '/';
+      }
       if (userType === "Error") {
         console.log("No user logged");
       } else {
@@ -452,13 +454,6 @@
 
         // Insert HTML into the container
         resultSideContainer.innerHTML = htmlContent;
-
-        const registerUserBtn = document.getElementById('registerUserBtn');
-        const userList = document.getElementById('userList');
-        if (userType !=="Government" && userType) {
-          registerUserBtn.classList.add('hidden');
-          userList.classList.add('hidden');
-        }
       }
     }
 
@@ -487,22 +482,13 @@
 
 
 
-    // Navigate buttons
-    document.getElementById('homeBtn').addEventListener('click', function () {
-      window.location.href = '/';
-    });
 
 
-    document.getElementById('userList').addEventListener('click', function () {
-      window.location.href = '/dashboard';
+
+    document.getElementById('studentPanel').addEventListener('click', function () {
+      window.location.href = '/studentPanel';
     });
     document.addEventListener('DOMContentLoaded', function () {
-      const registerUserBtn = document.getElementById('registerUserBtn');
-      if (registerUserBtn) {
-        registerUserBtn.addEventListener('click', function () {
-          window.location.href = '/dashboard';
-        });
-      }
 
       const logoutBtn = document.getElementById('logoutBtn');
       if (logoutBtn) {

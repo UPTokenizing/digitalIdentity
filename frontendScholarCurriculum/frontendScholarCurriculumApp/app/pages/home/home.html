@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel Contracts</title>
+  <title>Scholar Curriculum | Creation</title>
   <script src="/Dashscript.js"></script>
   <link rel="stylesheet" href="/style.css">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -299,6 +299,9 @@
 
     async function displayUserInfoInSideBar(userInfoDef) {
       const userType = getUserTypeString(userInfoDef.Data.getType);
+      if (userType !== "Educational Administrator") {
+        window.location.href = '/studentPanel';
+      }
       if (userType === "Error") {
         console.log("No user logged");
       } else {

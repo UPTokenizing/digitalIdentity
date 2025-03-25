@@ -272,7 +272,8 @@ document.addEventListener("DOMContentLoaded", function () {
             let dateU = new Date(dateLastUpdate * 1000);
             const tokenFather = await GetInfo(address, "tokenFather");
             const tokenMother = await GetInfo(address, "tokenMother");
-            const tokenDigIdentity = await GetInfo(address, "tokenDigIdentity");
+            const usAdds = await getUserFromBirthC(address);
+            const tokenDigIdentity = await getDigIdentityAdd(usAdds.UserAddress);
             const owner = await GetInfo(address, "owner");
             const government = await GetInfo(address, "government");
             // Populate the HTML elements with the fetched information
@@ -287,11 +288,11 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('fLastName2').textContent = fLastName || 'N/A';
             document.getElementById('mLastName2').textContent = mLastName || 'N/A';
             document.getElementById('gender2').textContent = genderType || 'N/A';
-            document.getElementById('day2').textContent = day || 'N/A';
-            document.getElementById('month2').textContent = month || 'N/A';
-            document.getElementById('year2').textContent = year || 'N/A';
-            document.getElementById('state2').textContent = state || 'N/A';
-            document.getElementById('municipality2').textContent = municipality || 'N/A';
+            document.getElementById('day2').textContent = day || 'Unauthorized';
+            document.getElementById('month2').textContent = month || 'Unauthorized';
+            document.getElementById('year2').textContent = year || 'Unauthorized';
+            document.getElementById('state2').textContent = state || 'Unauthorized';
+            document.getElementById('municipality2').textContent = municipality || 'Unauthorized';
             document.getElementById('dateCreation2').textContent = dateC.toLocaleString() || 'N/A';
             document.getElementById('dateLastUpdate2').textContent = dateU.toLocaleString() || 'N/A';
             document.getElementById('tokenFather2').textContent = tokenFather || 'N/A';
@@ -303,6 +304,67 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error('Error fetching information:', error);
         }
     }
+
+    async function getUserInfo(contractAdd, userAddress) {
+        try {
+            console.log(contractAdd + "," + userAddress)
+            const response = await fetch(`/getInfoUser?contractAdd=${encodeURIComponent(contractAdd)}&userAddress=${encodeURIComponent(userAddress)}`);
+            console.log(response);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error getting user info:', error);
+            return null;
+        }
+    }
+
+    async function getDigIdentityAdd(userAdd) {
+        try {
+            const contractAddress = await getContractAdd(); // Wait for contract address
+            const userAddress = userAdd; // Wait for user address
+
+            if (contractAddress && userAddress) {
+                const userInfoDef = await getUserInfo(contractAddress, userAddress);
+                console.log(userInfoDef);
+                if (userInfoDef) {
+                    return userInfoDef.Data.getDigIdentityAdd;
+                } else {
+                    console.error('No user info found');
+                }
+            } else {
+                console.error('Missing contract address or user address');
+            }
+        } catch (error) {
+            console.error('Error during DOMContentLoaded:', error);
+        }
+    }
+
+    async function getUserFromBirthC(address) {
+        try {
+            const response = await fetch('/api/getUserFromBirthC', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ birthCertificate: address }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Network response was not ok: ${response.status}`);
+            }
+
+            // Only call response.json() once and store the result
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error fetching information:', error);
+            return null;
+        }
+    }
+
 
     window.EditAddress = async function (address) {
         // First ensure the modal is displayed

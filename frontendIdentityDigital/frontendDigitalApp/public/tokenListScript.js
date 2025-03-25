@@ -67,11 +67,21 @@ document.addEventListener('DOMContentLoaded', function () {
                     } else if (result.Result === "Success") {
                         resultElement.classList.remove('hidden');
             
-                        if (i === 0) {
-                            resultContentElement.textContent = `Linked Tokens to this Identity -> ${result.Value}`;
-                        } else if (i === 1) {
-                            resultContentElement.textContent = `Token Name -> ${result.Value}`;
-                        } else if (i === 2) {
+                        // if (i === 0) {
+                        //     resultContentElement.innerHTML = `More Info -> <a href="http://localhost:3000" target="_blank">Click Here</a>`;
+                        // }
+                        //  else 
+                        if (i === 1) {
+                            let link = "";
+                            if (result.Value === "BirthCertificate") {
+                                link = `<a href="http://localhost:5510" target="_blank">Click Here</a>`;
+                            } else if (result.Value === "CurriculumUPGdl") {
+                                link = `<a href="http://localhost:5513" target="_blank">Click Here</a>`;
+                            }
+                        
+                            resultContentElement.innerHTML = `More Info -> ${link} <br>Token Name -> ${result.Value}`;
+                        }
+                         else if (i === 2) {
                             resultContentElement.textContent = `Government of the token -> ${result.Value}`;
                         }
                     } else {

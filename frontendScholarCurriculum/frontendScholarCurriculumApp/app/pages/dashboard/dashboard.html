@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Curriculums List</title>
+  <title>Scholar Curriculum | Student Curriculums List</title>
   <link rel="stylesheet" href="/style.css">
   <script src="/DashscriptSimple.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -168,7 +168,15 @@
                 </th>
                 <th
                   class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
+                  Curriculum Address
+                </th>
+                <th
+                  class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
                   Achievements
+                </th>
+                <th
+                  class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
+
                 </th>
                 <th
                   class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
@@ -222,15 +230,6 @@
                     class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
                     placeholder="1789549814" required>
                 </div>
-                <!-- Student Curriculum Address -->
-                <div class="mb-4">
-                  <label for="curriculumAdd" class="block text-gray-700 dark:text-gray-300">Student Curriculum
-                    Address</label>
-                  <input type="text" id="curriculumAdd" name="curriculumAdd"
-                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-                    placeholder="0x00000000000000000000" required>
-                </div>
-
                 <!-- Buttons -->
                 <button type="submit"
                   class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-500">
@@ -242,6 +241,46 @@
             </div>
           </div>
         </div>
+
+        <!-- View info Modal -->
+        <div id="ViewModal" class="modal hidden fixed inset-0 flex items-center justify-center z-50">
+          <div class="modal-content p-6 rounded-lg shadow-lg bg-white dark:bg-gray-800 dark:text-white relative">
+            <span class="close cursor-pointer text-gray-500 dark:text-gray-300 text-lg font-bold absolute top-2 right-2"
+              id="closeModalV">&times;</span>
+
+            <h2 class="text-xl font-semibold mb-4">Achievement Details</h2>
+                <!-- Achievement Title -->
+                <div class="mb-4">
+                  <label class="block text-gray-700 dark:text-gray-300">Title</label>
+                  <span id="titleV" class="text-lg font-semibold">dasdsa</span>
+                </div>
+
+                <!-- Achievement ID -->
+                <div class="mb-4">
+                  <label class="block text-gray-700 dark:text-gray-300">ID</label>
+                  <span id="achievementIDV" class="text-lg font-semibold"></span>
+                </div>
+
+                <!-- Achievement Details -->
+                <div class="mb-4">
+                  <label class="block text-gray-700 dark:text-gray-300">Details</label>
+                  <span id="detailsV" class="text-lg font-semibold"></span>
+                </div>
+
+                <!-- Achievement Creation Date -->
+                <div class="mb-4">
+                  <label class="block text-gray-700 dark:text-gray-300">Date</label>
+                  <span id="dateV" class="text-lg font-semibold"></span>
+                </div>
+
+                <!-- Buttons -->
+                <button type="button" id="cancelButtonV"
+                  class="bg-red-500 text-white font-semibold px-4 py-2 rounded hover:bg-red-600">Cancel</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
 
 
       </div>
@@ -394,7 +433,9 @@
 
     async function displayUserInfoInSideBar(userInfoDef) {
       const userType = getUserTypeString(userInfoDef.Data.getType);
-
+      if (userType !== "Educational Administrator") {
+        window.location.href = '/studentPanel';
+      }
       if (userType === "Error") {
         console.log("No user logged");
       } else {

@@ -3,7 +3,7 @@ pragma solidity 0.8.23;
 
 import "./BirthCertificate.sol";
 
-contract Curriculum{  
+contract ScholarCurriculum{  
     //attributes
       uint public studentId; // student id 
     string public name; 
@@ -12,7 +12,7 @@ contract Curriculum{
       bool public gender; //true will be man and false woman
       uint public dateCreation=0; // it contains the date the contract was created
       uint public dateLastUpdate=0;
-   address public government;
+   address public government; 
    address public owner;
     string public nameToken="CurriculumUPGdl";
 //    address private birthCertificate;
@@ -35,9 +35,9 @@ contract Curriculum{
     fLastName = birthCer.fLastName(); 
     mLastName = birthCer.mLastName(); 
     gender = birthCer.gender(); 
+    owner = birthCer.owner();    
     dateCreation = block.timestamp;
     government = msg.sender;
-    owner = birthCer.owner();    
   }
 
     modifier mustBeUniversity(){      

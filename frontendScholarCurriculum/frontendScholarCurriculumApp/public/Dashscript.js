@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
         console.log(formData);
+        const Institution = "UpCurriculum";
 
         try {
             // Await the resolved user address
@@ -22,40 +23,57 @@ document.addEventListener('DOMContentLoaded', function () {
             };
 
             console.log('Input Values for curriculum:', inputValues); // For debugging
+            userUsed = await checkInstitutionField(data.BirthCertificateAddress, Institution);
+            if (!userUsed) {
+                const response = await fetch('/createCurriculum', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(inputValues)
+                });
 
-            const response = await fetch('/createCurriculum', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(inputValues)
-            });
+                const result = await response.json();
 
-            const result = await response.json();
+                // Display the result
+                const resultElement = document.getElementById('result');
+                const resultContentElement = document.getElementById('resultContent');
 
-            // Display the result
-            const resultElement = document.getElementById('result');
-            const resultContentElement = document.getElementById('resultContent');
-
-            // Check if the response indicates an error
-            if (result.Result === "Error") {
-                alert("Error during creation");
-                resultElement.classList.remove('hidden');
-                resultContentElement.textContent = 'Failed to create contract. Please try again or check the input data.';
-            } else if (result.Result === "Success") {
-                console.log(result);
-                await updateBirthCertificateWithStudentID(data.studentID, data.BirthCertificateAddress)
-                await updateScholarCurriculum(data.BirthCertificateAddress,result.contractAddress, "UpCurriculum");
-                alert("Curriculum created successfully!");
-                resultElement.classList.remove('hidden');
-                resultContentElement.textContent = `Curriculum created successfully!`;
-            } else {
-                alert("Error during creation");
-                resultElement.classList.remove('hidden');
-                resultContentElement.textContent = 'Unexpected result: ' + result.Result;
+                // Check if the response indicates an error
+                if (result.Result === "Error") {
+                    alert("Error during creation");
+                    resultElement.classList.remove('hidden');
+                    resultContentElement.textContent = 'Failed to create contract. Please try again or check the input data.';
+                } else if (result.Result === "Success") {
+                    console.log(result);
+                    await updateBirthCertificateWithStudentID(data.studentID, data.BirthCertificateAddress)
+                    await updateScholarCurriculum(data.BirthCertificateAddress, result.contractAddress, "UpCurriculum");
+                    alert("Curriculum created successfully!");
+                    resultElement.classList.remove('hidden');
+                    resultContentElement.textContent = `Curriculum created successfully!`;
+                } else {
+                    alert("Error during creation");
+                    resultElement.classList.remove('hidden');
+                    resultContentElement.textContent = 'Unexpected result: ' + result.Result;
+                }
             }
+            else{
+                alert("This User has alredy a curriculum");
+            }
+
         } catch (error) {
             console.error('Error:', error);
         }
     });
+
+    async function checkInstitutionField(birthCertificate, Institution) {
+        const response = await fetch('/api/checkInstitutionField', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ birthCertificate, Institution }),
+        });
+
+        const data = await response.json();
+        return data.exists;
+    }
 
     async function updateBirthCertificateWithStudentID(studentID, birthCertificate) {
         console.log(studentID, birthCertificate);
@@ -69,13 +87,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const data = await response.json();
         console.log(data);
     }
-    async function updateScholarCurriculum(birthCertificate, curriculumAdd,Institution) {
-        console.log(birthCertificate, curriculumAdd,Institution);
+    async function updateScholarCurriculum(birthCertificate, curriculumAdd, Institution) {
+        console.log(birthCertificate, curriculumAdd, Institution);
 
         const response = await fetch('/api/updateScholarCurriculum', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ birthCertificate, curriculumAdd ,Institution}),
+            body: JSON.stringify({ birthCertificate, curriculumAdd, Institution }),
         });
 
         const data = await response.json();

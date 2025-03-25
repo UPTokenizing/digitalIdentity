@@ -12,6 +12,9 @@ const admin = require('./app/pages/config/firebase-config');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.static('public'));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 // Serve static files from app/pages/dashboard if needed
 app.use('/dashboard', express.static(path.join(__dirname, 'app/pages/dashboard')));
@@ -23,6 +26,9 @@ app.get('/', (req, res) => {
 app.get('/home', (req, res) => {
   res.sendFile(path.join(__dirname, 'app/pages/home/homeGuest.html'));
 });
+app.get('/studentPanel', (req, res) => {
+  res.sendFile(path.join(__dirname, 'app/pages/dashboard/dashboardNoAuth.html'));
+});
 app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, 'app/pages/login/login.html'));
 });
@@ -32,26 +38,6 @@ app.get('/registerGovernment', (req, res) => {
 app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, 'app/pages/dashboard/dashboard.html'));
 });
-
-
-//Revisar para eliminar
-
-// app.get('/create-service', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'app/pages/createService/create-service.html'));
-// });
-// app.get('/consult-service', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'app/pages/consultService/consult-service.html'));
-// });
-// app.get('/dashboard/genesisId.html', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'app/pages/dashboard/dashboardPages/genesisId/genesisId.html'));
-// });
-// app.get('/dashboard/digitalId.html', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'app/pages/dashboard/dashboardPages/digitalId/digitalId.html'));
-// });
-
-
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.get('/fetch-proof', async (req, res) => {
@@ -461,6 +447,185 @@ app.post('/api/updateScholarCurriculum', async (req, res) => {
   } catch (error) {
     console.error('Error updating curriculumAdd:', error);
     res.status(500).send({ message: 'Error updating curriculumAdd.' });
+  }
+});
+
+
+app.post('/api/getStudentsCurriculum', async (req, res) => {
+  try {
+    const { birthCertificate, Institution } = req.body;
+    if (!birthCertificate || !Institution) {
+      return res.status(400).send({ message: 'Missing birthcertificate or Institution parameter.' });
+    }
+
+    const db = admin.firestore();
+
+    // Query to get the student by birthCertificate field
+    const userSnapshot = await db.collection('users')
+      .where('BirthCertificate', '==', birthCertificate) // Query by the 'BirthCertificate' field
+      .get();
+
+    if (userSnapshot.empty) {
+      return res.status(404).send({ message: 'No matching student found.' });
+    }
+
+    // Assuming there is only one matching document
+    const studentData = userSnapshot.docs[0].data();
+
+    // Check if the specified Institution field exists in the document
+    if (!studentData[Institution]) {
+      return res.status(404).send({ message: `No curriculum found for ${Institution}.` });
+    }
+
+    // Return the curriculum for the given institution
+    res.status(200).send({ UpCurriculum: studentData[Institution] });
+  } catch (error) {
+    console.error('Error retrieving student curriculum:', error);
+    res.status(500).send({ message: 'Error retrieving student curriculum.' });
+  }
+});
+
+
+
+app.post('/api/updateCurriculum', async (req, res) => {
+  try {
+    const { Institution, tokenAddress, birthCertificates } = req.body;
+
+    if (!Institution || !tokenAddress || !birthCertificates) {
+      return res.status(400).send({ message: 'Institution, tokenAddress, and birthCertificates are required.' });
+    }
+
+    console.log(`Updating DigitalIdentity for Institution: ${Institution}`);
+
+    const db = admin.firestore();
+
+    // Reference to the specific BirthCertificates document
+    const digitalIDRef = db.collection('BirthCertificates').doc(birthCertificates);
+
+    // Check if the document exists
+    const docSnapshot = await digitalIDRef.get();
+    if (!docSnapshot.exists) {
+      return res.status(404).send({ message: 'BirthCertificate not found with the provided birthCertificates.' });
+    }
+
+    // Dynamically create the field name
+    const achievementsField = `${Institution}Achievements`;
+
+    // Update Firestore: Add tokenAddress to InstitutionAchievements array
+    await digitalIDRef.update({
+      [achievementsField]: admin.firestore.FieldValue.arrayUnion(tokenAddress)
+    });
+
+    console.log(`Update complete: Added ${tokenAddress} to ${achievementsField}`);
+    res.status(200).send({ message: `DigitalIdentity updated successfully for ${Institution}` });
+
+  } catch (error) {
+    console.error('Error updating DigitalIdentity:', error);
+    res.status(500).send({ message: 'Error updating DigitalIdentity.' });
+  }
+});
+
+app.get('/numberOfAchievements', async (req, res) => {
+  try {
+    const { contractAdd } = req.query;
+
+    if (!contractAdd) {
+      return res.status(400).send({ message: 'contractAdd is required.' });
+    }
+
+    // Simulating a response (replace with actual logic if needed)
+    const response = await axios.get('http://172.18.1.3:5500/numberOfAchievements', {
+      params: { contractAdd }
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching numberOfAchievements:', error.message);
+    res.status(500).send({ message: 'Error fetching numberOfAchievements' });
+  }
+});
+
+app.get('/consultCertificate', async (req, res) => {
+  try {
+    const { contractAdd, id } = req.query;
+
+    if (!contractAdd || id === undefined) {
+      return res.status(400).send({ message: 'contractAdd and id are required.' });
+    }
+
+    // Simulating a response (replace with actual logic if needed)
+    const response = await axios.get('http://172.18.1.3:5500/consultCertificate', {
+      params: { contractAdd, id }
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching consultCertificate:', error.message);
+    res.status(500).send({ message: 'Error fetching consultCertificate' });
+  }
+});
+
+app.post('/addAchievement', async (req, res) => {
+  try {
+    // Destructure data sent from frontend
+    const { gas, from, contractAdd, id, title, date, details } = req.body;
+
+    const requestData = {
+      gas,
+      from,
+      contractAdd,
+      id,
+      title,
+      date,
+      details
+    };
+
+    console.log("Received data:", requestData);
+
+    // Send request to an external service (like your Solidity contract or another API)
+    const response = await axios.post('http://172.18.1.3:5500/addAchievement', requestData, {
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    // Send the result back to the frontend
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error creating achievement:', error);
+    res.status(500).send('Error creating achievement');
+  }
+});
+
+app.post('/api/checkInstitutionField', async (req, res) => {
+  try {
+    const { birthCertificate, Institution } = req.body;
+
+    if (!birthCertificate || !Institution) {
+      return res.status(400).send({ message: 'birthCertificate and Institution are required.' });
+    }
+
+    const db = admin.firestore();
+
+    // Buscar usuario con el birthCertificate proporcionado
+    const userSnapshot = await db.collection('users')
+      .where('BirthCertificate', '==', birthCertificate)
+      .get();
+
+    if (userSnapshot.empty) {
+      return res.status(404).send({ message: 'User not found with the provided birthCertificate.', exists: false });
+    }
+
+    // Obtener el primer documento encontrado
+    const userDoc = userSnapshot.docs[0].data();
+
+    // Verificar si el campo Institution existe y tiene valor
+    if (userDoc.hasOwnProperty(Institution) && userDoc[Institution]) {
+      return res.status(200).send({ exists: true });
+    } else {
+      return res.status(200).send({ exists: false });
+    }
+  } catch (error) {
+    console.error('Error checking Institution field:', error);
+    res.status(500).send({ message: 'Error checking Institution field.', exists: false });
   }
 });
 

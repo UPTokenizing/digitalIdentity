@@ -157,6 +157,56 @@ app.get('/consult', async (req, res) => {
   }
 });
 
+
+
+app.get('/consultPrivates', async (req, res) => {
+  try {
+    const { contractAdd, from } = req.query;
+
+    // Make sure both parameters are provided
+    if (!contractAdd || !from) {
+      return res.status(400).send('Both contractAdd and from are required.');
+    }
+
+    // Send a GET request to your desired endpoint with the provided query parameters
+    const response = await axios.get('http://172.18.1.3:5500/consultPrivates', {
+      params: {
+        contractAdd,
+        from
+      }
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching the data:', error.response ? error.response.data : error.message);
+    res.status(500).send('Error fetching the data');
+  }
+});
+
+app.get('/getInfoUser', async (req, res) => {
+  try {
+    const { contractAdd, userAddress } = req.query;
+
+    // Make sure both parameters are provided
+    if (!contractAdd || !userAddress) {
+      return res.status(400).send('Both contractAdd and publicMethod are required.');
+    }
+
+    // Send a GET request to your desired endpoint with the provided query parameters
+    const response = await axios.get('http://172.18.1.3:5500/getInfoUser', {
+      params: {
+        contractAdd,
+        userAddress
+      }
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching the data:', error.response ? error.response.data : error.message);
+    res.status(500).send('Error fetching the data');
+  }
+});
+
 app.post('/api/login', async (req, res) => {
 
   const { email, password } = req.body;
@@ -396,6 +446,38 @@ app.post('/api/getBirthCertificate', async (req, res) => {
   } catch (error) {
     console.error('Error retrieving BirthCertificate:', error);
     res.status(500).send({ message: 'Error retrieving BirthCertificate.' });
+  }
+});
+
+
+app.post('/api/getUserFromBirthC', async (req, res) => {
+  try {
+    
+    const { birthCertificate } = req.body;
+    if (!birthCertificate) {
+      return res.status(400).send({ message: 'birthCertificate is required.' });
+    }
+    
+    const db = admin.firestore();
+    // Query Firestore to find the user based on BirthCertificate
+    const userSnapshot = await db.collection('users')
+      .where('BirthCertificate', '==', birthCertificate)
+      .get();
+      
+    
+    if (userSnapshot.empty) {
+      
+      return res.status(404).send({ message: 'User not found with the provided BirthCertificate.' });
+    }
+    
+    // Get UserAddress field from the found user document
+    const userDoc = userSnapshot.docs[0];
+    const userAddress = userDoc.data().UserAddress || 'No UserAddress found';
+    
+    res.status(200).send({ UserAddress: userAddress });
+  } catch (error) {
+    console.error('Error retrieving userAddress:', error);
+    res.status(500).send({ message: 'Error retrieving userAddress.' });
   }
 });
 
