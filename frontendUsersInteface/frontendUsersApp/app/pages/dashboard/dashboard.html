@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register New User</title>
+  <title>Users | Register New User</title>
   <script src="/Dashscript.js"></script>
   <link rel="stylesheet" href="/style.css">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -354,7 +354,6 @@
     }
 
 
-
     function getUserTypeString(type) {
       switch (type) {
         case '0':
@@ -499,8 +498,6 @@
       window.location.href = '/login'; // Redirect to the login page
     });
 
-
-
   </script>
   <script>
     document.getElementById("password").addEventListener("input", function () {
@@ -514,9 +511,6 @@
 
 
   <script>
-
-
-
     document.getElementById('RegisterForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       document.getElementById('overlay').style.display = 'block'; // Show overlay
@@ -636,8 +630,6 @@
         console.error('Error:', error);
       }
     });
-
-
 
     async function registerCertificate(certificateString) {
       console.log("To add ", certificateString)

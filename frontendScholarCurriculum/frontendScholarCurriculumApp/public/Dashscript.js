@@ -71,7 +71,9 @@ document.addEventListener('DOMContentLoaded', function () {
             body: JSON.stringify({ birthCertificate, Institution }),
         });
 
+        
         const data = await response.json();
+        console.log(data);
         return data.exists;
     }
 

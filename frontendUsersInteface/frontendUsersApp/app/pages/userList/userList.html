@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users List</title>
+    <title>Users | Users List</title>
     <link rel="stylesheet" href="/style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/styleDashboard.css">
@@ -103,7 +103,7 @@
             <nav class="mt-6">
                 <ul>
                     <div id="resultSideContainer"></div>
-                    <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
+                    <li id="registerUserBtn" class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
                         <button class="w-full h-8 text-left flex items-center px-4 rounded-lg " id="linkTok">
                             Register user
                         </button>
@@ -331,23 +331,23 @@
         }
 
         async function displayUserInfoInSideBar(userInfoDef) {
-            const userType = getUserTypeString(userInfoDef.Data.getType);
+      console.log(userInfoDef.Data.getType);
+      const userType = getUserTypeString(userInfoDef.Data.getType);
 
-            if (userType === "Error") {
-                console.log("No user logged");
-            } else {
-                // from local storage retreivethe email in 'userEmail'
-                const email = localStorage.getItem('userEmail') || "No email";
+      if (userType === "Error") {
+        console.log("No user logged");
+      } else {
+        const email = localStorage.getItem('userEmail') || "No email";
 
-                const userAdd = await getUserAdd();
-
+        const userAdd = await getUserAdd();
 
 
-                // Generate initials
-                const initials = email.charAt(0).toUpperCase();
 
-                // Generate HTML
-                const htmlContent = `
+        // Generate initials
+        const initials = email.charAt(0).toUpperCase();
+
+        // Generate HTML
+        const htmlContent = `
         <div class="user-circle">
           <span>${initials}</span>
           <div class="tooltip">
@@ -361,18 +361,19 @@
         </div>
       `;
 
-                // Insert HTML into the container
-                resultSideContainer.innerHTML = htmlContent;
+        // Insert HTML into the container
+        resultSideContainer.innerHTML = htmlContent;
 
-                const registerUserBtn = document.getElementById('registerUserBtn');
-                const userList = document.getElementById('userList');
-                if (userType !=="Government" && userType !=="Admin") {
-                    registerUserBtn.classList.add('hidden');
-                    userList.classList.add('hidden');
-                }
-            }
+        const registerUserBtn = document.getElementById('registerUserBtn');
+        if (userType !== "Government" && userType !== "Admin" && registerUserBtn) {
+          registerUserBtn.classList.add('hidden');
+          
         }
-
+        if (userType=="User") {
+            window.location.href = "/";
+        }
+      }
+    }
 
 
         document.addEventListener('DOMContentLoaded', async () => {

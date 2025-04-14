@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Token Information center</title>
+    <title>Digital Idenity | Search Token Information</title>
     <script src="/tokenListScript.js"></script>
     <link rel="stylesheet" href="/style.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -123,6 +123,12 @@
         /* Adjust font size */
         font-weight: bold;
     }
+
+    .blue-link {
+        color: rgb(0, 140, 255);
+        text-decoration: underline;
+        font-weight: bold;
+    }
 </style>
 
 <body class="bg-gray-100 dark:bg-gray-900 dark:text-white font-sans">
@@ -144,7 +150,7 @@
                     </li>
                     <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
                         <button
-                            class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 hidden"
+                            class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
                             id="linkT">Link
                             Tokens</button>
                     </li>
@@ -523,6 +529,26 @@
                 return []; // Return an empty array in case of error
             }
         };
+
+
+        const inputA = document.getElementById('contractAdd'); // Asegúrate de tener este ID en el input
+        const selectElement = document.getElementById('contractToken');
+
+        // Función para actualizar la lista de contratos
+        const updateTokenList = async () => {
+            const digitalID = inputA.value.trim(); // Obtiene el valor del input
+            if (digitalID) {
+                await populateTokenDropdown(digitalID); // Llama a la función si el valor no está vacío
+            } else {
+                selectElement.innerHTML = '<option value="" disabled selected>Enter a valid ID</option>';
+            }
+        };
+
+        // Escucha cambios en el inputA
+        inputA.addEventListener('input', updateTokenList);
+
+        // Llama a la función cuando la página carga para mostrar contratos del valor inicial
+        window.addEventListener('DOMContentLoaded', updateTokenList);
 
 
         const populateTokenDropdown = async (digitalID) => {

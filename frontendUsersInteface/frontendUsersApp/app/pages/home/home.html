@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users Interface</title>
-    <script src="/tokenListScript.js"></script>
+    <title>Users | Search User</title>
     <link rel="stylesheet" href="/style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/styleDashboard.css">
@@ -152,7 +151,8 @@
             <div id="resultSideContainer"></div>
             <nav class="mt-6">
                 <ul>
-                    <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
+                    <li id="registerUserBtn"
+                        class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
                         <button
                             class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
                             id="registerUserBtn">Register user</button>
@@ -162,7 +162,8 @@
                         <button class="w-full h-8 text-left flex items-center px-4 rounded-lg " id="homeBtn">Users
                             consult information</button>
                     </li>
-                    <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
+                    <li id="userList2"
+                        class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
                         <button
                             class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
                             id="userList">User List</button>
@@ -436,10 +437,7 @@
                 console.log("No user logged");
             } else {
                 const email = localStorage.getItem('userEmail') || "No email";
-
                 const userAdd = await getUserAdd();
-
-
 
                 // Generate initials
                 const initials = email.charAt(0).toUpperCase();
@@ -463,10 +461,18 @@
                 resultSideContainer.innerHTML = htmlContent;
 
                 const registerUserBtn = document.getElementById('registerUserBtn');
-                if (userType !=="Government" && userType !=="Admin"&& registerUserBtn) {
+                const userListBtn = document.getElementById('userList2');
+                if (userType !== "Government" && userType !== "Admin" && registerUserBtn) {
                     registerUserBtn.classList.add('hidden');
+                    userListBtn.classList.add('hidden');
                 }
+
+                // Set email as default value in search input
+                searchInput.value = email; // Set default value
+                searchBtn.click(); // Trigger search after setting the value
+
             }
+
         }
 
         document.addEventListener('DOMContentLoaded', async () => {

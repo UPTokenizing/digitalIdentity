@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!button.dataset.listenerAdded) {
                 button.addEventListener("click", async function () {
                     console.log("Botón clickeado:", this.value);
-                    
+
                     addresToOwner = this.value; // Guardar valor del botón
 
                     // Encuentra la fila más cercana y su select
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         console.log("Valor numérico seleccionado:", selectedValue);
                         console.log("Contract Address:", contractAdd);
 
-                        if (parseInt(selectedValue)>=0) {
+                        if (parseInt(selectedValue) >= 0) {
                             viewmodal.style.display = "block"; // Mostrar modal
                             // Llamar a la función con los valores obtenidos
                             try {
@@ -217,7 +217,14 @@ document.addEventListener("DOMContentLoaded", function () {
             details: data.details
         };
 
-        console.log('Formatted Data:', formattedData);  // Debugging
+        // Get the date input value and convert to epoch
+        const dateInput = document.getElementById("date").value;
+        const epochTime = Math.floor(new Date(dateInput).getTime() / 1000); // Convert to seconds
+
+        // Add the epoch timestamp to the data being sent to string
+        formattedData.date = epochTime.toString();
+
+        console.log('Formatted Data with Epoch:', formattedData);  // Debugging
 
         try {
             // Send data to backend
@@ -263,6 +270,37 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
+    async function GetInfo(address, publicMethod) {
+        try {
+            // Fetching data from your backend endpoint using GET request with query parameters
+            const response = await fetch(`/consult?contractAdd=${encodeURIComponent(address)}&publicMethod=${encodeURIComponent(publicMethod)}`, {
+                method: 'GET'
+            });
+
+            // Check if the response is OK (status in the range 200-299)
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            // Parse the response as JSON
+            const result = await response.json();
+            // Check if the result indicates success
+            if (result.Result === "Success") {
+
+                if (typeof result.Value === 'object' && result.Value !== null) {
+                    // If Value is an object, return the nested "value"
+                    return result.Value.value; // Extract the value property
+                } else {
+                    // Otherwise, return the value directly if it's a string
+                    return result.Value;
+                }
+            } else {
+                console.log("Error not succeeded tofetch " + publicMethod);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const fetchStudents = async () => {
         try {
@@ -299,7 +337,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         // Create a select element
                         const selectElement = document.createElement('select');
-                        selectElement.className = "userTypeSelect border rounded px-2 py-1";
+                        selectElement.className = "userTypeSelect border rounded px-2 py-1 bg-white text-gray-700 dark:bg-gray-700 dark:text-white";
+
 
                         // Default option
                         const defaultOption = document.createElement('option');
@@ -319,13 +358,17 @@ document.addEventListener("DOMContentLoaded", function () {
                             }
                         }
 
+                        const name = await GetInfo(userAdd, "name");
+                        const fLastName = await GetInfo(userAdd, "fLastName");
+                        const mLastName = await GetInfo(userAdd, "mLastName");
+
                         // Create table row
                         const row = document.createElement('tr');
                         row.innerHTML = `
                                 <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${studentID}</td>
-                                <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${userAdd} -> Brandon</td>
+                                <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${name} ${fLastName} ${mLastName}</td>
                                 <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${responseCurri}</td>
-                                <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300"></td> <!-- Select will be appended here -->
+                                <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300" dark:bg-gray-300"></td> <!-- Select will be appended here -->
                                 <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300"> 
                                     <button class="detailsBtn bg-blue-500 text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-500 p-2 rounded">Achievement Details</button>
                                 </td>

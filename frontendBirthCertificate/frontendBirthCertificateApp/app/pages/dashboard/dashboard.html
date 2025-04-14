@@ -43,6 +43,11 @@
 
 <style>
   /* Circle styling */
+  #overlay {
+        display: none;
+        /* Initially hidden */
+    }
+
   .user-circle {
     width: 60px;
     /* Smaller circle */
@@ -98,6 +103,7 @@
 </style>
 
 <body class="bg-gray-100 dark:bg-gray-900 dark:text-white font-sans">
+  <div id="overlay" class="hidden fixed inset-0 bg-gray-500 bg-opacity-50 z-50"></div>
   <div class="flex">
     <!-- Sidebar -->
     <div class="w-64 bg-white dark:bg-gray-800 h-screen shadow-md">

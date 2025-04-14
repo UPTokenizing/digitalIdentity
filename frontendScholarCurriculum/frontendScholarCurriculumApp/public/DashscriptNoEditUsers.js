@@ -117,7 +117,37 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
+    async function GetInfo(address, publicMethod) {
+        try {
+            // Fetching data from your backend endpoint using GET request with query parameters
+            const response = await fetch(`/consult?contractAdd=${encodeURIComponent(address)}&publicMethod=${encodeURIComponent(publicMethod)}`, {
+                method: 'GET'
+            });
 
+            // Check if the response is OK (status in the range 200-299)
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            // Parse the response as JSON
+            const result = await response.json();
+            // Check if the result indicates success
+            if (result.Result === "Success") {
+
+                if (typeof result.Value === 'object' && result.Value !== null) {
+                    // If Value is an object, return the nested "value"
+                    return result.Value.value; // Extract the value property
+                } else {
+                    // Otherwise, return the value directly if it's a string
+                    return result.Value;
+                }
+            } else {
+                console.log("Error not succeeded tofetch " + publicMethod);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
     const fetchStudents = async () => {
         try {
             // Fetch student data from the backend API
@@ -153,7 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         // Create a select element
                         const selectElement = document.createElement('select');
-                        selectElement.className = "userTypeSelect border rounded px-2 py-1";
+                        selectElement.className = "userTypeSelect border rounded px-2 py-1 bg-white text-gray-700 dark:bg-gray-700 dark:text-white";
 
                         // Default option
                         const defaultOption = document.createElement('option');
@@ -172,12 +202,22 @@ document.addEventListener("DOMContentLoaded", function () {
                                 selectElement.appendChild(option);
                             }
                         }
+                        const name = await GetInfo(userAdd, "name");
+                        const fLastName = await GetInfo(userAdd, "fLastName");
+                        const mLastName = await GetInfo(userAdd, "mLastName");
+                        let owner = await GetInfo(userAdd, "owner");
+                        const logUserAdd = await getUserAdd();
+                        console.log(logUserAdd);
+                        console.log(owner);
+                        if (logUserAdd !== owner) {
+                            continue;
+                        }
 
                         // Create table row
                         const row = document.createElement('tr');
                         row.innerHTML = `
                                 <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${studentID}</td>
-                                <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${userAdd} -> Brandon</td>
+                                <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${name} ${fLastName} ${mLastName}</td>
                                 <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${responseCurri}</td>
                                 <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300"></td> <!-- Select will be appended here -->
                                 <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300"> 

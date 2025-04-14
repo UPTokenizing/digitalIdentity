@@ -227,6 +227,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById('create-service-form').addEventListener('submit', async (event) => {
         event.preventDefault();
+        document.getElementById('overlay').style.display = 'block'; // Show overlay
 
         // Get form data
         const formData = new FormData(event.target);
@@ -256,6 +257,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 await registerCertificate(result.contractAddress);
                 await updateBirthCertificate(data.contractUser, result.contractAddress);
+
 
                 //                console.log('Contract Address:', await getCertificates());
 
@@ -326,6 +328,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                 }
+                document.getElementById('overlay').style.display = 'none'; // Hide overlay
+                window.location.reload();
 
 
             }
@@ -470,26 +474,33 @@ document.addEventListener("DOMContentLoaded", function () {
         const tbody = document.querySelector('tbody');
         tbody.innerHTML = ''; // Clear existing rows
 
-        for (const address of contractAddresses) {
+        const userAdd = await getUserAdd(); // Obtener userAdd una sola vez
 
+        for (const address of contractAddresses) {
             // Fetch all required information
             const name = await GetInfo(address, "name");
             const fLastName = await GetInfo(address, "fLastName");
             const mLastName = await GetInfo(address, "mLastName");
             const dateOfCreation = await GetInfo(address, "dateCreation");
+            let owner = await GetInfo(address, "owner");
 
             // Skip this iteration if essential data is missing
             if (!name || !fLastName || !mLastName || !dateOfCreation) {
                 continue; // Skip to the next address
             }
-            let owner = await GetInfo(address, "owner");
-            // let date = new Date(dateOfCreation * 1000);
+
+            const cAdd = await getContractAdd();
+            const userInfoDef = await getUserInfo(cAdd,  await getUserAdd());
+            console.log(userInfoDef);
+            // Condición para mostrar solo si el usuario actual es el owner o si el tipo es '0'
+            if (userInfoDef.Data.getType !== '0' && userAdd !== owner) {
+                continue; // Salta este contrato si no cumple con la condición
+            }
 
             const tr = document.createElement('tr');
             tr.className = 'border-t dark:border-gray-600';
 
             tr.innerHTML = `
-          
           <td class="py-2 px-4 text-sm text-gray-700 dark:text-white flex items-center">
               ${name} ${fLastName} ${mLastName}
           </td>
@@ -497,9 +508,10 @@ document.addEventListener("DOMContentLoaded", function () {
           <td class="py-2 px-4 text-sm text-gray-700 dark:text-white">${owner}</td>
           <td class="py-2 px-4 text-sm text-gray-700 dark:text-white text-right">
               <div>
-                  <button data-id="1" class="hidden dark:text-white dark:hover:text-gray-400 hover:text-gray-500 text-gray-700 button-spacing new-child-button">
-                      <i class="fas fa-plus"></i> New Child  
-                  </button>
+                 <button data-id="1" style="display: none;" class="dark:text-white dark:hover:text-gray-400 hover:text-gray-500 text-gray-700 button-spacing new-child-button">
+                     <i class="fas fa-plus"></i> New Child  
+                 </button>
+
                   <button data-id="2" class="hidden dark:text-white dark:hover:text-gray-400 hover:text-gray-500 text-gray-700 button-spacing" onclick="EditAddress('${address}')">
                       <i class="fas fa-edit"></i> Edit an Address  
                   </button>
@@ -528,6 +540,7 @@ document.addEventListener("DOMContentLoaded", function () {
             };
         }
     }
+
 
 
 

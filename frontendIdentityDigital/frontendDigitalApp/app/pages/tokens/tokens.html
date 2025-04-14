@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Token Information center</title>
+    <title>Digital Idenity | Token Linker</title>
     <script src="/tokenListScript.js"></script>
     <script src="/Dashscript.js"></script>
     <link rel="stylesheet" href="/style.css">
@@ -138,11 +138,6 @@
             <div id="resultSideContainer"></div>
             <nav class="mt-6">
                 <ul>
-                    <!-- <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
-                        <button
-                            class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-                            id="linkTokenBtn">Create DigitalIdentity</button>
-                    </li> -->
                     <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
                         <button
                             class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
@@ -150,7 +145,7 @@
                     </li>
                     <li
                         class="px-4 py-2 text-gray-200 dark:text-gray-700 hover:bg-gray-600 dark:hover:bg-gray-100 dark:bg-gray-100 bg-gray-600">
-                        <button class="w-full h-8 text-left flex items-center px-4 rounded-lg " id="linkT">Link
+                        <button class="w-full h-8 text-left flex items-center px-4 rounded-lg " id="linkT" >Link
                             Tokens</button>
                     </li>
                 </ul>
@@ -413,24 +408,7 @@
           <p>Access: ${userType}</p>
         </div>
       `;
-                // const createBtn = document.getElementById('linkTokenBtn');
-                const linkT = document.getElementById('linkT');
-                console.log(userType);
-                if (userType === "Government") {
-                    console.log("Government Active");
-                    linkT.classList.remove('hidden');
-                }
-                else if ((userType === "Admin" || userType === "User")) {
-                    //createBtn.classList.add('hidden');
-                    linkT.classList.remove('hidden');
-                }
-                else if ((userType === "Government" || userType === "Admin" || userType === "User")) {
-                    console.log("User log");
-                    linkT.classList.remove('hidden');
-                }
-                else {
-                    //createBtn.classList.add('hidden');
-                }
+
                 // Insert HTML into the container
                 resultSideContainer.innerHTML = htmlContent;
             }
@@ -530,10 +508,6 @@
         document.getElementById('homeBtn').addEventListener('click', function () {
             window.location.href = '/';
         });
-
-        // document.getElementById('linkTokenBtn').addEventListener('click', function () {
-        //     window.location.href = '/dashboard';
-        // });
 
         document.getElementById('loginBtn').addEventListener('click', function () {
             window.location.href = '/login';
