@@ -1,25 +1,11 @@
 //document on load of js
 document.addEventListener("DOMContentLoaded", function () {
-
-
     const modalView = document.getElementById("viewServiceModal");
-
     // Get close button
-
     const closeModal2 = document.getElementById("closeModal2");
-
-
-
     // Get cancel button
-
     const cancelButton2 = document.getElementById("cancelButton2");
-
-
-
-
-
-
-
+    
     closeModal2.onclick = function () {
         modalView.style.display = "none";
     }
@@ -36,17 +22,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-
-
-
-
     let contractAddresses = [];
-
-
-    // Load contract addresses from localStorage when the page loads
+   
     window.addEventListener('load', async () => {
         contractAddresses = await getCertificates();
-        console.log("from teh event: ", contractAddresses);
         updateTableRows(contractAddresses); // Update the table with the cleaned data
     });
 
@@ -60,25 +39,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 body: JSON.stringify({}), // No need to send any data
             });
-
             // Handle the response
             if (!response.ok) {
                 throw new Error('Failed to retrieve contract address');
             }
-
             // Parse the response JSON
             const data = await response.json();
-            console.log('Contract Address Users:', data.contractAdd);
             return data.contractAdd; // Return the contract address
-
         } catch (error) {
             console.error('Error:', error);
             alert('An error occurred while fetching contract address');
         }
     };
-
-
-
     async function getCertificates() {
         try {
             const response = await fetch('/api/getCertificates', {
@@ -87,10 +59,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     'Content-Type': 'application/json',
                 },
             });
-
             // Await the response.json() to get the actual result
             const result = await response.json();
-
             if (response.ok) {
                 return result.certificates;  // Return the certificates array
             } else {
@@ -101,58 +71,20 @@ document.addEventListener("DOMContentLoaded", function () {
             throw error;  // Rethrow the error for handling elsewhere
         }
     }
-
-    const getUserAdd = async () => {
-        try {
-            const email = localStorage.getItem('userEmail'); // Get the email from localStorage
-            if (!email) {
-                throw new Error('No email found in localStorage');
-            }
-
-            // Send a POST request to the server to get the user address
-            const response = await fetch('/api/getUserAdd', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json', // Set content type to JSON
-                },
-                body: JSON.stringify({ email: email }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to retrieve user address');
-            }
-
-            // Parse the response JSON
-            const data = await response.json();
-            console.log('User Address:', data.UserAddress);
-            return data.UserAddress; // Return the user address
-
-        } catch (error) {
-            console.error('Error fetching user address:', error);
-        }
-    };
-
-
-
-
-
     async function GetInfo(address, publicMethod) {
         try {
             // Fetching data from your backend endpoint using GET request with query parameters
             const response = await fetch(`/consult?contractAdd=${encodeURIComponent(address)}&publicMethod=${encodeURIComponent(publicMethod)}`, {
                 method: 'GET'
             });
-
             // Check if the response is OK (status in the range 200-299)
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-
             // Parse the response as JSON
             const result = await response.json();
             // Check if the result indicates success
             if (result.Result === "Success") {
-
                 if (typeof result.Value === 'object' && result.Value !== null) {
                     // If Value is an object, return the nested "value"
                     return result.Value.value; // Extract the value property
@@ -160,42 +92,33 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Otherwise, return the value directly if it's a string
                     return result.Value;
                 }
-            } else {
-                console.log("Error not succeeded tofetch " + publicMethod);
-            }
+            } else {     }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
-
     // Function to update the table rows based on contractAddresses array
     async function getBirthCertificate(usAd) {
         const userAddress = usAd;  // Replace with actual user address
-
         const response = await fetch('/api/getBirthCertificate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userAddress }),
         });
-
         const data = await response.json();
-        console.log(data);
         return (data.BirthCertificate);
     }
-
     // Function to update the table rows based on contractAddresses array
     async function updateTableRows(contractAddresses) {
         const tbody = document.querySelector('tbody');
         tbody.innerHTML = ''; // Clear existing rows
 
         for (const address of contractAddresses) {
-
             // Fetch all required information
             const name = await GetInfo(address, "name");
             const fLastName = await GetInfo(address, "fLastName");
             const mLastName = await GetInfo(address, "mLastName");
             const dateOfCreation = await GetInfo(address, "dateCreation");
-
             // Skip this iteration if essential data is missing
             if (!name || !fLastName || !mLastName || !dateOfCreation) {
                 continue; // Skip to the next address
@@ -203,12 +126,10 @@ document.addEventListener("DOMContentLoaded", function () {
             let owner = await GetInfo(address, "owner");
             // let date = new Date(dateOfCreation * 1000);
             let date = await getBirthCertificate(owner);
-
             const tr = document.createElement('tr');
             tr.className = 'border-t dark:border-gray-600';
-
             tr.innerHTML = `
-          
+        
           <td class="py-2 px-4 text-sm text-gray-700 dark:text-white flex items-center">
               ${name} ${fLastName} ${mLastName}
           </td>
@@ -228,88 +149,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }
     }
-
-
-
-    // Function to get gender and show modal with token fields updated
-    async function updateToken(address, tokenToChange) {
-
-        console.log(address, tokenToChange);
-
-        try {
-            console.log("aqui va el cambio ");
-            isChild = true;
-            tempAdd = address;
-            replace = tokenToChange;
-            // Fetch gender information (true for male, false for female)
-            // Show the modal
-            modal.style.display = 'block';
-        } catch (error) {
-            console.error('Error fetching gender information:', error);
-        }
-
-    }
-
-
-
-    window.viewDetails = async function (address) {
-        modalView.style.display = "block";
-        try {
-            // Fetch information from the contract address
-            const name = await GetInfo(address, "name");
-            const fLastName = await GetInfo(address, "fLastName");
-            const mLastName = await GetInfo(address, "mLastName");
-            const gender = await GetInfo(address, "gender");
-            //convertir la fecha a normal, no en epochhhhhhhhhhhhhhhhhhh
-            const day = await GetInfo(address, "day");
-            const month = await GetInfo(address, "month");
-            const year = await GetInfo(address, "year");
-            const state = await GetInfo(address, "state");
-            const municipality = await GetInfo(address, "municipality");
-            const dateCreation = await GetInfo(address, "dateCreation");
-            let dateC = new Date(dateCreation * 1000);
-            const dateLastUpdate = await GetInfo(address, "dateLastUpdate");
-            let dateU = new Date(dateLastUpdate * 1000);
-            const tokenFather = await GetInfo(address, "tokenFather");
-            const tokenMother = await GetInfo(address, "tokenMother");
-            const usAdds = await getUserFromBirthC(address);
-            const tokenDigIdentity = await getDigIdentityAdd(usAdds.UserAddress);
-            const owner = await GetInfo(address, "owner");
-            const government = await GetInfo(address, "government");
-            // Populate the HTML elements with the fetched information
-            let genderType;
-            if (gender) {
-                genderType = "Male";
-            }
-            else {
-                genderType = "Female";
-            }
-            document.getElementById('name2').textContent = name || 'N/A';
-            document.getElementById('fLastName2').textContent = fLastName || 'N/A';
-            document.getElementById('mLastName2').textContent = mLastName || 'N/A';
-            document.getElementById('gender2').textContent = genderType || 'N/A';
-            document.getElementById('day2').textContent = day || 'Unauthorized';
-            document.getElementById('month2').textContent = month || 'Unauthorized';
-            document.getElementById('year2').textContent = year || 'Unauthorized';
-            document.getElementById('state2').textContent = state || 'Unauthorized';
-            document.getElementById('municipality2').textContent = municipality || 'Unauthorized';
-            document.getElementById('dateCreation2').textContent = dateC.toLocaleString() || 'N/A';
-            document.getElementById('dateLastUpdate2').textContent = dateU.toLocaleString() || 'N/A';
-            document.getElementById('tokenFather2').textContent = tokenFather || 'N/A';
-            document.getElementById('tokenMother2').textContent = tokenMother || 'N/A';
-            document.getElementById('tokenDigIdentity2').textContent = tokenDigIdentity || 'N/A';
-            document.getElementById('owner2').textContent = owner || 'N/A';
-            document.getElementById('government2').textContent = government || 'N/A';
-        } catch (error) {
-            console.error('Error fetching information:', error);
-        }
-    }
-
     async function getUserInfo(contractAdd, userAddress) {
         try {
-            console.log(contractAdd + "," + userAddress)
             const response = await fetch(`/getInfoUser?contractAdd=${encodeURIComponent(contractAdd)}&userAddress=${encodeURIComponent(userAddress)}`);
-            console.log(response);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -320,7 +162,6 @@ document.addEventListener("DOMContentLoaded", function () {
             return null;
         }
     }
-
     async function getDigIdentityAdd(userAdd) {
         try {
             const contractAddress = await getContractAdd(); // Wait for contract address
@@ -328,7 +169,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (contractAddress && userAddress) {
                 const userInfoDef = await getUserInfo(contractAddress, userAddress);
-                console.log(userInfoDef);
                 if (userInfoDef) {
                     return userInfoDef.Data.getDigIdentityAdd;
                 } else {
@@ -341,7 +181,6 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error('Error during DOMContentLoaded:', error);
         }
     }
-
     async function getUserFromBirthC(address) {
         try {
             const response = await fetch('/api/getUserFromBirthC', {
@@ -365,39 +204,33 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-
-    window.EditAddress = async function (address) {
-        // First ensure the modal is displayed
-        const modalEdit = document.getElementById("editAdress");
-        if (modalEdit) {
-            modalEdit.style.display = "block";
-        }
-
+    window.viewDetails = async function (address) {
+        modalView.style.display = "block";
         try {
-            // Fetch information from the contract address
-            const government = await GetInfo(address, "government");
-
-
-
-            // Get elements with error checking
-            const elements = {
-                government: document.getElementById('government3'),
-                contractAddress: document.getElementById('address3')
+            const [name, fLastName, mLastName, gender, day, month, year, state, municipality, dateCreation, dateLastUpdate, tokenFather, tokenMother, owner, government] =
+                await Promise.all(["name", "fLastName", "mLastName", "gender", "day", "month", "year", "state", "municipality", "dateCreation", "dateLastUpdate", "tokenFather", "tokenMother", "owner", "government"].map(f => GetInfo(address, f)));
+    
+            const usAdds = await getUserFromBirthC(address);
+            const tokenDigIdentity = await getDigIdentityAdd(usAdds.UserAddress);
+    
+            const formatDate = t => new Date(t * 1000).toLocaleString();
+            const genderType = gender ? "Male" : "Female";
+    
+            const fields = {
+                name2: name, fLastName2: fLastName, mLastName2: mLastName,
+                gender2: genderType, day2: day || "Unauthorized", month2: month || "Unauthorized", year2: year || "Unauthorized",
+                state2: state || "Unauthorized", municipality2: municipality || "Unauthorized",
+                dateCreation2: formatDate(dateCreation), dateLastUpdate2: formatDate(dateLastUpdate),
+                tokenFather2: tokenFather, tokenMother2: tokenMother,
+                tokenDigIdentity2: tokenDigIdentity, owner2: owner, government2: government
             };
-
-
-            if (elements.government) {
-
-                elements.government.textContent = government || 'N/A';
-            } else {
-                console.warn('Element with ID "government3" not found');
-            }
-            elements.contractAddress.textContent = address || 'N/A';
-
+    
+            Object.entries(fields).forEach(([id, val]) => {
+                document.getElementById(id).textContent = val || 'N/A';
+            });
+    
         } catch (error) {
-            console.error('Error in EditAddress:', error);
+            console.error('Error fetching information:', error);
         }
-    }
-
-
+    };
 });

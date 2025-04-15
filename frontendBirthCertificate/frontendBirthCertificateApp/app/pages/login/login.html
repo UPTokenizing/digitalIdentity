@@ -55,24 +55,17 @@
           placeholder="Enter your password">
       </div>
       <div class="flex items-center justify-between mb-4">
-        <!-- <a href="#" class="text-blue-400 hover:text-blue-600">Forgot password?</a> -->
-        
         <label class="switch">
           <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()">
           <span class="slider">
-            <!-- Moon Icon -->
             <i class="fas fa-moon moon"></i>
           </span>
         </label>
       </div>
-
-      <!-- <button type="submit" class="w-full bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-700  dark:hover:bg-blue-600 p-2 rounded " id="LogIn">Login</button> boton con submit -->
     </form>
     <button
       class="w-full bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-700  dark:hover:bg-blue-600 p-2 rounded "
       id="LogIn">Login</button>
-    <!-- botonsolo para redirigir -->
-
   </div>
 </body>
 <script src="/js/auth.js"></script>
@@ -86,12 +79,9 @@
   const checkLoginRedirect = () => {
     const token = localStorage.getItem('authToken');
     if (token) {
-      // Si el usuario ya está logueado, redirigir a la página principal
       window.location.href = '/';  // o '/dashboard'
     }
   };
-
-  // Ejecutar al cargar la página de login
   checkLoginRedirect();
 
   document.getElementById('homeBtn').addEventListener('click', function () {

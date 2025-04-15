@@ -2,10 +2,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const axios = require('axios');
-const qs = require('qs');
 require('dotenv').config();
-const { auth } = require('./app/pages/config/firebase-config');
-const authMiddleware = require('./app/pages/middleware/auth');
 const admin = require('./app/pages/config/firebase-config');
 
 // Serve static files from the public directory (like images, CSS, etc.)
@@ -26,36 +23,14 @@ app.get('/home', (req, res) => {
 app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, 'app/pages/login/login.html'));
 });
-app.get('/registerGovernment', (req, res) => {
-  res.sendFile(path.join(__dirname, 'app/pages/register/registerCriticUsers.html'));
+app.get('/userlist', (req, res) => {
+  res.sendFile(path.join(__dirname, 'app/pages/dashboard/UserList.html'));
 });
-
-
-app.get('/loading', (req, res) => {
-  res.sendFile(path.join(__dirname, 'app/pages/loading/loading.html'));
-});
-app.get('/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, 'app/pages/dashboard/dashboard.html'));
-});
-
-app.get('/create-service', (req, res) => {
-  res.sendFile(path.join(__dirname, 'app/pages/createService/create-service.html'));
-});
-app.get('/consult-service', (req, res) => {
-  res.sendFile(path.join(__dirname, 'app/pages/consultService/consult-service.html'));
-});
-app.get('/dashboard/genesisId.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'app/pages/dashboard/dashboardPages/genesisId/genesisId.html'));
-});
-app.get('/dashboard/digitalId.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'app/pages/dashboard/dashboardPages/digitalId/digitalId.html'));
-});
-
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
+//Ensure webpage is live nad correctly connected to the API Gateway
 app.get('/fetch-proof', async (req, res) => {
   try {
     const response = await axios.get('http://172.18.1.3:5500/proof');
@@ -66,14 +41,10 @@ app.get('/fetch-proof', async (req, res) => {
   }
 });
 
-
-
-// Route to handle the POST request from the form
+//Cerate a new contracct address named birthcertificate
 app.post('/createService', async (req, res) => {
-
   try {
     const { gas, name, fLastName, mLastName, sex, day, month, year, state, municipality, contractUser, government, owner } = req.body;
-
     const requestData = {
       gas,
       name,
@@ -89,11 +60,6 @@ app.post('/createService', async (req, res) => {
       government,
       owner
     };
-    
-    console.log(requestData);
-    
-
-
     const response = await axios.post('http://172.18.1.3:5500/create', requestData, {
       headers: { 'Content-Type': 'application/json' }
     });
@@ -106,33 +72,7 @@ app.post('/createService', async (req, res) => {
   }
 });
 
-
-
-app.post('/setAddress', async (req, res) => {
-  try {
-    const { contractAdd, replaceAdd, gas, government, publicMethod } = req.body;
-
-    const requestData = {
-      contractAdd,
-      replaceAdd,
-      gas,
-      government,
-      publicMethod
-    };
-    const response = await axios.post('http://172.18.1.3:5500/setAddress', requestData, {
-      headers: { 'Content-Type': 'application/json' }
-    });
-
-
-    res.json(response.data);
-  } catch (error) {
-    console.error('Error creating service:', error);
-    res.status(500).send('Error creating service');
-  }
-});
-
-
-
+//Consult individual public information of the birthcertificate Address 
 app.get('/consult', async (req, res) => {
   try {
     const { contractAdd, publicMethod } = req.query;
@@ -157,32 +97,7 @@ app.get('/consult', async (req, res) => {
   }
 });
 
-
-
-app.get('/consultPrivates', async (req, res) => {
-  try {
-    const { contractAdd, from } = req.query;
-
-    // Make sure both parameters are provided
-    if (!contractAdd || !from) {
-      return res.status(400).send('Both contractAdd and from are required.');
-    }
-
-    // Send a GET request to your desired endpoint with the provided query parameters
-    const response = await axios.get('http://172.18.1.3:5500/consultPrivates', {
-      params: {
-        contractAdd,
-        from
-      }
-    });
-
-    res.json(response.data);
-  } catch (error) {
-    console.error('Error fetching the data:', error.response ? error.response.data : error.message);
-    res.status(500).send('Error fetching the data');
-  }
-});
-
+//Consult individual public information of the birthcertificate Address 
 app.get('/getInfoUser', async (req, res) => {
   try {
     const { contractAdd, userAddress } = req.query;
@@ -207,6 +122,56 @@ app.get('/getInfoUser', async (req, res) => {
   }
 });
 
+//Consult individual public information of the birthcertificate Address 
+app.get('/consultPrivates', async (req, res) => {
+  try {
+    const { contractAdd, from } = req.query;
+
+    // Make sure both parameters are provided
+    if (!contractAdd || !from) {
+      return res.status(400).send('Both contractAdd and from are required.');
+    }
+
+    // Send a GET request to your desired endpoint with the provided query parameters
+    const response = await axios.get('http://172.18.1.3:5500/consultPrivates', {
+      params: {
+        contractAdd,
+        from
+      }
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching the data:', error.response ? error.response.data : error.message);
+    res.status(500).send('Error fetching the data');
+  }
+});
+
+//Change de Address Selected of the birthcertificate Address 
+app.post('/setAddress', async (req, res) => {
+  try {
+    const { contractAdd, replaceAdd, gas, government, publicMethod } = req.body;
+
+    const requestData = {
+      contractAdd,
+      replaceAdd,
+      gas,
+      government,
+      publicMethod
+    };
+    const response = await axios.post('http://172.18.1.3:5500/setAddress', requestData, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error creating service:', error);
+    res.status(500).send('Error creating service');
+  }
+});
+
+//Firebase Auth verification
 app.post('/api/login', async (req, res) => {
 
   const { email, password } = req.body;
@@ -246,7 +211,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-
+//Get contract Address for whole project (Critical user) *Uses a default Address to look for it -> "0x2CFcBB9Cf2910fBa7E7E7a8092aa1a40BC5BA341"
 app.post('/api/getContractAdd', async (req, res) => {
   // Default User Address
   const UserAddress = '0x2CFcBB9Cf2910fBa7E7E7a8092aa1a40BC5BA341';  // Default address
@@ -276,7 +241,7 @@ app.post('/api/getContractAdd', async (req, res) => {
   }
 });
 
-
+//Fetch User Address by utilizing its email saved on the user collection 
 app.post('/api/getUserAdd', async (req, res) => {
   try {
     const email = req.body.email; // Get the email from the request body
@@ -305,30 +270,7 @@ app.post('/api/getUserAdd', async (req, res) => {
   }
 });
 
-app.get('/getInfoUser', async (req, res) => {
-  try {
-    const { contractAdd, userAddress } = req.query;
-
-    // Make sure both parameters are provided
-    if (!contractAdd || !userAddress) {
-      return res.status(400).send('Both contractAdd and publicMethod are required.');
-    }
-
-    // Send a GET request to your desired endpoint with the provided query parameters
-    const response = await axios.get('http://172.18.1.3:5500/getInfoUser', {
-      params: {
-        contractAdd,
-        userAddress
-      }
-    });
-
-    res.json(response.data);
-  } catch (error) {
-    console.error('Error fetching the data:', error.response ? error.response.data : error.message);
-    res.status(500).send('Error fetching the data');
-  }
-});
-
+//Fetch all emails from the user collection in Firestore
 app.get('/api/getAllEmails', async (req, res) => {
   try {
     const db = admin.firestore();
@@ -342,8 +284,6 @@ app.get('/api/getAllEmails', async (req, res) => {
 
     // Extract emails from the documents
     const emails = usersSnapshot.docs.map((doc) => doc.data().email);
-
-    console.log('Registered Emails:', emails); // Log the emails to the console
     res.status(200).send({ emails }); // Send the emails as a response
   } catch (error) {
     console.error('Error fetching emails:', error);
@@ -351,7 +291,7 @@ app.get('/api/getAllEmails', async (req, res) => {
   }
 });
 
-
+//Add to collection BirthCertificates the new birthcertificate Address 
 app.post('/api/registerCertificate', async (req, res) => {
   const { certificateString } = req.body;
   
@@ -371,7 +311,7 @@ app.post('/api/registerCertificate', async (req, res) => {
   }
 });
 
-
+//Fetch all birthcertificates stored in the database in firestore BirthCertificates collection
 app.get('/api/getCertificates', async (req, res) => {
   try {
     const db = admin.firestore();
@@ -379,8 +319,6 @@ app.get('/api/getCertificates', async (req, res) => {
 
     // Extract the document IDs (certificate strings)
     const certificates = certificatesSnapshot.docs.map(doc => doc.id);
-
-    console.log('All certificates:', certificates);
     res.status(200).send({ certificates });
   } catch (error) {
     console.error('Error retrieving certificates:', error);
@@ -388,7 +326,7 @@ app.get('/api/getCertificates', async (req, res) => {
   }
 });
 
-
+//Add birthcertificate Address to the BirthCertificate or cretes de field BirthCertificate in the user table that has the useraddress in firestore
 app.post('/api/updateBirthCertificate', async (req, res) => {
   try {
     const { userAddress, birthCertificate } = req.body;
@@ -396,7 +334,6 @@ app.post('/api/updateBirthCertificate', async (req, res) => {
     if (!userAddress || !birthCertificate) {
       return res.status(400).send({ message: 'UserAddress and BirthCertificate are required.' });
     }
-    console.log('Registered birth:', birthCertificate);
     const db = admin.firestore();
 
     // Find the user document with the given UserAddress
@@ -411,7 +348,6 @@ app.post('/api/updateBirthCertificate', async (req, res) => {
     // Update the first found user document (assuming UserAddress is unique)
     const userDoc = userSnapshot.docs[0].ref;
     await userDoc.update({ BirthCertificate: birthCertificate });
-    console.log('Registered birth: complete', birthCertificate);
     res.status(200).send({ message: 'BirthCertificate updated successfully' });
   } catch (error) {
     console.error('Error updating BirthCertificate:', error);
@@ -419,6 +355,7 @@ app.post('/api/updateBirthCertificate', async (req, res) => {
   }
 });
 
+//Obtain the birthcertificate Address using the userAddress
 app.post('/api/getBirthCertificate', async (req, res) => {
   try {
     const { userAddress } = req.body;
@@ -449,7 +386,7 @@ app.post('/api/getBirthCertificate', async (req, res) => {
   }
 });
 
-
+//Obtain User Address using the Birthcertificate Address, info saved on firstore
 app.post('/api/getUserFromBirthC', async (req, res) => {
   try {
     
@@ -481,8 +418,7 @@ app.post('/api/getUserFromBirthC', async (req, res) => {
   }
 });
 
-
-
+//Listening to port PORT
 const PORT = 5510;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

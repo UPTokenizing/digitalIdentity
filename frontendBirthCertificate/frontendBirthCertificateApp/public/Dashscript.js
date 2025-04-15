@@ -1,28 +1,16 @@
 //document on load of js
 document.addEventListener("DOMContentLoaded", function () {
-
-
     const modal = document.getElementById("newServiceModal");
     const modalView = document.getElementById("viewServiceModal");
     const modalEdit = document.getElementById("editAdress");
-
-
     // Get close button
     const closeModal = document.getElementById("closeModal");
     const closeModal2 = document.getElementById("closeModal2");
     const closeModal3 = document.getElementById("closeModal3");
-
-
     // Get cancel button
     const cancelButton = document.getElementById("cancelButton");
     const cancelButton2 = document.getElementById("cancelButton2");
     const cancelButton3 = document.getElementById("cancelButton3");
-
-
-
-
-
-
     // Listen for close click
     closeModal.onclick = function () {
         clearModalFields();
@@ -58,7 +46,6 @@ document.addEventListener("DOMContentLoaded", function () {
             modalView.style.display = "none";
         }
     }
-
     closeModal3.onclick = function () {
         modalEdit.style.display = "none";
     }
@@ -74,16 +61,12 @@ document.addEventListener("DOMContentLoaded", function () {
             modalEdit.style.display = "none";
         }
     }
-
     //bool to say thta a new service is a child
     let isChild = false;
     let tempAdd = "";
     let replace = "";
-
-
     // Function to clear modal fields
     function clearModalFields() {
-
         document.getElementById('name').value = '';
         document.getElementById('fLastName').value = '';
         document.getElementById('mLastName').value = '';
@@ -96,26 +79,9 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('owner').value = '';
     }
 
-    function loadContent(page) {
-        fetch(page)
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('content').innerHTML = data;
-            })
-            .catch(error => console.error('Error loading content:', error));
-    }
-
-
-
-
     let contractAddresses = [];
-
-
-    // Load contract addresses from localStorage when the page loads
     window.addEventListener('load', async () => {
-        console.log("Entro en load");
         contractAddresses = await getCertificates();
-        console.log("from the event: ", contractAddresses);
         updateTableRows(contractAddresses); // Update the table with the cleaned data
     });
 
@@ -129,25 +95,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 body: JSON.stringify({}), // No need to send any data
             });
-
             // Handle the response
             if (!response.ok) {
                 throw new Error('Failed to retrieve contract address');
             }
-
             // Parse the response JSON
             const data = await response.json();
-            console.log('Contract Address Users:', data.contractAdd);
             return data.contractAdd; // Return the contract address
-
         } catch (error) {
             console.error('Error:', error);
             alert('An error occurred while fetching contract address');
         }
     };
-
     async function registerCertificate(certificateString) {
-        console.log("To add ", certificateString)
         try {
             const response = await fetch('/api/registerCertificate', {
                 method: 'POST',
@@ -156,13 +116,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 body: JSON.stringify({ certificateString })
             });
-
             // Await the response.json() to get the actual result
             const result = await response.json();
-            console.log("Certificate registered:", result); // Log the actual result
-
             if (response.ok) {
-                console.log("Certificate successfully added:", certificateString);
+                console.warn("Certificate successfully added");
             } else {
                 console.error("Error adding certificate:", result.message);
             }
@@ -170,9 +127,7 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Error in API call:", error);
         }
     }
-
     async function getCertificates() {
-        console.log("Entro en busqueda");
         try {
             const response = await fetch('/api/getCertificates', {
                 method: 'GET',
@@ -180,10 +135,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     'Content-Type': 'application/json',
                 },
             });
-
             // Await the response.json() to get the actual result
             const result = await response.json();
-            console.log(result);
             if (response.ok) {
                 return result.certificates;  // Return the certificates array
             } else {
@@ -194,14 +147,12 @@ document.addEventListener("DOMContentLoaded", function () {
             throw error;  // Rethrow the error for handling elsewhere
         }
     }
-
     const getUserAdd = async () => {
         try {
             const email = localStorage.getItem('userEmail'); // Get the email from localStorage
             if (!email) {
                 throw new Error('No email found in localStorage');
             }
-
             // Send a POST request to the server to get the user address
             const response = await fetch('/api/getUserAdd', {
                 method: 'POST',
@@ -210,192 +161,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 body: JSON.stringify({ email: email }),
             });
-
             if (!response.ok) {
                 throw new Error('Failed to retrieve user address');
             }
-
             // Parse the response JSON
             const data = await response.json();
-            console.log('User Address:', data.UserAddress);
             return data.UserAddress; // Return the user address
-
         } catch (error) {
             console.error('Error fetching user address:', error);
         }
     };
-
-    document.getElementById('create-service-form').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        document.getElementById('overlay').style.display = 'block'; // Show overlay
-
-        // Get form data
-        const formData = new FormData(event.target);
-        const data = Object.fromEntries(formData.entries());
-
-        data.contractUser = await getContractAdd();
-        data.gas = 3000000;
-        data.government = await getUserAdd();
-
-
-        console.log('Data:', data); // For debugging
-
-        try {
-            const response = await fetch('/createService', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            });
-
-            // Await the response.json() to get the actual result
-            const result = await response.json();
-            console.log("resultado", result); // Log the actual result
-
-            if (result.contractAddress) {
-
-                await registerCertificate(result.contractAddress);
-                await updateBirthCertificate(data.contractUser, result.contractAddress);
-
-
-                //                console.log('Contract Address:', await getCertificates());
-
-                clearModalFields();
-                modal.style.display = "none";
-
-                if (isChild) {
-
-                    try {
-                        console.log("creating child service");
-
-                        const contractAdd = result.contractAddress; // Ensure result is defined
-                        const replaceAdd = tempAdd;
-                        const gas = 300000;
-                        const government = await getUserAdd();
-
-                        // Check if replace is defined
-                        if (typeof replace === 'undefined') {
-                            console.error('The variable "replace" is not defined.');
-                            return; // Exit if replace is not defined
-                        }
-
-                        let publicMethod = ""; // Use let instead of const
-                        if (replace === "tokenMother") {
-                            publicMethod = "setMotherAddress";
-                        } else if (replace === "tokenFather") {
-                            publicMethod = "setFatherAddress";
-                        }
-
-                        const requestData = {
-                            contractAdd,
-                            replaceAdd,
-                            gas,
-                            government,
-                            publicMethod
-                        };
-
-                        console.log(requestData);
-                        const response = await fetch('/setAddress', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(requestData)
-                        });
-
-                        const apiResponse = await response.json();
-
-                        console.log("Lo seteado", apiResponse);
-
-                        // Check if apiResponse is defined and has the expected structure
-                        if (apiResponse && apiResponse.Result === 'Success') {
-                            tempAdd = "";
-                            replace = "";
-                            isChild = false;
-                            // Refresh the page
-                            // window.location.reload();
-                        } else {
-                            // Show error alert
-                            alert('Invalid Data');
-                        }
-
-                    } catch (error) {
-                        console.error('Error:', error);
-                        // Show error alert
-                        alert('Invalid Data');
-                    }
-
-
-                }
-                document.getElementById('overlay').style.display = 'none'; // Hide overlay
-                window.location.reload();
-
-
-            }
-
-            updateTableRows(contractAddresses);
-            // window.location.reload();
-
-        } catch (error) {
-            updateTableRows(contractAddresses);
-            console.error('Error:', error);
-        }
-    });
-
-    document.getElementById('editAddressForm').addEventListener('submit', async (event) => {
-        event.preventDefault();
-
-
-        // Get values from span elements
-        const contractAdd = document.getElementById('address3').textContent;
-        const government = document.getElementById('government3').textContent;
-
-        // Get the selected option from the select element
-        const publicMethod = document.getElementById('tokenChange2').value;
-
-        // Get the new address from input
-        const replaceAdd = document.getElementById('newAdd').value;
-
-        // Set default gas value or get it from somewhere if needed
-        const gas = '300000'; // You can adjust this value as needed
-
-        // Create data object with the exact structure needed
-        const requestData = {
-            contractAdd,
-            replaceAdd,
-            gas,
-            government,
-            publicMethod
-        };
-
-        try {
-            const response = await fetch('/setAddress', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(requestData)
-            });
-
-            const result = await response.json();
-
-            // Check if result is 'Success'
-            if (result.Result === 'Success') {
-                // Refresh the page
-                window.location.reload();
-            } else {
-                // Show error alert
-                alert('Invalid Data');
-            }
-
-        } catch (error) {
-            console.error('Error:', error);
-            // Show error alert
-            alert('Invalid Data');
-        }
-    });
-
     async function GetInfo(address, publicMethod) {
         try {
             // Fetching data from your backend endpoint using GET request with query parameters
@@ -421,59 +196,32 @@ document.addEventListener("DOMContentLoaded", function () {
                     return result.Value;
                 }
             } else {
-                console.log("Error not succeeded tofetch " + publicMethod);
+                console.error("Error not succeeded tofetch " + publicMethod);
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
-
     async function GetPrivateInfo(address, from) {
         try {
-            // Hacemos la petición al backend
             const response = await fetch(`/consultPrivates?contractAdd=${encodeURIComponent(address)}&from=${encodeURIComponent(from)}`, {
             });
-
-            // Verificamos si la respuesta es válida
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-
-            // Convertimos la respuesta a JSON
             const result = await response.json();
-
-            // Verificamos si el resultado es "Success"
             if (result.Result === "Success") {
-                return result.Data; // Retornamos el objeto Data directamente
+                return result.Data;
             } else {
-                console.log("Error: No se pudo obtener la información.");
                 return null;
             }
         } catch (error) {
-            console.log("Error en GetPrivateInfo:", error);
             return null;
         }
     }
-
-    async function getBirthCertificate(usAd) {
-        const userAddress = usAd;  // Replace with actual user address
-
-        const response = await fetch('/api/getBirthCertificate', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userAddress }),
-        });
-
-        const data = await response.json();
-        console.log(data);
-        return (data.BirthCertificate);
-    }
-
-    // Function to update the table rows based on contractAddresses array
     async function updateTableRows(contractAddresses) {
         const tbody = document.querySelector('tbody');
         tbody.innerHTML = ''; // Clear existing rows
-
         const userAdd = await getUserAdd(); // Obtener userAdd una sola vez
 
         for (const address of contractAddresses) {
@@ -483,20 +231,16 @@ document.addEventListener("DOMContentLoaded", function () {
             const mLastName = await GetInfo(address, "mLastName");
             const dateOfCreation = await GetInfo(address, "dateCreation");
             let owner = await GetInfo(address, "owner");
-
             // Skip this iteration if essential data is missing
             if (!name || !fLastName || !mLastName || !dateOfCreation) {
                 continue; // Skip to the next address
             }
-
             const cAdd = await getContractAdd();
-            const userInfoDef = await getUserInfo(cAdd,  await getUserAdd());
-            console.log(userInfoDef);
+            const userInfoDef = await getUserInfo(cAdd, await getUserAdd());
             // Condición para mostrar solo si el usuario actual es el owner o si el tipo es '0'
             if (userInfoDef.Data.getType !== '0' && userAdd !== owner) {
                 continue; // Salta este contrato si no cumple con la condición
             }
-
             const tr = document.createElement('tr');
             tr.className = 'border-t dark:border-gray-600';
 
@@ -528,7 +272,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Add event listener for the new child button
             tr.querySelector('.new-child-button').onclick = async function () {
-                console.log("New Child");
                 const gender = await GetInfo(address, "gender");
                 if (gender) {
                     // It's the father
@@ -540,119 +283,28 @@ document.addEventListener("DOMContentLoaded", function () {
             };
         }
     }
-
-
-
-
-    // Function to get gender and show modal with token fields updated
     async function updateToken(address, tokenToChange) {
-
-        console.log(address, tokenToChange);
-
         try {
-            console.log("aqui va el cambio ");
             isChild = true;
             tempAdd = address;
             replace = tokenToChange;
-            // Fetch gender information (true for male, false for female)
-            // Show the modal
             modal.style.display = 'block';
         } catch (error) {
             console.error('Error fetching gender information:', error);
         }
-
     }
-
-
-
-    window.viewDetails = async function (address) {
-        modalView.style.display = "block";
-        try {
-            // Fetch information from the contract address
-            const name = await GetInfo(address, "name");
-            const fLastName = await GetInfo(address, "fLastName");
-            const mLastName = await GetInfo(address, "mLastName");
-            const gender = await GetInfo(address, "gender");
-            //convertir la fecha a normal, no en epochhhhhhhhhhhhhhhhhhh
-            // Llamada a la función para obtener la información privada
-            const privateInfo = await GetPrivateInfo(address, await getUserAdd());
-
-            // Destructuración con valores por defecto de "Unauthorized" si privateInfo es null o no tiene datos válidos
-            let { Day = 'Unauthorized', Month = 'Unauthorized', Year = 'Unauthorized', State = 'Unauthorized', Municipality = 'Unauthorized' } = {};
-
-            if (privateInfo) {
-                // Si privateInfo tiene los datos correctos, extraemos las propiedades
-                Day = privateInfo.Day;
-                Month = privateInfo.Month;
-                Year = privateInfo.Year;
-                State = privateInfo.State;
-                Municipality = privateInfo.Municipality;
-
-            } else {
-                // Si privateInfo es null o no tiene 'Data', las variables tomarán el valor por defecto "Unauthorized"
-                console.log("No se pudo obtener la información, valores predeterminados asignados.");
-            }
-
-            // Ahora las variables Day, Month, Year, State, Municipality estarán disponibles con los valores correctos
-            console.log("Datos obtenidos:", Day, Month, Year, State, Municipality);
-
-
-
-            const dateCreation = await GetInfo(address, "dateCreation");
-            let dateC = new Date(dateCreation * 1000);
-            const dateLastUpdate = await GetInfo(address, "dateLastUpdate");
-            let dateU = new Date(dateLastUpdate * 1000);
-            const tokenFather = await GetInfo(address, "tokenFather");
-            const tokenMother = await GetInfo(address, "tokenMother");
-            const usAdds = await getUserFromBirthC(address);
-            const tokenDigIdentity = await getDigIdentityAdd(usAdds.UserAddress);
-            const owner = await GetInfo(address, "owner");
-            const government = await GetInfo(address, "government");
-            // Populate the HTML elements with the fetched information
-            let genderType;
-            if (gender) {
-                genderType = "Male";
-            }
-            else {
-                genderType = "Female";
-            }
-            document.getElementById('name2').textContent = name || 'N/A';
-            document.getElementById('fLastName2').textContent = fLastName || 'N/A';
-            document.getElementById('mLastName2').textContent = mLastName || 'N/A';
-            document.getElementById('gender2').textContent = genderType || 'N/A';
-            document.getElementById('day2').textContent = Day || 'N/A';
-            document.getElementById('month2').textContent = Month || 'N/A';
-            document.getElementById('year2').textContent = Year || 'N/A';
-            document.getElementById('state2').textContent = State || 'N/A';
-            document.getElementById('municipality2').textContent = Municipality || 'N/A';
-            document.getElementById('dateCreation2').textContent = dateC.toLocaleString() || 'N/A';
-            document.getElementById('dateLastUpdate2').textContent = dateU.toLocaleString() || 'N/A';
-            document.getElementById('tokenFather2').textContent = tokenFather || 'N/A';
-            document.getElementById('tokenMother2').textContent = tokenMother || 'N/A';
-            document.getElementById('tokenDigIdentity2').textContent = tokenDigIdentity || 'N/A';
-            document.getElementById('owner2').textContent = owner || 'N/A';
-            document.getElementById('government2').textContent = government || 'N/A';
-        } catch (error) {
-            console.error('Error fetching information:', error);
-        }
-    }
-
     async function getUserInfo(contractAdd, userAddress) {
         try {
-            console.log(contractAdd + "," + userAddress)
             const response = await fetch(`/getInfoUser?contractAdd=${encodeURIComponent(contractAdd)}&userAddress=${encodeURIComponent(userAddress)}`);
-            console.log(response);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-
             return await response.json();
         } catch (error) {
             console.error('Error getting user info:', error);
             return null;
         }
     }
-
     async function getDigIdentityAdd(userAdd) {
         try {
             const contractAddress = await getContractAdd(); // Wait for contract address
@@ -660,7 +312,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (contractAddress && userAddress) {
                 const userInfoDef = await getUserInfo(contractAddress, userAddress);
-                console.log(userInfoDef);
                 if (userInfoDef) {
                     return userInfoDef.Data.getDigIdentityAdd;
                 } else {
@@ -673,7 +324,6 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error('Error during DOMContentLoaded:', error);
         }
     }
-
     async function getUserFromBirthC(address) {
         try {
             const response = await fetch('/api/getUserFromBirthC', {
@@ -697,29 +347,21 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-
     window.EditAddress = async function (address) {
         // First ensure the modal is displayed
         const modalEdit = document.getElementById("editAdress");
         if (modalEdit) {
             modalEdit.style.display = "block";
         }
-
         try {
             // Fetch information from the contract address
             const government = await GetInfo(address, "government");
-
-
-
             // Get elements with error checking
             const elements = {
                 government: document.getElementById('government3'),
                 contractAddress: document.getElementById('address3')
             };
-
-
             if (elements.government) {
-
                 elements.government.textContent = government || 'N/A';
             } else {
                 console.warn('Element with ID "government3" not found');
@@ -730,11 +372,165 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error('Error in EditAddress:', error);
         }
     }
+    document.getElementById('create-service-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        document.getElementById('overlay').style.display = 'block'; // Show overlay
+        // Get form data
+        const formData = new FormData(event.target);
+        const data = Object.fromEntries(formData.entries());
+        data.contractUser = await getContractAdd();
+        data.gas = 3000000;
+        data.government = await getUserAdd();
+        try {
+            const response = await fetch('/createService', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            // Await the response.json() to get the actual result
+            const result = await response.json();
+            if (result.contractAddress) {
+                await registerCertificate(result.contractAddress);
+                await updateBirthCertificate(data.contractUser, result.contractAddress);
+                clearModalFields();
+                modal.style.display = "none";
+                if (isChild) {
+                    try {
+                        const contractAdd = result.contractAddress; // Ensure result is defined
+                        const replaceAdd = tempAdd;
+                        const gas = 300000;
+                        const government = await getUserAdd();
+                        // Check if replace is defined
+                        if (typeof replace === 'undefined') {
+                            console.error('The variable "replace" is not defined.');
+                            return; // Exit if replace is not defined
+                        }
+                        let publicMethod = ""; // Use let instead of const
+                        if (replace === "tokenMother") {
+                            publicMethod = "setMotherAddress";
+                        } else if (replace === "tokenFather") {
+                            publicMethod = "setFatherAddress";
+                        }
+                        const requestData = {
+                            contractAdd,
+                            replaceAdd,
+                            gas,
+                            government,
+                            publicMethod
+                        };
+                        const response = await fetch('/setAddress', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(requestData)
+                        });
+                        const apiResponse = await response.json();
+                        // Check if apiResponse is defined and has the expected structure
+                        if (apiResponse && apiResponse.Result === 'Success') {
+                            tempAdd = "";
+                            replace = "";
+                            isChild = false;
+                            // Refresh the page
+                            // window.location.reload();
+                        } else {
+                            // Show error alert
+                            alert('Invalid Data');
+                        }
 
+                    } catch (error) {
+                        console.error('Error:', error);
+                        // Show error alert
+                        alert('Invalid Data');
+                    }
+                }
+                document.getElementById('overlay').style.display = 'none'; // Hide overlay
+                window.location.reload();
+            }
+            updateTableRows(contractAddresses);
+        } catch (error) {
+            updateTableRows(contractAddresses);
+            console.error('Error:', error);
+        }
+    });
+    document.getElementById('editAddressForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        // Get values from span elements
+        const contractAdd = document.getElementById('address3').textContent;
+        const government = document.getElementById('government3').textContent;
+        // Get the selected option from the select element
+        const publicMethod = document.getElementById('tokenChange2').value;
+        // Get the new address from input
+        const replaceAdd = document.getElementById('newAdd').value;
+        // Set default gas value or get it from somewhere if needed
+        const gas = '300000'; // You can adjust this value as needed
+        // Create data object with the exact structure needed
+        const requestData = {
+            contractAdd,
+            replaceAdd,
+            gas,
+            government,
+            publicMethod
+        };
+        try {
+            const response = await fetch('/setAddress', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            });
 
+            const result = await response.json();
 
+            // Check if result is 'Success'
+            if (result.Result === 'Success') {
+                // Refresh the page
+                window.location.reload();
+            } else {
+                // Show error alert
+                alert('Invalid Data');
+            }
 
+        } catch (error) {
+            console.error('Error:', error);
+            // Show error alert
+            alert('Invalid Data');
+        }
+    });
+    window.viewDetails = async function (address) {
+        modalView.style.display = "block";
+        try {
+            const [userAdd, usAdds] = await Promise.all([getUserAdd(), getUserFromBirthC(address)]);
+            const [name, fLastName, mLastName, gender, dateC, dateU, tokenFather, tokenMother, owner, government] = await Promise.all(
+                ["name", "fLastName", "mLastName", "gender", "dateCreation", "dateLastUpdate", "tokenFather", "tokenMother", "owner", "government"]
+                    .map(f => GetInfo(address, f))
+            );
 
+            const tokenDigIdentity = await getDigIdentityAdd(usAdds.UserAddress);
+            const privateInfo = await GetPrivateInfo(address, userAdd) || {};
+            const getDate = t => new Date(t * 1000).toLocaleString();
+            const genderType = gender ? "Male" : "Female";
 
+            const map = {
+                name2: name, fLastName2: fLastName, mLastName2: mLastName,
+                gender2: genderType, day2: privateInfo.Day || "Unauthorized",
+                month2: privateInfo.Month || "Unauthorized", year2: privateInfo.Year || "Unauthorized",
+                state2: privateInfo.State || "Unauthorized", municipality2: privateInfo.Municipality || "Unauthorized",
+                dateCreation2: getDate(dateC), dateLastUpdate2: getDate(dateU),
+                tokenFather2: tokenFather, tokenMother2: tokenMother,
+                tokenDigIdentity2: tokenDigIdentity, owner2: owner, government2: government
+            };
+
+            Object.entries(map).forEach(([id, val]) => {
+                document.getElementById(id).textContent = val || 'N/A';
+            });
+
+        } catch (e) {
+            console.error('Error fetching information:', e);
+        }
+    };
 
 });

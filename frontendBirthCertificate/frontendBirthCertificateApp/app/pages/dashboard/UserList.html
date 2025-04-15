@@ -6,9 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Birth Certificate | Users List</title>
   <link rel="stylesheet" href="/style.css">
-  <script src="/DashscriptSimple.js"></script>
+  <script src="/UserListManager.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/styleDashboard.css">
+  <link rel="stylesheet" href="/slideBar.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <!-- Dark Mode change -->
   <script>
@@ -40,67 +41,6 @@
     }
   </script>
 </head>
-
-<style>
-  /* Circle styling */
-  #overlay {
-        display: none;
-        /* Initially hidden */
-    }
-
-  .user-circle {
-    width: 60px;
-    /* Smaller circle */
-    height: 60px;
-    /* Smaller circle */
-    border-radius: 50%;
-    background-color: rgb(255, 102, 0);
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 18px;
-    /* Adjust font size for initials */
-    font-weight: bold;
-    margin: 10px auto;
-    position: relative;
-    cursor: pointer;
-  }
-
-  /* Tooltip styling */
-  .tooltip {
-    position: absolute;
-    top: 70px;
-    /* Position tooltip below the circle */
-    left: 150%;
-    transform: translateX(-50%);
-    background-color: #333;
-    color: #fff;
-    padding: 6px;
-    /* Adjust padding */
-    border-radius: 4px;
-    font-size: 12px;
-    /* Adjust font size */
-    display: none;
-    white-space: nowrap;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    /* Add a shadow for better visibility */
-  }
-
-  .user-circle:hover .tooltip {
-    display: block;
-  }
-
-  /* Access text styling */
-  .access-text {
-    text-align: center;
-    margin-top: 5px;
-    /* Reduce margin */
-    font-size: 14px;
-    /* Adjust font size */
-    font-weight: bold;
-  }
-</style>
 
 <body class="bg-gray-100 dark:bg-gray-900 dark:text-white font-sans">
   <div id="overlay" class="hidden fixed inset-0 bg-gray-500 bg-opacity-50 z-50"></div>
@@ -430,7 +370,7 @@
       const userType = getUserTypeString(userInfoDef.Data.getType);
 
       if (userType === "Error") {
-        console.log("No user logged");
+        console.warn("No user logged");
       } else {
         const email = localStorage.getItem('userEmail') || "No email";
 
@@ -500,13 +440,13 @@
 
 
     document.getElementById('userList').addEventListener('click', function () {
-      window.location.href = '/dashboard';
+      window.location.href = '/userlist';
     });
     document.addEventListener('DOMContentLoaded', function () {
       const registerUserBtn = document.getElementById('registerUserBtn');
       if (registerUserBtn) {
         registerUserBtn.addEventListener('click', function () {
-          window.location.href = '/dashboard';
+          window.location.href = '/userlist';
         });
       }
 

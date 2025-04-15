@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="/style.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/styleDashboard.css">
+  <link rel="stylesheet" href="/slideBar.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <!-- Dark Mode change -->
   <script>
@@ -40,61 +41,6 @@
     }
   </script>
 </head>
-
-<style>
-  /* Circle styling */
-  .user-circle {
-    width: 60px;
-    /* Smaller circle */
-    height: 60px;
-    /* Smaller circle */
-    border-radius: 50%;
-    background-color: rgb(255, 102, 0);
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 18px;
-    /* Adjust font size for initials */
-    font-weight: bold;
-    margin: 10px auto;
-    position: relative;
-    cursor: pointer;
-  }
-
-  /* Tooltip styling */
-  .tooltip {
-    position: absolute;
-    top: 70px;
-    /* Position tooltip below the circle */
-    left: 25%;
-    background-color: #333;
-    color: #fff;
-    padding: 6px;
-    /* Adjust padding */
-    border-radius: 4px;
-    font-size: 12px;
-    /* Adjust font size */
-    display: none;
-    white-space: nowrap;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    /* Add a shadow for better visibility */
-  }
-
-  .user-circle:hover .tooltip {
-    display: block;
-  }
-
-  /* Access text styling */
-  .access-text {
-    text-align: center;
-    margin-top: 5px;
-    /* Reduce margin */
-    font-size: 14px;
-    /* Adjust font size */
-    font-weight: bold;
-  }
-</style>
 
 <body class="bg-gray-100 dark:bg-gray-900 dark:text-white font-sans">
   <div class="flex">
@@ -130,8 +76,6 @@
 
           <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"
             id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log Out</button>
-
-
           <!-- Toggle Switch for Dark Mode -->
           <label class="switch">
             <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()">
@@ -147,13 +91,6 @@
           <h1 class="text-2xl font-bold">Birth Certificate Addresses</h1>
           <p class="text-gray-600 dark:text-gray-400">Contracts. Please use this page
             to view clients' Birth Certificates.</p>
-        </div>
-        <div class="flex items-center space-x-4">
-          <button id="trashbtn"
-            class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"><i
-              class="fas fa-trash"></i> Delete</button>
-          <!-- <button class="bg-blue-500 text-white hover:bg-blue-700 dark:bg-blue-700  dark:hover:bg-blue-500 p-2 rounded"
-            id="newServiceButton">New</button> -->
         </div>
       </div>
       <div class="mt-6 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
@@ -367,7 +304,6 @@
     </div>
   </div>
 
-
   <!-- Edit address Modal -->
   <div id="editAdress" class="modalEdit hidden fixed inset-0 flex items-center justify-center z-50">
     <div class="modal-content p-6 rounded-lg shadow-lg bg-white dark:bg-gray-800 dark:text-white relative">
@@ -410,16 +346,11 @@
               class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
               required>
           </div>
-
           <!-- government -->
           <div class="mb-4">
             <label for="government3" class="block text-gray-500 dark:text-gray-300">Government</label>
             <span id="government3" class="block text-gray-700 dark:text-white"></span>
           </div>
-          
-
-
-
           <!-- Button -->
           <button type="button" id="cancelButton3"
             class="bg-red-500 text-white font-semibold px-4 py-2 rounded hover:bg-red-600">Cancel</button>
@@ -436,8 +367,6 @@
   <script>
 
     const resultSideContainer = document.getElementById('resultSideContainer'); // To display results
-
-
     const getContractAdd = async () => {
       try {
         // Send a POST request to the server to get the contract address
@@ -487,7 +416,6 @@
 
         // Parse the response JSON
         const data = await response.json();
-        console.log('User Address:', data.UserAddress);
         return data.UserAddress; // Return the user address
 
       } catch (error) {
@@ -511,8 +439,6 @@
       }
     }
 
-
-
     // Function to display user info in a table
     function getUserTypeString(type) {
       switch (type) {
@@ -529,11 +455,10 @@
       }
     }
 
-
     async function displayUserInfoInSideBar(userInfoDef) {
       const userType = getUserTypeString(userInfoDef.Data.getType);
       if (userType === "Error") {
-        console.log("No user logged");
+        console.error("No user logged");
       } else {
         const email = localStorage.getItem('userEmail') || "No email";
         const userAdd = await getUserAdd();
@@ -552,7 +477,6 @@
           <p>Access: ${userType}</p>
         </div>
       `;
-
         resultSideContainer.innerHTML = htmlContent;
 
         function updateButtonsVisibility() {
@@ -584,10 +508,6 @@
        
       }
     }
-
-
-
-
     document.addEventListener('DOMContentLoaded', async () => {
       try {
         const contractAddress = await getContractAdd(); // Wait for contract address
@@ -608,9 +528,6 @@
         console.error('Error during DOMContentLoaded:', error);
       }
     });
-
-
-
     const checkAuth = () => {
       const token = localStorage.getItem('authToken');
       if (!token) {
@@ -618,22 +535,16 @@
         window.location.href = '/login';
       }
     };
-
     // Ejecutar al cargar la página
     checkAuth();
-
      // Navigate buttons
      document.getElementById('homeBtn').addEventListener('click', function () {
       window.location.href = '/';
     });
-
-
     document.getElementById('userList').addEventListener('click', function () {
-      window.location.href = '/dashboard';
+      window.location.href = '/userlist';
     });
-
     document.getElementById('logoutBtn').addEventListener('click', function () {
-
       localStorage.removeItem('authToken');
       localStorage.removeItem('user');
       localStorage.removeItem('userEmail'); // Eliminar el correo guardado
@@ -642,9 +553,6 @@
 
       window.location.href = '/login'; // Redirect to the login page
     });
-
-
-
   </script>
 </body>
 
