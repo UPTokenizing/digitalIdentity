@@ -4,9 +4,9 @@ const path = require('path');
 const axios = require('axios');
 const qs = require('qs');
 require('dotenv').config();
-const { auth } = require('./app/pages/config/firebase-config');
-const authMiddleware = require('./app/pages/middleware/auth');
-const admin = require('./app/pages/config/firebase-config');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const pool = require('./db'); 
 
 // Serve static files from the public directory (like images, CSS, etc.)
 app.use(express.static(path.join(__dirname, 'public')));
@@ -126,100 +126,92 @@ app.get('/consult', async (req, res) => {
   }
 });
 
-// Firebase APIs
+//Auth by SQL
 app.post('/api/login', async (req, res) => {
-
   const { email, password } = req.body;
-  const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY;
-
 
   try {
-    // Step 1: Use Firebase Identity Toolkit API to verify email and password
-    const response = await axios.post(
-      `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${FIREBASE_API_KEY}`,
-      {
-        email,
-        password,
-        returnSecureToken: true,
-      }
-    );
+    const [rows] = await pool.execute('SELECT * FROM users WHERE email = ?', [email]);
 
-    const { localId } = response.data;
+    if (rows.length === 0) {
+      return res.status(401).json({ message: 'Incorrect email or password' });
+    }
 
-    // Step 2: Generate a custom token for the user
-    const customToken = await admin.auth().createCustomToken(localId);
+    const user = rows[0];
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ message: 'Incorrect email or password' });
+    }
 
-    // Step 3: Return the custom token and user data
+    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
+      expiresIn: '2h',
+    });
+
     res.json({
-      token: customToken,
+      token,
       user: {
-        email,
-        uid: localId,
+        id: user.id,
+        email: user.email,
       },
     });
   } catch (error) {
-    console.error('Login error:', error.response ? error.response.data : error.message);
-    res.status(401).json({
-      message: 'Invalid credentials',
-      error: error.message,
-    });
+    console.error('Login error:', error.message);
+    res.status(500).json({ message: 'Server error' });
   }
 });
+
 app.post('/api/getContractAdd', async (req, res) => {
-  // Default User Address
   const UserAddress = '0x2CFcBB9Cf2910fBa7E7E7a8092aa1a40BC5BA341';  // Default address
 
   try {
-    const db = admin.firestore();
+    const connection = await pool.getConnection();
 
-    // Query Firestore to find the user based on the default UserAddress
-    const userSnapshot = await db.collection('users')
-      .where('UserAddress', '==', UserAddress)
-      .get();
+    const [rows] = await connection.query(
+      'SELECT contractAdd FROM users WHERE UserAddress = ? LIMIT 1',
+      [UserAddress]
+    );
 
-    if (userSnapshot.empty) {
-      // Return a default contract address if no user is found with the given UserAddress
-      const defaultContractAdd = '0x2CFcBB9Cf2910fBa7E7E7a8092aa1a40BC5BA341';
-      return res.status(200).send({ contractAdd: defaultContractAdd });
+    connection.release();
+
+    if (rows.length === 0) {
+      return res.status(200).send({ contractAdd: UserAddress }); // Default if not found
     }
 
-    // Get contractAdd from the found user document
-    const userDoc = userSnapshot.docs[0];  // Assuming UserAddress is unique
-    const contractAdd = userDoc.data().contractAdd;
-
-    res.status(200).send({ contractAdd: contractAdd });
+    res.status(200).send({ contractAdd: rows[0].contractAdd });
   } catch (error) {
     console.error('Error retrieving contract address:', error);
     res.status(400).send({ message: error.message });
   }
 });
+
 app.post('/api/getUserAdd', async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).send({ message: 'Email is required in the request body.' });
+  }
+
   try {
-    const email = req.body.email; // Get the email from the request body
+    const connection = await pool.getConnection();
 
-    const db = admin.firestore();
+    const [rows] = await connection.query(
+      'SELECT UserAddress FROM users WHERE email = ? LIMIT 1',
+      [email]
+    );
 
-    // Query Firestore to find the user based on the default UserAddress
-    const userSnapshot = await db.collection('users')
-      .where('email', '==', email)
-      .get();
+    connection.release();
 
-    if (userSnapshot.empty) {
-      // Return a default user address if no user is found with the given UserAddress
-      const defaultUserAdd = 'No email';
-      return res.status(200).send({ UserAddress: defaultUserAdd });
+    if (rows.length === 0) {
+      return res.status(200).send({ UserAddress: 'No email' });
     }
 
-    // Get userAdd from the found user document
-    const userDoc = userSnapshot.docs[0];  // Assuming UserAddress is unique
-    const UserAddress = userDoc.data().UserAddress;
-
-    res.status(200).send({ UserAddress: UserAddress });
+    res.status(200).send({ UserAddress: rows[0].UserAddress });
   } catch (error) {
     console.error('Error retrieving user address:', error);
-    res.status(400).send({ message: error.message });
+    res.status(500).send({ message: 'Error retrieving user address.' });
   }
 });
+
 app.get('/getInfoUser', async (req, res) => {
   try {
     const { contractAdd, userAddress } = req.query;
@@ -243,54 +235,35 @@ app.get('/getInfoUser', async (req, res) => {
     res.status(500).send('Error fetching the data');
   }
 });
+
 app.get('/api/getAllEmails', async (req, res) => {
   try {
-    const db = admin.firestore();
+    const connection = await pool.getConnection();
 
-    // Retrieve all documents in the 'users' collection
-    const usersSnapshot = await db.collection('users').get();
+    const [rows] = await connection.query('SELECT email FROM users');
 
-    if (usersSnapshot.empty) {
+    connection.release();
+
+    if (rows.length === 0) {
       return res.status(404).send({ message: 'No users found.' });
     }
 
-    // Extract emails from the documents
-    const emails = usersSnapshot.docs.map((doc) => doc.data().email);
+    const emails = rows.map((row) => row.email);
 
-    console.log('Registered Emails:', emails); // Log the emails to the console
-    res.status(200).send({ emails }); // Send the emails as a response
+    console.log('Registered Emails:', emails);
+    res.status(200).send({ emails });
   } catch (error) {
     console.error('Error fetching emails:', error);
     res.status(500).send({ message: 'Error fetching emails.' });
   }
 });
 
-//Check to erase
-app.post('/api/registerCertificate', async (req, res) => {
-  const { certificateString } = req.body;
-
-  try {
-    const db = admin.firestore();
-
-    // Create a new document in the `BirthCertificates` collection with the certificate string as the document ID
-    const docRef = db.collection('BirthCertificates').doc(certificateString);
-
-    // Set the document data (it can be an empty object or you can add additional metadata)
-    await docRef.set({ createdAt: admin.firestore.FieldValue.serverTimestamp() });
-
-    res.status(201).send({ message: 'Certificate added successfully', certificateString });
-  } catch (error) {
-    console.error('Error adding certificate:', error);
-    res.status(400).send({ message: error.message });
-  }
-});
+/////////////////////////////////////////////////////////////////
 app.get('/api/getCertificates', async (req, res) => {
   try {
-    const db = admin.firestore();
-    const certificatesSnapshot = await db.collection('BirthCertificates').get();
-
-    // Extract the document IDs (certificate strings)
-    const certificates = certificatesSnapshot.docs.map(doc => doc.id);
+  
+    const [rows] = await pool.query('SELECT certificate_string FROM BirthCertificates');
+    const certificates = rows.map(row => row.certificate_string);
 
     console.log('All certificates:', certificates);
     res.status(200).send({ certificates });
@@ -299,35 +272,7 @@ app.get('/api/getCertificates', async (req, res) => {
     res.status(400).send({ message: error.message });
   }
 });
-app.post('/api/updateBirthCertificate', async (req, res) => {
-  try {
-    const { userAddress, birthCertificate } = req.body;
 
-    if (!userAddress || !birthCertificate) {
-      return res.status(400).send({ message: 'UserAddress and BirthCertificate are required.' });
-    }
-    console.log('Registered birth:', birthCertificate);
-    const db = admin.firestore();
-
-    // Find the user document with the given UserAddress
-    const userSnapshot = await db.collection('users')
-      .where('UserAddress', '==', userAddress)
-      .get();
-
-    if (userSnapshot.empty) {
-      return res.status(404).send({ message: 'User not found with the provided UserAddress.' });
-    }
-
-    // Update the first found user document (assuming UserAddress is unique)
-    const userDoc = userSnapshot.docs[0].ref;
-    await userDoc.update({ BirthCertificate: birthCertificate });
-    console.log('Registered birth: complete', birthCertificate);
-    res.status(200).send({ message: 'BirthCertificate updated successfully' });
-  } catch (error) {
-    console.error('Error updating BirthCertificate:', error);
-    res.status(500).send({ message: 'Error updating BirthCertificate.' });
-  }
-});
 app.post('/api/getBirthCertificate', async (req, res) => {
   try {
     const { userAddress } = req.body;
@@ -336,20 +281,18 @@ app.post('/api/getBirthCertificate', async (req, res) => {
       return res.status(400).send({ message: 'UserAddress is required.' });
     }
 
-    const db = admin.firestore();
+    // Buscar el usuario con el UserAddress dado
+    const [rows] = await pool.query(
+      'SELECT BirthCertificate FROM users WHERE UserAddress = ?',
+      [userAddress]
+    );
 
-    // Query Firestore to find the user based on UserAddress
-    const userSnapshot = await db.collection('users')
-      .where('UserAddress', '==', userAddress)
-      .get();
-
-    if (userSnapshot.empty) {
+    if (rows.length === 0) {
       return res.status(404).send({ message: 'User not found with the provided UserAddress.' });
     }
 
-    // Get BirthCertificate field from the found user document
-    const userDoc = userSnapshot.docs[0];
-    const birthCertificate = userDoc.data().BirthCertificate || 'No Birth Certificate found';
+    // Obtener el BirthCertificate del usuario
+    const birthCertificate = rows[0].BirthCertificate || 'No Birth Certificate found';
 
     res.status(200).send({ BirthCertificate: birthCertificate });
   } catch (error) {
@@ -359,24 +302,20 @@ app.post('/api/getBirthCertificate', async (req, res) => {
 });
 
 //Retrieve students ID
-
 app.get('/api/getStudentsIDs', async (req, res) => {
   try {
-    const db = admin.firestore();
+    const [rows] = await pool.query(
+      'SELECT certificate_string, StudentID FROM BirthCertificates WHERE StudentID IS NOT NULL'
+    );
 
-    // Query only documents where StudentID exists
-    const certificatesSnapshot = await db.collection('BirthCertificates')
-      .where('StudentID', '!=', null) // Filter to include only documents that have a StudentID
-      .get();
-
-    if (certificatesSnapshot.empty) {
+    if (rows.length === 0) {
       return res.status(404).send({ message: 'No birth certificates with student IDs found.' });
     }
 
-    // Extract StudentID values
-    const students = certificatesSnapshot.docs.map(doc => ({
-      certificate: doc.id, // Document ID (birth certificate hash)
-      studentID: doc.data().StudentID // Student ID
+    // Mapear los resultados
+    const students = rows.map(row => ({
+      certificate: row.certificate_string,
+      studentID: row.StudentID
     }));
 
     console.log('Students:', students);
@@ -387,7 +326,6 @@ app.get('/api/getStudentsIDs', async (req, res) => {
   }
 });
 
-
 app.post('/api/updateBirthCertificateWithStudentID', async (req, res) => {
   try {
     const { studentID, birthCertificate } = req.body;
@@ -397,18 +335,66 @@ app.post('/api/updateBirthCertificateWithStudentID', async (req, res) => {
     }
 
     console.log('Registered birth:', birthCertificate);
-    const db = admin.firestore();
-
-    // Directly reference the document using its ID
-    const birthCertificateRef = db.collection('BirthCertificates').doc(birthCertificate);
-    const doc = await birthCertificateRef.get();
-
-    if (!doc.exists) {
-      return res.status(404).send({ message: 'Birth certificate not found.' });
+    
+    // Verificar primero si la tabla BirthCertificates existe
+    try {
+      const [tables] = await pool.query("SHOW TABLES LIKE 'BirthCertificates'");
+      
+      if (tables.length === 0) {
+        // Si la tabla no existe, la creamos
+        console.log('Creating BirthCertificates table...');
+        await pool.query(`
+          CREATE TABLE BirthCertificates (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            certificate_string VARCHAR(255) UNIQUE NOT NULL,
+            StudentID VARCHAR(255)
+          )
+        `);
+        console.log('BirthCertificates table created');
+      }
+    } catch (tableError) {
+      console.error('Error checking/creating table:', tableError);
+      return res.status(500).send({ message: 'Error setting up database table.' });
+    }
+    
+    // Verificar si la columna StudentID existe
+    try {
+      const [columns] = await pool.query('SHOW COLUMNS FROM BirthCertificates LIKE "StudentID"');
+      
+      if (columns.length === 0) {
+        // Si la columna no existe, la creamos
+        console.log('Creating StudentID column...');
+        await pool.query('ALTER TABLE BirthCertificates ADD COLUMN StudentID VARCHAR(255)');
+        console.log('Column StudentID added to BirthCertificates table');
+      }
+    } catch (columnError) {
+      console.error('Error checking/creating column:', columnError);
+      return res.status(500).send({ message: 'Error setting up database schema.' });
     }
 
-    // Update the document with StudentID
-    await birthCertificateRef.update({ StudentID: studentID });
+    // Verificar si el certificado existe
+    const [rows] = await pool.query(
+      'SELECT * FROM BirthCertificates WHERE certificate_string = ?',
+      [birthCertificate]
+    );
+
+    if (rows.length === 0) {
+      // Si el certificado no existe, lo creamos
+      console.log('Birth certificate not found, creating it');
+      await pool.query(
+        'INSERT INTO BirthCertificates (certificate_string, StudentID) VALUES (?, ?)',
+        [birthCertificate, studentID]
+      );
+      
+      console.log('Registered id: complete', studentID);
+      return res.status(200).send({ message: 'Birth certificate created with studentID' });
+    }
+
+    // Si el certificado existe, actualizamos el StudentID
+    await pool.query(
+      'UPDATE BirthCertificates SET StudentID = ? WHERE certificate_string = ?',
+      [studentID, birthCertificate]
+    );
 
     console.log('Registered id: complete', studentID);
     res.status(200).send({ message: 'studentID updated successfully' });
@@ -427,20 +413,36 @@ app.post('/api/updateScholarCurriculum', async (req, res) => {
     }
 
     console.log('Registered curriculum:', curriculumAdd);
-    const db = admin.firestore();
+    
+    // Verificar si la columna de la institución existe
+    try {
+      const [columns] = await pool.query(`SHOW COLUMNS FROM users LIKE '${Institution}'`);
+      
+      if (columns.length === 0) {
+        // Si la columna no existe, la creamos
+        await pool.query(`ALTER TABLE users ADD COLUMN \`${Institution}\` VARCHAR(255)`);
+        console.log(`Column ${Institution} added to users table`);
+      }
+    } catch (columnError) {
+      console.error('Error checking/creating column:', columnError);
+      return res.status(500).send({ message: 'Error setting up database schema.' });
+    }
+    
+    // Buscar el usuario con el BirthCertificate dado
+    const [rows] = await pool.query(
+      'SELECT * FROM users WHERE BirthCertificate = ?',
+      [birthCertificate]
+    );
 
-    // Find the user document with the given UserAddress
-    const userSnapshot = await db.collection('users')
-      .where('BirthCertificate', '==', birthCertificate)
-      .get();
-
-    if (userSnapshot.empty) {
+    if (rows.length === 0) {
       return res.status(404).send({ message: 'User not found with the provided birthCertificate.' });
     }
 
-    // Update the first found user document (assuming birthCertificate is unique)
-    const userDoc = userSnapshot.docs[0].ref;
-    await userDoc.update({ [Institution]: curriculumAdd });  // Dynamically add field
+    // Actualizar el campo de institución con el curriculumAdd
+    await pool.query(
+      `UPDATE users SET \`${Institution}\` = ? WHERE BirthCertificate = ?`,
+      [curriculumAdd, birthCertificate]
+    );
 
     console.log(`Updated: ${Institution}: ${curriculumAdd}`);
     res.status(200).send({ message: `Curriculum added under ${Institution}` });
@@ -450,7 +452,6 @@ app.post('/api/updateScholarCurriculum', async (req, res) => {
   }
 });
 
-
 app.post('/api/getStudentsCurriculum', async (req, res) => {
   try {
     const { birthCertificate, Institution } = req.body;
@@ -458,34 +459,39 @@ app.post('/api/getStudentsCurriculum', async (req, res) => {
       return res.status(400).send({ message: 'Missing birthcertificate or Institution parameter.' });
     }
 
-    const db = admin.firestore();
+    // Verificar si la columna institución existe
+    try {
+      const [columns] = await pool.query(`SHOW COLUMNS FROM users LIKE '${Institution}'`);
+      if (columns.length === 0) {
+        return res.status(404).send({ message: `No curriculum found for ${Institution}.` });
+      }
+    } catch (error) {
+      console.error('Error checking column:', error);
+      return res.status(500).send({ message: 'Error checking database schema.' });
+    }
 
-    // Query to get the student by birthCertificate field
-    const userSnapshot = await db.collection('users')
-      .where('BirthCertificate', '==', birthCertificate) // Query by the 'BirthCertificate' field
-      .get();
+    // Buscar el estudiante por su BirthCertificate
+    const [rows] = await pool.query(
+      `SELECT \`${Institution}\` FROM users WHERE BirthCertificate = ?`,
+      [birthCertificate]
+    );
 
-    if (userSnapshot.empty) {
+    if (rows.length === 0) {
       return res.status(404).send({ message: 'No matching student found.' });
     }
 
-    // Assuming there is only one matching document
-    const studentData = userSnapshot.docs[0].data();
-
-    // Check if the specified Institution field exists in the document
-    if (!studentData[Institution]) {
+    // Verificar si el campo de la institución tiene valor
+    if (!rows[0][Institution]) {
       return res.status(404).send({ message: `No curriculum found for ${Institution}.` });
     }
 
-    // Return the curriculum for the given institution
-    res.status(200).send({ UpCurriculum: studentData[Institution] });
+    // Devolver el currículo
+    res.status(200).send({ UpCurriculum: rows[0][Institution] });
   } catch (error) {
     console.error('Error retrieving student curriculum:', error);
     res.status(500).send({ message: 'Error retrieving student curriculum.' });
   }
 });
-
-
 
 app.post('/api/updateCurriculum', async (req, res) => {
   try {
@@ -497,33 +503,64 @@ app.post('/api/updateCurriculum', async (req, res) => {
 
     console.log(`Updating DigitalIdentity for Institution: ${Institution}`);
 
-    const db = admin.firestore();
+    // El nombre del campo para los logros
+    const achievementsField = `${Institution}Achievements`;
+    
+    // Verificar si la columna de logros existe
+    try {
+      const [columns] = await pool.query(`SHOW COLUMNS FROM BirthCertificates LIKE '${achievementsField}'`);
+      
+      if (columns.length === 0) {
+        // Si la columna no existe, la creamos para almacenar JSON
+        await pool.query(`ALTER TABLE BirthCertificates ADD COLUMN \`${achievementsField}\` TEXT`);
+        console.log(`Column ${achievementsField} added to BirthCertificates table`);
+      }
+    } catch (columnError) {
+      console.error('Error checking/creating column:', columnError);
+      return res.status(500).send({ message: 'Error setting up database schema.' });
+    }
+    
+    // Verificar si el certificado existe
+    const [rows] = await pool.query(
+      'SELECT * FROM BirthCertificates WHERE certificate_string = ?',
+      [birthCertificates]
+    );
 
-    // Reference to the specific BirthCertificates document
-    const digitalIDRef = db.collection('BirthCertificates').doc(birthCertificates);
-
-    // Check if the document exists
-    const docSnapshot = await digitalIDRef.get();
-    if (!docSnapshot.exists) {
+    if (rows.length === 0) {
       return res.status(404).send({ message: 'BirthCertificate not found with the provided birthCertificates.' });
     }
 
-    // Dynamically create the field name
-    const achievementsField = `${Institution}Achievements`;
-
-    // Update Firestore: Add tokenAddress to InstitutionAchievements array
-    await digitalIDRef.update({
-      [achievementsField]: admin.firestore.FieldValue.arrayUnion(tokenAddress)
-    });
+    // Actualizar el campo de logros
+    let achievements = [];
+    if (rows[0][achievementsField]) {
+      try {
+        achievements = JSON.parse(rows[0][achievementsField]);
+        if (!Array.isArray(achievements)) {
+          achievements = [];
+        }
+      } catch (e) {
+        achievements = [];
+      }
+    }
+    
+    // Añadir el token si no existe
+    if (!achievements.includes(tokenAddress)) {
+      achievements.push(tokenAddress);
+    }
+    
+    await pool.query(
+      `UPDATE BirthCertificates SET \`${achievementsField}\` = ? WHERE certificate_string = ?`,
+      [JSON.stringify(achievements), birthCertificates]
+    );
 
     console.log(`Update complete: Added ${tokenAddress} to ${achievementsField}`);
     res.status(200).send({ message: `DigitalIdentity updated successfully for ${Institution}` });
-
   } catch (error) {
     console.error('Error updating DigitalIdentity:', error);
     res.status(500).send({ message: 'Error updating DigitalIdentity.' });
   }
 });
+////////////////////////////////////////////////////////////
 
 app.get('/numberOfAchievements', async (req, res) => {
   try {
@@ -603,32 +640,40 @@ app.post('/api/checkInstitutionField', async (req, res) => {
       return res.status(400).send({ message: 'birthCertificate and Institution are required.' });
     }
 
-    const db = admin.firestore();
+    // Primero verificamos si la columna de la institución existe
+    try {
+      const [columns] = await pool.query(`SHOW COLUMNS FROM users LIKE '${Institution}'`);
+      
+      // Si la columna no existe, retornamos false directamente
+      if (columns.length === 0) {
+        return res.status(200).send({ exists: false });
+      }
+    } catch (columnError) {
+      console.error('Error checking column:', columnError);
+      return res.status(500).send({ message: 'Error checking database schema.', exists: false });
+    }
 
-    // Buscar usuario con el birthCertificate proporcionado
-    const userSnapshot = await db.collection('users')
-      .where('BirthCertificate', '==', birthCertificate)
-      .get();
+    // Buscamos el usuario con el birthCertificate proporcionado
+    const [rows] = await pool.query(
+      'SELECT * FROM users WHERE BirthCertificate = ?',
+      [birthCertificate]
+    );
 
-    if (userSnapshot.empty) {
+    if (rows.length === 0) {
       return res.status(404).send({ message: 'User not found with the provided birthCertificate.', exists: false });
     }
 
-    // Obtener el primer documento encontrado
-    const userDoc = userSnapshot.docs[0].data();
-
-    // Verificar si el campo Institution existe y tiene valor
-    if (userDoc.hasOwnProperty(Institution) && userDoc[Institution]) {
+    // Verificar si el campo Institution tiene valor
+    if (rows[0][Institution]) {
       return res.status(200).send({ exists: true });
     } else {
       return res.status(200).send({ exists: false });
     }
   } catch (error) {
     console.error('Error checking Institution field:', error);
-    res.status(500).send({ message: 'Error checking Institution field.', exists: false });
+    return res.status(500).send({ message: 'Error checking Institution field.', exists: false });
   }
 });
-
 
 
 

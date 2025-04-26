@@ -282,7 +282,6 @@
 
                 // Parse the response JSON
                 const data = await response.json();
-                console.log('Contract Address:', data.contractAdd);
                 return data.contractAdd; // Return the contract address
 
             } catch (error) {
@@ -313,7 +312,6 @@
 
                 // Parse the response JSON
                 const data = await response.json();
-                console.log('User Address:', data.UserAddress);
                 return data.UserAddress; // Return the user address
 
             } catch (error) {
@@ -368,7 +366,6 @@
 
         // Function to display user info in a table
         function getUserTypeString(type) {
-            console.log("Tipo: ", type);
             switch (type) {
                 case '0':
                     return 'Government';
@@ -385,11 +382,10 @@
 
 
         async function displayUserInfoInSideBar(userInfoDef) {
-            console.log(userInfoDef.Data.getType);
             const userType = getUserTypeString(userInfoDef.Data.getType);
 
             if (userType === "Error") {
-                console.log("No user logged");
+                console.warn("No user logged");
             } else {
                 const email = localStorage.getItem('userEmail') || "No email";
                 const userAdd = await getUserAdd();
@@ -413,9 +409,7 @@
 
                 // const createBtn = document.getElementById('linkTokenBtn');
                 const linkT = document.getElementById('linkT');
-                console.log(userType);
                 if (userType === "Government") {
-                    console.log("Government Active");
                     linkT.classList.remove('hidden');
                 }
                 else if ((userType === "Admin" || userType === "User")) {
@@ -423,7 +417,6 @@
                     linkT.classList.remove('hidden');
                 }
                 else if ((userType === "Government" || userType === "Admin" || userType === "User")) {
-                    console.log("User log");
                     linkT.classList.remove('hidden');
                 }
                 else {
@@ -444,7 +437,6 @@
                 if (contractAddress && userAddress) {
                     const userInfoDef = await getUserInfo(contractAddress, userAddress);
                     if (userInfoDef) {
-                        console.log('User Info:', userInfoDef);
                         displayUserInfoInSideBar(userInfoDef); // Display the user info in the sidebar
                     } else {
                         console.error('No user info found');
@@ -465,7 +457,6 @@
                 if (contractAddress && userAddress) {
                     const userInfoDef = await getUserInfo(contractAddress, userAddress);
                     if (userInfoDef) {
-                        console.log('User Info:', userInfoDef);
                         displayUserInfoInSideBar(userInfoDef); // Display the user info in the sidebar
                     } else {
                         console.error('No user info found');
@@ -492,7 +483,6 @@
                 if (contractAddress && userAddress) {
                     const userInfoDef = await getUserInfo(contractAddress, userAddress);
                     if (userInfoDef) {
-                        console.log('User Info:', userInfoDef);
                         displayUserInfoInSideBar(userInfoDef);
                     }
                 }
@@ -521,7 +511,6 @@
                 }
 
                 const data = await response.json();
-                console.log('Token Addresses:', data.tokenAddresses);
                 return data.tokenAddresses; // Return the list of token addresses
 
             } catch (error) {
@@ -585,10 +574,8 @@
                 if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
                 const resultText = await response.text(); // Read response as text first
-                console.log(`Raw response text for ${tokenAddress}:`, resultText);
 
                 const result = JSON.parse(resultText); // Convert to JSON manually
-                console.log(`Parsed JSON result for ${tokenAddress}:`, result);
 
                 if (result.Result === "Success") {
                     return result.Value; // Return the token name

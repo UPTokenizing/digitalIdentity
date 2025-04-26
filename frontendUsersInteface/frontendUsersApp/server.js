@@ -2,11 +2,10 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const axios = require('axios');
-const qs = require('qs');
 require('dotenv').config();
-const { auth } = require('./app/pages/config/firebase-config');
-const authMiddleware = require('./app/pages/middleware/auth');
-const admin = require('./app/pages/config/firebase-config');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const pool = require('./db'); 
 
 // Serve static files from the public directory (like images, CSS, etc.)
 app.use(express.static(path.join(__dirname, 'public')));
@@ -169,146 +168,140 @@ app.get('/consultuser', async (req, res) => {
   }
 });
 
+//Auth by SQL
 app.post('/api/login', async (req, res) => {
-
   const { email, password } = req.body;
-  const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY;
-
 
   try {
-    // Step 1: Use Firebase Identity Toolkit API to verify email and password
-    const response = await axios.post(
-      `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${FIREBASE_API_KEY}`,
-      {
-        email,
-        password,
-        returnSecureToken: true,
-      }
-    );
+    const [rows] = await pool.execute('SELECT * FROM users WHERE email = ?', [email]);
 
-    const { localId } = response.data;
+    if (rows.length === 0) {
+      return res.status(401).json({ message: 'Incorrect email or password' });
+    }
 
-    // Step 2: Generate a custom token for the user
-    const customToken = await admin.auth().createCustomToken(localId);
+    const user = rows[0];
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ message: 'Incorrect email or password' });
+    }
 
-    // Step 3: Return the custom token and user data
+    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
+      expiresIn: '2h',
+    });
+
     res.json({
-      token: customToken,
+      token,
       user: {
-        email,
-        uid: localId,
+        id: user.id,
+        email: user.email,
       },
     });
   } catch (error) {
-    console.error('Login error:', error.response ? error.response.data : error.message);
-    res.status(401).json({
-      message: 'Invalid credentials',
-      error: error.message,
-    });
+    console.error('Login error:', error.message);
+    res.status(500).json({ message: 'Server error' });
   }
 });
+
 
 
 app.post('/api/registerCritic', async (req, res) => {
   const { email, password, UserAddress, Type, contractAdd } = req.body;
 
   try {
-    const db = admin.firestore();
+    const connection = await pool.getConnection();
 
-    // Verificar si Firestore contiene datos en la colección `users`
-    const usersSnapshot = await db.collection('users').get();
-
-    if (!usersSnapshot.empty) {
-      // La colección `users` no está vacía, eliminar todos los usuarios y documentos
-      console.log('Firestore no está vacío. Eliminando datos existentes...');
-
-      // 1. Eliminar todos los usuarios de Firebase Authentication
-      const listUsersResult = await admin.auth().listUsers();
-      const deletePromises = listUsersResult.users.map(user =>
-        admin.auth().deleteUser(user.uid)
+    // Crear tabla si no existe
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        email VARCHAR(255) NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        UserAddress VARCHAR(255),
+        Type VARCHAR(50),
+        contractAdd VARCHAR(255),
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
-      await Promise.all(deletePromises);
-      console.log('Todos los usuarios de Firebase Authentication han sido eliminados.');
+    `);
 
-      // 2. Eliminar todas las colecciones/documentos de Firestore
-      const deleteFirestorePromises = usersSnapshot.docs.map(doc => doc.ref.delete());
-      await Promise.all(deleteFirestorePromises);
-      console.log('Todos los documentos de la colección `users` han sido eliminados.');
-    }
+    // Deleat existen user table if existed after creating the new critical user
+    await connection.query('DELETE FROM users');
 
-    // Crear un nuevo usuario en Firebase Authentication
-    const userRecord = await admin.auth().createUser({
-      email: email,
-      password: password,
-    });
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Guardar datos adicionales del usuario en Firestore
-    await db.collection('users').doc(userRecord.uid).set({
-      email: email,
-      UserAddress: UserAddress,
-      Type: Type,
-      contractAdd: contractAdd,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    });
+    // Insertar nuevo usuario
+    await connection.query(
+      `INSERT INTO users (email, password, UserAddress, Type, contractAdd) 
+       VALUES (?, ?, ?, ?, ?)`,
+      [email, hashedPassword, UserAddress, Type, contractAdd]
+    );
 
-    res.status(201).send({ message: 'User registered successfully', uid: userRecord.uid });
+    connection.release();
+
+    res.status(201).send({ message: 'User registered successfully' });
   } catch (error) {
     console.error('Error en el registro:', error);
     res.status(400).send({ message: error.message });
   }
 });
 
+
 //before this was teh critic
 app.post('/api/registerUser2', async (req, res) => {
   const { email, password, UserAddress, Type, contractAdd } = req.body;
 
   try {
-    // Create a new user in Firebase Authentication
-    const userRecord = await admin.auth().createUser({
-      email: email,
-      password: password,
-    });
+    const connection = await pool.getConnection();
 
-    // Save additional user data to Firestore
-    const db = admin.firestore();
-    await db.collection('users').doc(userRecord.uid).set({
-      email: email,
-      UserAddress: UserAddress,
-      Type: Type,
-      contractAdd: contractAdd,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(), // optional: track creation timestamp
-    });
+    // Create table if not exists
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        email VARCHAR(255) NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        UserAddress VARCHAR(255),
+        Type VARCHAR(50),
+        contractAdd VARCHAR(255),
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
 
-    res.status(201).send({ message: 'User registered successfully', uid: userRecord.uid });
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Insert new user
+    await connection.query(
+      `INSERT INTO users (email, password, UserAddress, Type, contractAdd) 
+       VALUES (?, ?, ?, ?, ?)`,
+      [email, hashedPassword, UserAddress, Type, contractAdd]
+    );
+
+    connection.release();
+
+    res.status(201).send({ message: 'User registered successfully' });
   } catch (error) {
-    console.error('Error creating new user:', error);
+    console.error('Error in registration:', error);
     res.status(400).send({ message: error.message });
   }
 });
 
 app.post('/api/getContractAdd', async (req, res) => {
-  // Default User Address
   const UserAddress = '0x2CFcBB9Cf2910fBa7E7E7a8092aa1a40BC5BA341';  // Default address
 
   try {
-    const db = admin.firestore();
+    const connection = await pool.getConnection();
 
-    // Query Firestore to find the user based on the default UserAddress
-    const userSnapshot = await db.collection('users')
-      .where('UserAddress', '==', UserAddress)
-      .get();
+    const [rows] = await connection.query(
+      'SELECT contractAdd FROM users WHERE UserAddress = ? LIMIT 1',
+      [UserAddress]
+    );
 
-    if (userSnapshot.empty) {
-      // Return a default contract address if no user is found with the given UserAddress
-      const defaultContractAdd = '0x2CFcBB9Cf2910fBa7E7E7a8092aa1a40BC5BA341';
-      return res.status(200).send({ contractAdd: defaultContractAdd });
+    connection.release();
+
+    if (rows.length === 0) {
+      return res.status(200).send({ contractAdd: UserAddress }); // Default if not found
     }
 
-    // Get contractAdd from the found user document
-    const userDoc = userSnapshot.docs[0];  // Assuming UserAddress is unique
-    const contractAdd = userDoc.data().contractAdd;
-
-    res.status(200).send({ contractAdd: contractAdd });
+    res.status(200).send({ contractAdd: rows[0].contractAdd });
   } catch (error) {
     console.error('Error retrieving contract address:', error);
     res.status(400).send({ message: error.message });
@@ -316,56 +309,51 @@ app.post('/api/getContractAdd', async (req, res) => {
 });
 
 
-
-
 app.post('/api/getUserAdd', async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).send({ message: 'Email is required in the request body.' });
+  }
+
   try {
-    const email = req.body.email; // Get the email from the request body
+    const connection = await pool.getConnection();
 
-    if (!email) {
-      return res.status(400).send({ message: 'Email is required in the request body.' });
+    const [rows] = await connection.query(
+      'SELECT UserAddress FROM users WHERE email = ? LIMIT 1',
+      [email]
+    );
+
+    connection.release();
+
+    if (rows.length === 0) {
+      return res.status(200).send({ UserAddress: 'No email' });
     }
 
-    const db = admin.firestore();
-
-    // Query Firestore to find the user based on the email
-    const userSnapshot = await db.collection('users')
-      .where('email', '==', email)
-      .get();
-
-    if (userSnapshot.empty) {
-      // Return a default user address if no user is found with the given email
-      const defaultUserAdd = 'No email';
-      return res.status(200).send({ UserAddress: defaultUserAdd });
-    }
-
-    // Get UserAddress from the found user document
-    const userDoc = userSnapshot.docs[0]; // Assuming email is unique
-    const UserAddress = userDoc.data().UserAddress;
-
-    res.status(200).send({ UserAddress });
+    res.status(200).send({ UserAddress: rows[0].UserAddress });
   } catch (error) {
     console.error('Error retrieving user address:', error);
     res.status(500).send({ message: 'Error retrieving user address.' });
   }
 });
 
+
 app.get('/api/getAllEmails', async (req, res) => {
   try {
-    const db = admin.firestore();
+    const connection = await pool.getConnection();
 
-    // Retrieve all documents in the 'users' collection
-    const usersSnapshot = await db.collection('users').get();
+    const [rows] = await connection.query('SELECT email FROM users');
 
-    if (usersSnapshot.empty) {
+    connection.release();
+
+    if (rows.length === 0) {
       return res.status(404).send({ message: 'No users found.' });
     }
 
-    // Extract emails from the documents
-    const emails = usersSnapshot.docs.map((doc) => doc.data().email);
+    const emails = rows.map((row) => row.email);
 
-    console.log('Registered Emails:', emails); // Log the emails to the console
-    res.status(200).send({ emails }); // Send the emails as a response
+    console.log('Registered Emails:', emails);
+    res.status(200).send({ emails });
   } catch (error) {
     console.error('Error fetching emails:', error);
     res.status(500).send({ message: 'Error fetching emails.' });
@@ -373,24 +361,41 @@ app.get('/api/getAllEmails', async (req, res) => {
 });
 
 
+
 app.post('/api/registerDigitalIdentity', async (req, res) => {
   const { certificateString } = req.body;
-  
+
+  if (!certificateString) {
+    return res.status(400).send({ message: 'certificateString is required.' });
+  }
+
   try {
-    const db = admin.firestore();
+    const connection = await pool.getConnection();
 
-    // Create a new document in the `BirthCertificates` collection with the certificate string as the document ID
-    const docRef = db.collection('DigitalIdentity').doc(certificateString);
+    // Crear tabla si no existe
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS DigitalIdentity (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        certificateString VARCHAR(255) UNIQUE NOT NULL,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
 
-    // Set the document data (it can be an empty object or you can add additional metadata)
-    await docRef.set({ createdAt: admin.firestore.FieldValue.serverTimestamp() });
+    // Insertar el certificado
+    await connection.query(
+      'INSERT INTO DigitalIdentity (certificateString) VALUES (?)',
+      [certificateString]
+    );
+
+    connection.release();
 
     res.status(201).send({ message: 'Certificate added successfully', certificateString });
   } catch (error) {
-    console.error('Error adding certificate:', error);
+    console.error('Error adding certificate:', error.message);
     res.status(400).send({ message: error.message });
   }
 });
+
 
 
 

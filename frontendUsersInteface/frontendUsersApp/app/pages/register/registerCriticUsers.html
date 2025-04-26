@@ -103,16 +103,11 @@
             passwordInput.value = generatePassword(); // Assign generated password
         };
     </script>
-
-
     <script>
-        localStorage.setItem('criticCreated', '0'); //commnet this for normal use active for testing
-
+        //localStorage.setItem('criticCreated', '0'); //commnet this for normal use active for testing
         if (localStorage.getItem('criticCreated') === 'true') {
             window.location.href = '/login';
         }
-
-
         document.getElementById('adminRegisterForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             document.getElementById('overlay').style.display = 'block'; // Show overlay
@@ -123,12 +118,6 @@
                 government: document.getElementById('governAdd').value
 
             };
-
-
-            console.log('Data sended:', createData);
-
-
-
             try {
                 const response = await fetch('/createUser', {
                     method: 'POST',
@@ -138,22 +127,9 @@
                     body: JSON.stringify(createData)
 
                 });
-
                 const result = await response.json();
-
-
                 if (result.hasOwnProperty('contractAddress')) {
-
-                    console.log('Response from /createUser:', result);
-                    console.log('Full result:', result);
-                    console.log('Contract Address exists:', result.hasOwnProperty('contractAddress'));
-                    console.log('Contract Address value:', result.contractAddress);
-                    console.log('Contract Address type:', typeof result.contractAddress);
-
                     criticUserAdd = result.contractAddress;
-                    console.log(criticUserAdd);
-
-
                     const formData = {
                         email: document.getElementById('email').value,
                         password: document.getElementById('password').value
@@ -161,8 +137,6 @@
                         Type: 0,
                         contractAdd: criticUserAdd
                     };
-
-
                     try {
                         const response = await fetch('/api/registerCritic', {
                             method: 'POST',
@@ -174,11 +148,7 @@
 
                         if (response.ok) {
                             alert('Govern registered successfully');
-                            //make a local host variable name criticCreated and save it wit the word true
                             localStorage.setItem('criticCreated', 'true');
-                            //make a local host list variable name usedEmails and save the email in it
-//                            localStorage.setItem('usedEmails', document.getElementById('email').value);
-
                             window.location.href = '/login';
 
                         } else {
@@ -189,18 +159,13 @@
                         console.error('Error:', error);
                         alert('Registration failed');
                     }
-
                 }
-
-
                 alert('Service created successfully!');
 
             } catch (error) {
                 console.error('Error:', error);
             }
-
             document.getElementById('overlay').style.display = 'none'; // Hide overlay
-
         });
     </script>
 </body>

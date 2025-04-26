@@ -3,11 +3,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('curriculum-form').addEventListener('submit', async (event) => {
         event.preventDefault();
-        console.log("Form submission prevented!");
-        // Get form data
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
-        console.log(formData);
         const Institution = "UpCurriculum";
 
         try {
@@ -21,8 +18,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 studentID: data.studentID, // Get token address
                 from: userAddress // Use the awaited address
             };
-
-            console.log('Input Values for curriculum:', inputValues); // For debugging
             userUsed = await checkInstitutionField(data.BirthCertificateAddress, Institution);
             if (!userUsed) {
                 const response = await fetch('/createCurriculum', {
@@ -43,7 +38,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     resultElement.classList.remove('hidden');
                     resultContentElement.textContent = 'Failed to create contract. Please try again or check the input data.';
                 } else if (result.Result === "Success") {
-                    console.log(result);
                     await updateBirthCertificateWithStudentID(data.studentID, data.BirthCertificateAddress)
                     await updateScholarCurriculum(data.BirthCertificateAddress, result.contractAddress, "UpCurriculum");
                     alert("Curriculum created successfully!");
@@ -73,13 +67,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         
         const data = await response.json();
-        console.log(data);
         return data.exists;
     }
 
     async function updateBirthCertificateWithStudentID(studentID, birthCertificate) {
-        console.log(studentID, birthCertificate);
-
         const response = await fetch('/api/updateBirthCertificateWithStudentID', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -87,11 +78,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         const data = await response.json();
-        console.log(data);
     }
     async function updateScholarCurriculum(birthCertificate, curriculumAdd, Institution) {
-        console.log(birthCertificate, curriculumAdd, Institution);
-
         const response = await fetch('/api/updateScholarCurriculum', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -99,49 +87,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         const data = await response.json();
-        console.log(data);
     }
 
-
-    // use this to not let creat more curriculums
-    async function getStudentsIDs() {
-        const response = await fetch('/api/getStudentsIDs', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({}),
-        });
-
-        const data = await response.json();
-        console.log(data);
-        return (data.BirthCertificate);
-    }
-
-    const getContractAdd = async () => {
-        try {
-            // Send a POST request to the server to get the contract address
-            const response = await fetch('/api/getContractAdd', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json', // Set content type to JSON
-                },
-                body: JSON.stringify({}), // No need to send any data
-            });
-
-            // Handle the response
-            if (!response.ok) {
-                throw new Error('Failed to retrieve contract address');
-            }
-
-            // Parse the response JSON
-            const data = await response.json();
-            console.log('Contract Address:', data.contractAdd);
-            return data.contractAdd; // Return the contract address
-
-        } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred while fetching contract address');
-        }
-    };
     const getUserAdd = async () => {
         try {
             const email = localStorage.getItem('userEmail'); // Get the email from localStorage
@@ -164,7 +111,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Parse the response JSON
             const data = await response.json();
-            console.log('User Address:', data.UserAddress);
             return data.UserAddress; // Return the user address
 
         } catch (error) {

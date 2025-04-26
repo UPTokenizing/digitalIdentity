@@ -239,7 +239,6 @@
 
                 // Parse the response JSON
                 const data = await response.json();
-                console.log('Contract Address:', data.contractAdd);
                 return data.contractAdd; // Return the contract address
 
             } catch (error) {
@@ -270,23 +269,17 @@
 
                 // Parse the response JSON
                 const data = await response.json();
-                console.log('User Address:', data.UserAddress);
                 return data.UserAddress; // Return the user address
 
             } catch (error) {
                 console.error('Error fetching user address:', error);
             }
         };
-
-
-
-
         // Get references to the search input and search button
         const searchInput = document.getElementById('search');
         const searchBtn = document.getElementById('searchBtn');
         const resultContainer = document.getElementById('resultContainer'); // To display results
         const resultSideContainer = document.getElementById('resultSideContainer'); // To display results
-
         // Function to get user info
         async function getUserInfo(contractAdd, userAddress) {
             try {
@@ -302,7 +295,6 @@
                 return null;
             }
         }
-
         // Function to consult a contract method
         async function consultContractMethod(contractAdd, publicMethod) {
             try {
@@ -326,7 +318,6 @@
                 return null;
             }
         }
-
         // Function to display results in a table
         function displayResultsInTable(contractAddress, methods, results) {
             let tableHTML = `
@@ -344,11 +335,9 @@
             </thead>
             <tbody class="bg-white dark:bg-gray-800">
     `;
-
             // Loop through the methods and display the results
             methods.forEach((method, index) => {
                 let value = results[index] && results[index].Value ? results[index].Value : "Unknown";
-
                 // Check if the value contains an error message
                 if (typeof value === "string" && value.startsWith("Error: Web3 validator found")) {
                     value = "Unknown";
@@ -360,16 +349,12 @@
             <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${value}</td>
         </tr>`;
             });
-
             tableHTML += `</tbody></table></div>`;
-
             // Insert table HTML into the container
             resultContainer.innerHTML = tableHTML;
         }
-
         // Function to display user info in a table
         function getUserTypeString(type) {
-            console.log("Tipo: ", type);
             switch (type) {
                 case '0':
                     return 'Government';
@@ -384,14 +369,8 @@
             }
         }
 
-
-
-
-
         async function displayUserInfoInTable(userInfo, userAddres) {
             const userType = getUserTypeString(userInfo.Data.getType);
-            //const email = await getUserEmail(userAddres);
-
             let tableHTML = `
             <div class="mt-6 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
                     <table class="min-w-full bg-white dark:bg-gray-800">
@@ -424,17 +403,15 @@
                     </table>
                     <div id="response-container"></div>
                 </div>    `;
-
             // Insert table HTML into the container
             resultContainer.innerHTML = tableHTML;
         }
 
         async function displayUserInfoInSideBar(userInfoDef) {
-            console.log(userInfoDef.Data.getType);
             const userType = getUserTypeString(userInfoDef.Data.getType);
 
             if (userType === "Error") {
-                console.log("No user logged");
+                console.warn("No user logged");
             } else {
                 const email = localStorage.getItem('userEmail') || "No email";
                 const userAdd = await getUserAdd();
@@ -456,7 +433,6 @@
           <p>Access: ${userType}</p>
         </div>
       `;
-
                 // Insert HTML into the container
                 resultSideContainer.innerHTML = htmlContent;
 
@@ -472,9 +448,7 @@
                 searchBtn.click(); // Trigger search after setting the value
 
             }
-
         }
-
         document.addEventListener('DOMContentLoaded', async () => {
             try {
                 const contractAddress = await getContractAdd(); // Wait for contract address
@@ -491,8 +465,6 @@
                         userInfoDef.Data.getType = userInfoDef.Data.getType || "Unknown";
                         userInfoDef.Data.getCreator = userInfoDef.Data.getCreator || "Unknown";
                     }
-
-                    console.log('User Info:', userInfoDef);
                     displayUserInfoInSideBar(userInfoDef); // Display the user info in the sidebar
                 } else {
                     console.error('Missing contract address or user address');
@@ -501,29 +473,22 @@
                 console.error('Error during DOMContentLoaded:', error);
             }
         });
-
-
         // Main search functionality
         searchBtn.addEventListener('click', async function () {
             const searchTerm = searchInput.value.trim();
             try {
                 // Get contract address using getContractAdd() and wait for it to resolve
                 const contractAddress = await getContractAdd(); // Wait for contract address
-
                 if (!searchTerm) {
-                    console.log('Search term is empty');
                     try {
                         // Array of methods to consult
                         const methods = ['owner', 'nameToken', 'government'];
-
                         // Promises to consult each method
                         const consultPromises = methods.map(method =>
                             consultContractMethod(contractAddress, method)
                         );
-
                         // Wait for all consultations to complete
                         const results = await Promise.all(consultPromises);
-
                         // Display results in table with contract address
                         displayResultsInTable(contractAddress, methods, results);
 
@@ -531,7 +496,6 @@
                         console.error('Error in search process:', error);
                     }
                 } else {
-                    console.log("Search for : ", searchTerm);
                     let userAddres;
 
                     if (searchTerm.startsWith("0x")) {
@@ -539,13 +503,7 @@
                     } else {
                         userAddres = await getUserAddfromEmail(searchTerm);
                     }
-
-                    console.log("Address:", userAddres);
-                    console.log(`Requesting user info for contractAdd: ${contractAddress} and userAddress: ${userAddres}`);
-
                     const userInfo = await getUserInfo(contractAddress, userAddres);
-
-
                     if (userInfo && userInfo.Data) {
                         // Function to check if a value contains a Web3 validation error
                         const sanitizeValue = (value) => {
@@ -553,16 +511,12 @@
                             if (value.startsWith("Error: Web3 validator found")) return "Unknown";
                             return value;
                         };
-
                         // Ensure all fields are sanitized
                         userInfo.Data.getType = sanitizeValue(userInfo.Data.getType);
                         userInfo.Data.getDigIdentityAdd = sanitizeValue(userInfo.Data.getDigIdentityAdd);
                         userInfo.Data.getCreator = sanitizeValue(userInfo.Data.getCreator);
-
-                        console.log('User Info:', userInfo);
                         displayUserInfoInTable(userInfo, userAddres); // Display the user info in table
                     } else {
-                        console.log('No user info found');
                         displayUserInfoInTable({ Data: { getType: "Unknown", getDigIdentityAdd: "Unknown", getCreator: "Unknown" } });
                     }
 
@@ -573,8 +527,6 @@
         });
         const getUserAddfromEmail = async (email) => {
             try {
-
-
                 // Send a POST request to the server to get the user address
                 const response = await fetch('/api/getUserAdd', {
                     method: 'POST',
@@ -587,10 +539,8 @@
                 if (!response.ok) {
                     throw new Error('Failed to retrieve user address');
                 }
-
                 // Parse the response JSON
                 const data = await response.json();
-                console.log('User Address:', data.UserAddress);
                 return data.UserAddress; // Return the user address
 
             } catch (error) {
@@ -618,13 +568,11 @@
         document.getElementById('logoutBtn').addEventListener('click', function () {
             localStorage.removeItem('authToken');
             localStorage.removeItem('user');
-            localStorage.removeItem('userEmail'); // Eliminar el correo guardado
+            localStorage.removeItem('userEmail'); 
             checkAuth();
             window.location.href = '/login';
 
         });
     </script>
-
 </body>
-
 </html>

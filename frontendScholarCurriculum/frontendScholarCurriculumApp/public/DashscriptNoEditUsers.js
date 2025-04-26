@@ -109,7 +109,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             const data = await response.json();
-            console.log(data); // Inspect the data
             return data.UpCurriculum; // Return the curriculum data
         } catch (error) {
             console.error('Error:', error);
@@ -142,10 +141,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     return result.Value;
                 }
             } else {
-                console.log("Error not succeeded tofetch " + publicMethod);
+                console.warn("Error not succeeded tofetch " + publicMethod);
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
     const fetchStudents = async () => {
@@ -207,8 +206,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         const mLastName = await GetInfo(userAdd, "mLastName");
                         let owner = await GetInfo(userAdd, "owner");
                         const logUserAdd = await getUserAdd();
-                        console.log(logUserAdd);
-                        console.log(owner);
                         if (logUserAdd !== owner) {
                             continue;
                         }

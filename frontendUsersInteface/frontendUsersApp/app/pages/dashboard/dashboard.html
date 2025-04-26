@@ -219,9 +219,7 @@
   </div>
 
   <script>
-
     const resultSideContainer = document.getElementById('resultSideContainer'); // To display results
-
     const getContractAdd = async () => {
       try {
         // Send a POST request to the server to get the contract address
@@ -232,30 +230,24 @@
           },
           body: JSON.stringify({}), // No need to send any data
         });
-
         // Handle the response
         if (!response.ok) {
           throw new Error('Failed to retrieve contract address');
         }
-
         // Parse the response JSON
         const data = await response.json();
-        console.log('Contract Address:', data.contractAdd);
         return data.contractAdd; // Return the contract address
-
       } catch (error) {
         console.error('Error:', error);
         alert('An error occurred while fetching contract address');
       }
     };
-
     const getUserAdd = async () => {
       try {
         const email = localStorage.getItem('userEmail'); // Get the email from localStorage
         if (!email) {
           throw new Error('No email found in localStorage');
         }
-
         // Send a POST request to the server to get the user address
         const response = await fetch('/api/getUserAdd', {
           method: 'POST',
@@ -264,21 +256,17 @@
           },
           body: JSON.stringify({ email: email }),
         });
-
         if (!response.ok) {
           throw new Error('Failed to retrieve user address');
         }
-
         // Parse the response JSON
         const data = await response.json();
-        console.log('User Address:', data.UserAddress);
         return data.UserAddress; // Return the user address
 
       } catch (error) {
         console.error('Error fetching user address:', error);
       }
     };
-
     // Function to get user info
     async function getUserInfo(contractAdd, userAddress) {
       try {
@@ -287,15 +275,12 @@
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-
         return await response.json();
       } catch (error) {
         console.error('Error getting user info:', error);
         return null;
       }
     }
-
-
     // Modified updateUserType function to handle async operations
     async function updateUserType() {
       try {
@@ -304,24 +289,21 @@
         const userAdd = await getUserAdd();
 
         if (!contractAdd || !userAdd) {
-          console.log("Missing contract or user address");
+          console.warn("Missing contract or user address");
           return;
         }
-
         // Get user info with the required parameters
         const userInfo = await getUserInfo(contractAdd, userAdd);
         const userTypeSelect = document.getElementById("userType");
 
         if (!userTypeSelect) {
-          console.log("User type select element not found");
+          console.warn("User type select element not found");
           return;
         }
 
         if (userInfo && userInfo.Data) {
           // Clear current options
           userTypeSelect.innerHTML = '';
-          console.log('User Type:', userInfo.Data.getType);
-
           // Depending on the user type, set the options
           switch (userInfo.Data.getType) {
             case '0':
@@ -343,16 +325,15 @@
               window.location.href = "/";
               break;
             default:
-              console.log("Unknown user type:", userInfo.Data.getType);
+              console.warn("Unknown user type:", userInfo.Data.getType);
           }
         } else {
-          console.log("No user info found");
+          console.warn("No user info found");
         }
       } catch (error) {
         console.error("Error updating user type:", error);
       }
     }
-
 
     function getUserTypeString(type) {
       switch (type) {
@@ -370,11 +351,9 @@
     }
 
     async function displayUserInfoInSideBar(userInfoDef) {
-      console.log(userInfoDef.Data.getType);
       const userType = getUserTypeString(userInfoDef.Data.getType);
 
       if (userType === "Error") {
-        console.log("No user logged");
       } else {
         const email = localStorage.getItem('userEmail') || "No email";
 
@@ -421,7 +400,6 @@
         if (contractAddress && userAddress) {
           const userInfoDef = await getUserInfo(contractAddress, userAddress);
           if (userInfoDef) {
-            console.log('User Info:', userInfoDef);
             displayUserInfoInSideBar(userInfoDef); // Display the user info in the sidebar
           } else {
             console.error('No user info found');
@@ -443,9 +421,9 @@
 
         if (governmentField && userAddress) {
           governmentField.value = userAddress;
-          console.log('Set government field to:', userAddress);
+          console.warn('Set government field to:', userAddress);
         } else {
-          console.log('Either government field or user address not found');
+          console.warn('Either government field or user address not found');
         }
       } catch (error) {
         console.error('Error setting government field:', error);
@@ -468,7 +446,6 @@
         if (contractAddress && userAddress) {
           const userInfoDef = await getUserInfo(contractAddress, userAddress);
           if (userInfoDef) {
-            console.log('User Info:', userInfoDef);
             displayUserInfoInSideBar(userInfoDef);
           }
         }
@@ -527,7 +504,6 @@
 
           // Extract email data from the response
           const emails = data.emails || [];
-          console.log('Fetched Emails:', emails);
           // if document.getElementById('email').value is in emails then return
           if (emails.includes(document.getElementById('email').value)) {
             alert('Email already exists');
@@ -548,11 +524,6 @@
               userType: document.getElementById('userType').value,
               government: document.getElementById('government').value,
             };
-
-            //verificar que el correo usado para el register del contrato no este siedno usado por firebase
-
-            console.log('Data sent:', createData);
-
             // Send the registration request
             const response = await fetch('/registerUser', {
               method: 'POST',
@@ -563,14 +534,8 @@
             });
 
             const result = await response.json();
-
-            console.log(result);
-
             if (result.hasOwnProperty('Result') && result.Result !== "Error") {
-              console.log("Success Response");
-              console.log(result.Result);
               if (result.Result == "Success") {
-                console.log("Creating user");
                 const formData = {
                   email: document.getElementById('email').value,
                   password: document.getElementById('password').value
@@ -578,8 +543,6 @@
                   Type: " ",
                   contractAdd: " "
                 };
-
-                console.log(formData);
                 try {
                   const response = await fetch('/api/registerUser2', {
                     method: 'POST',
@@ -588,15 +551,10 @@
                     },
                     body: JSON.stringify(formData)
                   });
-                  console.log(response);
                   if (response.ok) {
                     const contractAddress = await getContractAdd();
-                    console.log("the add is " + contractAddress);
                     const userInfo = await getUserInfo(contractAddress, formData.UserAddress);
-                    console.log("the info is " + userInfo);
                     await registerCertificate(userInfo.Data.getDigIdentityAdd);
-
-
                     alert('User registered successfully');
                     document.getElementById('overlay').style.display = 'none';
                     window.location.href = '/users';
@@ -615,11 +573,7 @@
             else {
               alert('Invalid Input');
             }
-            console.log(result);
-
           }
-
-
         } catch (error) {
           console.error('Error fetching emails:', error);
 
@@ -632,7 +586,6 @@
     });
 
     async function registerCertificate(certificateString) {
-      console.log("To add ", certificateString)
       try {
         const response = await fetch('/api/registerDigitalIdentity', {
           method: 'POST',
@@ -641,13 +594,10 @@
           },
           body: JSON.stringify({ certificateString })
         });
-
         // Await the response.json() to get the actual result
         const result = await response.json();
-        console.log("Certificate registered:", result); // Log the actual result
-
         if (response.ok) {
-          console.log("Certificate successfully added:", certificateString);
+          console.warn("Certificate successfully added:", certificateString);
         } else {
           console.error("Error adding certificate:", result.message);
         }
@@ -667,8 +617,6 @@
     // Ejecutar al cargar la página
     checkAuth();
   </script>
-
-
   <script>
     // Function to generate a random password
     function generatePassword() {
@@ -688,13 +636,7 @@
       const passwordInput = document.getElementById('password');
       passwordInput.value = generatePassword(); // Assign generated password
     };
-
-
-
   </script>
-
-
-
 </body>
 
 </html>

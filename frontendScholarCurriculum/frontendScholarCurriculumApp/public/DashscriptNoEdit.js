@@ -1,24 +1,12 @@
 //document on load of js
 document.addEventListener("DOMContentLoaded", function () {
 
-
     const modalView = document.getElementById("viewServiceModal");
-
     // Get close button
 
     const closeModal2 = document.getElementById("closeModal2");
-
-
-
     // Get cancel button
-
     const cancelButton2 = document.getElementById("cancelButton2");
-
-
-
-
-
-
 
     closeModal2.onclick = function () {
         modalView.style.display = "none";
@@ -36,17 +24,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-
-
-
-
     let contractAddresses = [];
-
-
     // Load contract addresses from localStorage when the page loads
     window.addEventListener('load', async () => {
         contractAddresses = await getCertificates();
-        console.log("from teh event: ", contractAddresses);
         updateTableRows(contractAddresses); // Update the table with the cleaned data
     });
 
@@ -68,7 +49,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Parse the response JSON
             const data = await response.json();
-            console.log('Contract Address Users:', data.contractAdd);
             return data.contractAdd; // Return the contract address
 
         } catch (error) {
@@ -76,8 +56,6 @@ document.addEventListener("DOMContentLoaded", function () {
             alert('An error occurred while fetching contract address');
         }
     };
-
-
 
     async function getCertificates() {
         try {
@@ -101,40 +79,6 @@ document.addEventListener("DOMContentLoaded", function () {
             throw error;  // Rethrow the error for handling elsewhere
         }
     }
-
-    const getUserAdd = async () => {
-        try {
-            const email = localStorage.getItem('userEmail'); // Get the email from localStorage
-            if (!email) {
-                throw new Error('No email found in localStorage');
-            }
-
-            // Send a POST request to the server to get the user address
-            const response = await fetch('/api/getUserAdd', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json', // Set content type to JSON
-                },
-                body: JSON.stringify({ email: email }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to retrieve user address');
-            }
-
-            // Parse the response JSON
-            const data = await response.json();
-            console.log('User Address:', data.UserAddress);
-            return data.UserAddress; // Return the user address
-
-        } catch (error) {
-            console.error('Error fetching user address:', error);
-        }
-    };
-
-
-
-
 
     async function GetInfo(address, publicMethod) {
         try {
@@ -161,10 +105,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     return result.Value;
                 }
             } else {
-                console.log("Error not succeeded tofetch " + publicMethod);
+                console.warn("Error not succeeded tofetch " + publicMethod);
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 
@@ -179,7 +123,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         const data = await response.json();
-        console.log(data);
         return (data.BirthCertificate);
     }
 
@@ -228,29 +171,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }
     }
-
-
-
-    // Function to get gender and show modal with token fields updated
-    async function updateToken(address, tokenToChange) {
-
-        console.log(address, tokenToChange);
-
-        try {
-            console.log("aqui va el cambio ");
-            isChild = true;
-            tempAdd = address;
-            replace = tokenToChange;
-            // Fetch gender information (true for male, false for female)
-            // Show the modal
-            modal.style.display = 'block';
-        } catch (error) {
-            console.error('Error fetching gender information:', error);
-        }
-
-    }
-
-
 
     window.viewDetails = async function (address) {
         modalView.style.display = "block";
@@ -310,20 +230,14 @@ document.addEventListener("DOMContentLoaded", function () {
         if (modalEdit) {
             modalEdit.style.display = "block";
         }
-
         try {
             // Fetch information from the contract address
             const government = await GetInfo(address, "government");
-
-
-
             // Get elements with error checking
             const elements = {
                 government: document.getElementById('government3'),
                 contractAddress: document.getElementById('address3')
             };
-
-
             if (elements.government) {
 
                 elements.government.textContent = government || 'N/A';

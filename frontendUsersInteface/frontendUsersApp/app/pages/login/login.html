@@ -71,8 +71,6 @@
     <button
       class="w-full bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-700  dark:hover:bg-blue-600 p-2 rounded "
       id="LogIn">Login</button>
-    <!-- botonsolo para redirigir -->
-
   </div>
 </body>
 <script src="/js/auth.js"></script>
@@ -86,16 +84,13 @@
   const checkLoginRedirect = () => {
     const token = localStorage.getItem('authToken');
     if (token) {
-      // Si el usuario ya está logueado, redirigir a la página principal
-      window.location.href = '/';  // o '/dashboard'
+      window.location.href = '/';  
     }
   };
 
-  // Ejecutar al cargar la página de login
   checkLoginRedirect();
 
   document.getElementById('homeBtn').addEventListener('click', function () {
-    console.log("hola");
     window.location.href = '/'; // Redirect to the login page
   });
 </script>

@@ -282,7 +282,6 @@
 
                 // Parse the response JSON
                 const data = await response.json();
-                console.log('Contract Address:', data.contractAdd);
                 return data.contractAdd; // Return the contract address
 
             } catch (error) {
@@ -313,7 +312,6 @@
 
                 // Parse the response JSON
                 const data = await response.json();
-                console.log('User Address:', data.UserAddress);
                 return data.UserAddress; // Return the user address
 
             } catch (error) {
@@ -366,7 +364,6 @@
 
         // Function to display user info in a table
         function getUserTypeString(type) {
-            console.log("Tipo: ", type);
             switch (type) {
                 case '0':
                     return 'Government';
@@ -383,11 +380,10 @@
 
 
         async function displayUserInfoInSideBar(userInfoDef) {
-            console.log(userInfoDef.Data.getType);
             const userType = getUserTypeString(userInfoDef.Data.getType);
 
             if (userType === "Error") {
-                console.log("No user logged");
+                console.warn("No user logged");
             } else {
                 const email = localStorage.getItem('userEmail') || "No email";
                 const userAdd = await getUserAdd();
@@ -424,7 +420,6 @@
                 if (contractAddress && userAddress) {
                     const userInfoDef = await getUserInfo(contractAddress, userAddress);
                     if (userInfoDef) {
-                        console.log('User Info:', userInfoDef);
                         displayUserInfoInSideBar(userInfoDef); // Display the user info in the sidebar
                     } else {
                         console.error('No user info found');
@@ -445,7 +440,6 @@
                 if (contractAddress && userAddress) {
                     const userInfoDef = await getUserInfo(contractAddress, userAddress);
                     if (userInfoDef) {
-                        console.log('User Info:', userInfoDef);
                         displayUserInfoInSideBar(userInfoDef); // Display the user info in the sidebar
                     } else {
                         console.error('No user info found');
@@ -467,9 +461,8 @@
 
                 if (governmentField && userAddress) {
                     governmentField.value = userAddress;
-                    console.log('Set government field to:', userAddress);
                 } else {
-                    console.log('Either government field or user address not found');
+                    console.warn('Either government field or user address not found');
                 }
             } catch (error) {
                 console.error('Error setting government field:', error);
@@ -489,7 +482,6 @@
                 if (contractAddress && userAddress) {
                     const userInfoDef = await getUserInfo(contractAddress, userAddress);
                     if (userInfoDef) {
-                        console.log('User Info:', userInfoDef);
                         displayUserInfoInSideBar(userInfoDef);
                     }
                 }

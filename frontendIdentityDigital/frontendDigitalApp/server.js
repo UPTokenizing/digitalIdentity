@@ -2,11 +2,11 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const axios = require('axios');
-const qs = require('qs');
 require('dotenv').config();
-const { auth } = require('./app/pages/config/firebase-config');
-const authMiddleware = require('./app/pages/middleware/auth');
-const admin = require('./app/pages/config/firebase-config');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const pool = require('./db');
+
 
 // Serve static files from the public directory (like images, CSS, etc.)
 app.use(express.static(path.join(__dirname, 'public')));
@@ -189,99 +189,92 @@ app.get('/consultDigitalIdentity', async (req, res) => {
   }
 });
 
+//Auth by SQL
 app.post('/api/login', async (req, res) => {
-
   const { email, password } = req.body;
-  const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY;
-
 
   try {
-    // Step 1: Use Firebase Identity Toolkit API to verify email and password
-    const response = await axios.post(
-      `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${FIREBASE_API_KEY}`,
-      {
-        email,
-        password,
-        returnSecureToken: true,
-      }
-    );
+    const [rows] = await pool.execute('SELECT * FROM users WHERE email = ?', [email]);
 
-    const { localId } = response.data;
+    if (rows.length === 0) {
+      return res.status(401).json({ message: 'Incorrect email or password' });
+    }
 
-    // Step 2: Generate a custom token for the user
-    const customToken = await admin.auth().createCustomToken(localId);
+    const user = rows[0];
+    const passwordMatch = await bcrypt.compare(password, user.password);
 
-    // Step 3: Return the custom token and user data
+    if (!passwordMatch) {
+      return res.status(401).json({ message: 'Incorrect email or password' });
+    }
+
+    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
+      expiresIn: '2h',
+    });
+
     res.json({
-      token: customToken,
+      token,
       user: {
-        email,
-        uid: localId,
+        id: user.id,
+        email: user.email,
       },
     });
   } catch (error) {
-    console.error('Login error:', error.response ? error.response.data : error.message);
-    res.status(401).json({
-      message: 'Invalid credentials',
-      error: error.message,
-    });
+    console.error('Login error:', error.message);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
+
 app.post('/api/getContractAdd', async (req, res) => {
-  // Default User Address
   const UserAddress = '0x2CFcBB9Cf2910fBa7E7E7a8092aa1a40BC5BA341';  // Default address
 
   try {
-    const db = admin.firestore();
+    const connection = await pool.getConnection();
 
-    // Query Firestore to find the user based on the default UserAddress
-    const userSnapshot = await db.collection('users')
-      .where('UserAddress', '==', UserAddress)
-      .get();
+    const [rows] = await connection.query(
+      'SELECT contractAdd FROM users WHERE UserAddress = ? LIMIT 1',
+      [UserAddress]
+    );
 
-    if (userSnapshot.empty) {
-      // Return a default contract address if no user is found with the given UserAddress
-      const defaultContractAdd = '0x2CFcBB9Cf2910fBa7E7E7a8092aa1a40BC5BA341';
-      return res.status(200).send({ contractAdd: defaultContractAdd });
+    connection.release();
+
+    if (rows.length === 0) {
+      return res.status(200).send({ contractAdd: UserAddress }); // Default if not found
     }
 
-    // Get contractAdd from the found user document
-    const userDoc = userSnapshot.docs[0];  // Assuming UserAddress is unique
-    const contractAdd = userDoc.data().contractAdd;
-
-    res.status(200).send({ contractAdd: contractAdd });
+    res.status(200).send({ contractAdd: rows[0].contractAdd });
   } catch (error) {
     console.error('Error retrieving contract address:', error);
     res.status(400).send({ message: error.message });
   }
 });
 
+
 app.post('/api/getUserAdd', async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).send({ message: 'Email is required in the request body.' });
+  }
+
   try {
-    const email = req.body.email; // Get the email from the request body
+    const connection = await pool.getConnection();
 
-    const db = admin.firestore();
+    const [rows] = await connection.query(
+      'SELECT UserAddress FROM users WHERE email = ? LIMIT 1',
+      [email]
+    );
 
-    // Query Firestore to find the user based on the default UserAddress
-    const userSnapshot = await db.collection('users')
-      .where('email', '==', email)
-      .get();
+    connection.release();
 
-    if (userSnapshot.empty) {
-      // Return a default user address if no user is found with the given UserAddress
-      const defaultUserAdd = 'No email';
-      return res.status(200).send({ UserAddress: defaultUserAdd });
+    if (rows.length === 0) {
+      return res.status(200).send({ UserAddress: 'No email' });
     }
 
-    // Get userAdd from the found user document
-    const userDoc = userSnapshot.docs[0];  // Assuming UserAddress is unique
-    const UserAddress = userDoc.data().UserAddress;
-
-    res.status(200).send({ UserAddress: UserAddress });
+    res.status(200).send({ UserAddress: rows[0].UserAddress });
   } catch (error) {
     console.error('Error retrieving user address:', error);
-    res.status(400).send({ message: error.message });
+    res.status(500).send({ message: 'Error retrieving user address.' });
   }
 });
 
@@ -319,53 +312,103 @@ app.post('/api/updateDigitalID', async (req, res) => {
 
     console.log('Updating DigitalIdentity:', digitalIDadd);
 
-    const db = admin.firestore();
-    
-    // Reference to the specific DigitalIdentity document
-    const digitalIDRef = db.collection('DigitalIdentity').doc(digitalIDadd);
+    // Verificar si la columna tokenAddresses existe y crearla si no existe
+    try {
+      const [columns] = await pool.query('SHOW COLUMNS FROM DigitalIdentity LIKE "tokenAddresses"');
+      
+      if (columns.length === 0) {
+        console.log('Column tokenAddresses does not exist. Creating it...');
+        await pool.query('ALTER TABLE DigitalIdentity ADD COLUMN tokenAddresses TEXT');
+        console.log('Column tokenAddresses added successfully');
+      }
+    } catch (columnError) {
+      console.error('Error checking/creating column:', columnError);
+      return res.status(500).send({ message: 'Error setting up database schema.' });
+    }
 
-    // Check if the document exists
-    const docSnapshot = await digitalIDRef.get();
-    if (!docSnapshot.exists) {
+    // Verificar si el digital ID existe
+    const [rows] = await pool.query(
+      'SELECT * FROM DigitalIdentity WHERE certificateString = ?',
+      [digitalIDadd]
+    );
+
+    if (rows.length === 0) {
       return res.status(404).send({ message: 'DigitalIdentity not found with the provided digitalIDadd.' });
     }
 
-    // Update the document by adding tokenAddress to an array at index 0
-    await digitalIDRef.update({
-      tokenAddresses: admin.firestore.FieldValue.arrayUnion(tokenAddress)
-    });
+    // Comprobar si ya tiene tokenAddresses
+    let tokenAddresses = [];
+    if (rows[0].tokenAddresses) {
+      try {
+        tokenAddresses = JSON.parse(rows[0].tokenAddresses);
+        if (!Array.isArray(tokenAddresses)) {
+          tokenAddresses = [];
+        }
+      } catch (e) {
+        tokenAddresses = [];
+      }
+    }
+
+    // Añadir el nuevo token si no existe ya
+    if (!tokenAddresses.includes(tokenAddress)) {
+      tokenAddresses.push(tokenAddress);
+    }
+
+    // Actualizar el campo tokenAddresses
+    await pool.query(
+      'UPDATE DigitalIdentity SET tokenAddresses = ? WHERE certificateString = ?',
+      [JSON.stringify(tokenAddresses), digitalIDadd]
+    );
 
     console.log('Update complete:', tokenAddress);
     res.status(200).send({ message: 'DigitalIdentity updated successfully.' });
 
   } catch (error) {
     console.error('Error updating DigitalIdentity:', error);
-    res.status(500).send({ message: 'Error updating DigitalIdentity.' });
+    res.status(500).send({ 
+      message: 'Error updating DigitalIdentity.', 
+      error: error.message 
+    });
   }
 });
 
+// Función para obtener token addresses asociados a un digital ID
 app.get('/api/getDigitalID', async (req, res) => {
   try {
-      const { digitalIDadd } = req.query;
+    const { digitalIDadd } = req.query;
 
-      if (!digitalIDadd) {
-          return res.status(400).send({ message: 'digitalIDadd is required.' });
+    if (!digitalIDadd) {
+      return res.status(400).send({ message: 'digitalIDadd is required.' });
+    }
+
+    // Verificar si el digital ID existe y obtener sus datos
+    const [rows] = await pool.query(
+      'SELECT * FROM DigitalIdentity WHERE certificateString = ?',
+      [digitalIDadd]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).send({ message: 'DigitalIdentity not found.' });
+    }
+
+    // Extraer tokenAddresses o devolver array vacío si no existe
+    let tokenAddresses = [];
+    if (rows[0].tokenAddresses) {
+      try {
+        tokenAddresses = JSON.parse(rows[0].tokenAddresses);
+        if (!Array.isArray(tokenAddresses)) {
+          tokenAddresses = [];
+        }
+      } catch (e) {
+        tokenAddresses = [];
       }
+    }
 
-      const db = admin.firestore();
-      const digitalIDRef = db.collection('DigitalIdentity').doc(digitalIDadd);
-      const docSnapshot = await digitalIDRef.get();
-
-      if (!docSnapshot.exists) {
-          return res.status(404).send({ message: 'DigitalIdentity not found.' });
-      }
-
-      const data = docSnapshot.data();
-      res.status(200).send({ tokenAddresses: data.tokenAddresses || [] });
+    res.status(200).send({ tokenAddresses: tokenAddresses });
 
   } catch (error) {
-      console.error('Error fetching DigitalIdentity:', error);
-      res.status(500).send({ message: 'Error retrieving DigitalIdentity.' });
+    console.error('Error fetching DigitalIdentity:', error);
+    res.status(500).send({ message: 'Error retrieving DigitalIdentity.' });
   }
 });
 

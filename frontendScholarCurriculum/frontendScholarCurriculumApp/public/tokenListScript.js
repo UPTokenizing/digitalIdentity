@@ -1,13 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     
     function updateTableRows() {
-    // Add console log to check if function is being called
-    console.log('updateTableRows function called');
-
     // Find the tbody element and log it
     const tbody = document.querySelector('tbody');
-    console.log('tbody element:', tbody);
-
     // Check if tbody exists before trying to modify it
     if (!tbody) {
         console.error('No tbody element found in the document');
@@ -38,21 +33,16 @@ document.addEventListener('DOMContentLoaded', function () {
             </td>
         `;
         tbody.appendChild(tr);
-        
-        // Log when row is added
-        console.log('Row added:', contract);
     });
 }
 
 // Ensure the DOM is fully loaded before running
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM fully loaded');
     updateTableRows();
 });
 
 // Also add a fallback window load event
 window.addEventListener('load', function() {
-    console.log('Window loaded');
     updateTableRows();
 });
 

@@ -18,7 +18,6 @@
                 extend: {},
             },
         };
-
         // Check if the user has a previously saved preference
         document.addEventListener('DOMContentLoaded', function () {
             const darkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
@@ -331,11 +330,9 @@
         }
 
         async function displayUserInfoInSideBar(userInfoDef) {
-      console.log(userInfoDef.Data.getType);
       const userType = getUserTypeString(userInfoDef.Data.getType);
 
       if (userType === "Error") {
-        console.log("No user logged");
       } else {
         const email = localStorage.getItem('userEmail') || "No email";
 

@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", function () {
         newServiceButtons.forEach(async (button) => {
             if (!button.dataset.listenerAdded) { // Evitar eventos duplicados
                 button.addEventListener("click", function () {
-                    console.log("Botón clickeado:", this.value);
                     modal.style.display = "block"; // Mostrar modal
                     addresToOwner = this.value;
                 });
@@ -22,33 +21,22 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll(".detailsBtn").forEach((button) => {
             if (!button.dataset.listenerAdded) {
                 button.addEventListener("click", async function () {
-                    console.log("Botón clickeado:", this.value);
-
                     addresToOwner = this.value; // Guardar valor del botón
-
                     // Encuentra la fila más cercana y su select
                     const row = this.closest("tr");
                     const selectElement = row.querySelector("select");
                     const contractAdd = row.children[2].textContent.trim(); // Extrae el contractAdd de la tercera celda
 
                     if (selectElement) {
-                        console.log("Select element found:", selectElement);
-
                         // Obtener el valor numérico seleccionado
                         const selectedValue = selectElement.value;
-                        console.log("Valor numérico seleccionado:", selectedValue);
-                        console.log("Contract Address:", contractAdd);
-
                         if (parseInt(selectedValue) >= 0) {
                             viewmodal.style.display = "block"; // Mostrar modal
                             // Llamar a la función con los valores obtenidos
                             try {
                                 const achievementData = await fetchConsultCertificate(contractAdd, selectedValue);
-                                console.log("Achievement Data:", achievementData);
                                 if (achievementData && achievementData.Achievement) {
-                                    console.log(achievementData.Achievement.title);
                                     document.getElementById("titleV").textContent = achievementData.Achievement.title;
-                                    console.log(document.getElementById("titleV").textContent);
                                     document.getElementById("achievementIDV").textContent = achievementData.Achievement.id;
                                     document.getElementById("detailsV").textContent = achievementData.Achievement.details;
                                     document.getElementById("dateV").textContent = new Date(achievementData.Achievement.date * 1000).toLocaleDateString(); // Convierte la fecha Unix a formato legible
@@ -72,19 +60,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
-
-
-
     // Observar cambios en el DOM
     const observer = new MutationObserver(() => {
         attachButtonListeners();
     });
 
     observer.observe(document.body, { childList: true, subtree: true });
-
     // Adjuntar eventos iniciales
     attachButtonListeners();
-
     // Get close button
     const closeModal = document.getElementById("closeModal");
     const closeModalV = document.getElementById("closeModalV");
@@ -126,7 +109,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-
     // Function to clear modal fields
     function clearModalFields() {
 
@@ -154,7 +136,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Parse the response JSON
             const data = await response.json();
-            console.log('Contract Address Users:', data.contractAdd);
             return data.contractAdd; // Return the contract address
 
         } catch (error) {
@@ -162,7 +143,6 @@ document.addEventListener("DOMContentLoaded", function () {
             alert('An error occurred while fetching contract address');
         }
     };
-
 
     const getUserAdd = async () => {
         try {
@@ -186,7 +166,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Parse the response JSON
             const data = await response.json();
-            console.log('User Address:', data.UserAddress);
             return data.UserAddress; // Return the user address
 
         } catch (error) {
@@ -196,11 +175,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById('create-service-form').addEventListener('submit', async (event) => {
         event.preventDefault();
-
         // Get form data
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
-
         // Additional data
         data.contractAdd = await getContractAdd();  // Assuming getContractAdd() gets the contract address
         data.gas = 300000;  // Set the gas value
@@ -220,12 +197,8 @@ document.addEventListener("DOMContentLoaded", function () {
         // Get the date input value and convert to epoch
         const dateInput = document.getElementById("date").value;
         const epochTime = Math.floor(new Date(dateInput).getTime() / 1000); // Convert to seconds
-
         // Add the epoch timestamp to the data being sent to string
         formattedData.date = epochTime.toString();
-
-        console.log('Formatted Data with Epoch:', formattedData);  // Debugging
-
         try {
             // Send data to backend
             const response = await fetch('/addAchievement', {
@@ -239,9 +212,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-
             const result = await response.json();
-            console.log('Success:', result);
             window.location.reload();
         } catch (error) {
             console.error('Error:', error);
@@ -262,7 +233,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             const data = await response.json();
-            console.log(data); // Inspect the data
             return data.UpCurriculum; // Return the curriculum data
         } catch (error) {
             console.error('Error:', error);
@@ -295,10 +265,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     return result.Value;
                 }
             } else {
-                console.log("Error not succeeded tofetch " + publicMethod);
+                console.warn("Error not succeeded tofetch " + publicMethod);
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 
@@ -418,12 +388,9 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!response.ok) {
                 throw new Error(`Failed to update DigitalIdentity: ${response.statusText}`);
             }
-
             // Parse the response JSON
             const data = await response.json();
-            console.log('Update successful:', data.message);
             return data; // Return response data for further use if needed
-
         } catch (error) {
             console.error('Error updating DigitalIdentity:', error);
             return { error: error.message }; // Return error object
@@ -471,24 +438,4 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error('Error fetching consultCertificate:', error);
         }
     }
-    async function updateBirthCertificate(usAdd, bt) {
-        console.log(usAdd, bt);
-        const userAddress = usAdd;  // Replace with actual user address
-        const birthCertificate = bt;  // Replace with actual certificate value
-
-        const response = await fetch('/api/updateBirthCertificate', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userAddress, birthCertificate }),
-        });
-
-        const data = await response.json();
-
-        console.log(data);
-    }
-
-
-
-
-
 });

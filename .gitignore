@@ -11,3 +11,4 @@ frontendUsersInteface/frontendUsersApp/app/pages/config/firebase-credentials.jso
 frontendIdentityDigital/frontendDigitalApp/app/pages/config/firebase-credentials.json
 frontendBirthCertificate/frontendBirthCertificateApp/app/pages/config/firebase-credentials.json
 frontendScholarCurriculum/frontendScholarCurriculumApp/app/pages/config/firebase-credentials.json
+*.env
