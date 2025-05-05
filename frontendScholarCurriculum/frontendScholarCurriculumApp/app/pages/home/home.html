@@ -254,7 +254,6 @@
 
         // Parse the response JSON
         const data = await response.json();
-        console.log('User Address:', data.UserAddress);
         return data.UserAddress; // Return the user address
 
       } catch (error) {
@@ -303,7 +302,7 @@
         window.location.href = '/studentPanel';
       }
       if (userType === "Error") {
-        console.log("No user logged");
+        console.warn("No user logged");
       } else {
         const email = localStorage.getItem('userEmail') || "No email";
         const userAdd = await getUserAdd();
@@ -364,9 +363,8 @@
 
         if (governmentField && userAddress) {
           governmentField.value = userAddress;
-          console.log('Set government field to:', userAddress);
         } else {
-          console.log('Either government field or user address not found');
+          console.warn('Either government field or user address not found');
         }
       } catch (error) {
         console.error('Error setting government field:', error);

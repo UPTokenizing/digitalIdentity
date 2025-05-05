@@ -68,32 +68,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    const getContractAdd = async () => {
-        try {
-            // Send a POST request to the server to get the contract address
-            const response = await fetch('/api/getContractAdd', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json', // Set content type to JSON
-                },
-                body: JSON.stringify({}), // No need to send any data
-            });
-
-            // Handle the response
-            if (!response.ok) {
-                throw new Error('Failed to retrieve contract address');
-            }
-
-            // Parse the response JSON
-            const data = await response.json();
-            return data.contractAdd; // Return the contract address
-
-        } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred while fetching contract address');
-        }
-    };
-
     const getStudentCurriculmWithBC = async (birthCertificate, Institution) => {
         try {
             const response = await fetch('/api/getStudentsCurriculum', {

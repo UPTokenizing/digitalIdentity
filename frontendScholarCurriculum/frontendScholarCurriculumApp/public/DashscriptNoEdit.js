@@ -1,85 +1,167 @@
 //document on load of js
 document.addEventListener("DOMContentLoaded", function () {
 
-    const modalView = document.getElementById("viewServiceModal");
-    // Get close button
 
-    const closeModal2 = document.getElementById("closeModal2");
-    // Get cancel button
-    const cancelButton2 = document.getElementById("cancelButton2");
+    const viewmodal = document.getElementById("ViewModal");
+    let addresToOwner = "";
+    // Función para agregar el eventListener a los botones
+    async function attachButtonListeners() {
+        document.querySelectorAll(".detailsBtn").forEach((button) => {
+            if (!button.dataset.listenerAdded) {
+                button.addEventListener("click", async function () {
+                    addresToOwner = this.value; // Guardar valor del botón
 
-    closeModal2.onclick = function () {
-        modalView.style.display = "none";
+                    // Encuentra la fila más cercana y su select
+                    const row = this.closest("tr");
+                    const selectElement = row.querySelector("select");
+                    const contractAdd = row.children[2].textContent.trim(); // Extrae el contractAdd de la tercera celda
+
+                    if (selectElement) {
+                        const selectedValue = selectElement.value;
+                        if (parseInt(selectedValue) >= 0) {
+                            viewmodal.style.display = "block"; // Mostrar modal
+                            // Llamar a la función con los valores obtenidos
+                            try {
+                                const achievementData = await fetchConsultCertificate(contractAdd, selectedValue);
+                                if (achievementData && achievementData.Achievement) {
+                                    document.getElementById("titleV").textContent = achievementData.Achievement.title;
+                                    document.getElementById("achievementIDV").textContent = achievementData.Achievement.id;
+                                    document.getElementById("detailsV").textContent = achievementData.Achievement.details;
+                                    document.getElementById("dateV").textContent = new Date(achievementData.Achievement.date * 1000).toLocaleDateString(); // Convierte la fecha Unix a formato legible
+                                }
+                            } catch (error) {
+                                console.error("Error fetching achievement data:", error);
+                            }
+                        } else {
+                            console.warn("No achievement selected.");
+                        }
+                    } else {
+                        console.warn("No select element found in row.");
+                    }
+                });
+
+                button.dataset.listenerAdded = "true"; // Evita duplicar eventos
+            }
+        });
+
     }
 
-    // Listen for cancel button click
-    cancelButton2.onclick = function () {
-        modalView.style.display = "none";
-    }
-
-    // Listen for outside click
-    window.onclick = function (event) {
-        if (event.target === modalView) {
-            modalView.style.display = "none";
-        }
-    }
-
-    let contractAddresses = [];
-    // Load contract addresses from localStorage when the page loads
-    window.addEventListener('load', async () => {
-        contractAddresses = await getCertificates();
-        updateTableRows(contractAddresses); // Update the table with the cleaned data
+    // Observar cambios en el DOM
+    const observer = new MutationObserver(() => {
+        attachButtonListeners();
     });
 
-    const getContractAdd = async () => {
-        try {
-            // Send a POST request to the server to get the contract address
-            const response = await fetch('/api/getContractAdd', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json', // Set content type to JSON
-                },
-                body: JSON.stringify({}), // No need to send any data
-            });
+    observer.observe(document.body, { childList: true, subtree: true });
 
-            // Handle the response
-            if (!response.ok) {
-                throw new Error('Failed to retrieve contract address');
-            }
+    // Adjuntar eventos iniciales
+    attachButtonListeners();
 
-            // Parse the response JSON
-            const data = await response.json();
-            return data.contractAdd; // Return the contract address
-
-        } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred while fetching contract address');
-        }
-    };
-
-    async function getCertificates() {
-        try {
-            const response = await fetch('/api/getCertificates', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            // Await the response.json() to get the actual result
-            const result = await response.json();
-
-            if (response.ok) {
-                return result.certificates;  // Return the certificates array
-            } else {
-                throw new Error("Error retrieving certificates: " + result.message);
-            }
-        } catch (error) {
-            console.error("Error in API call:", error);
-            throw error;  // Rethrow the error for handling elsewhere
+    const closeModalV = document.getElementById("closeModalV");
+    const cancelButtonV = document.getElementById("cancelButtonV");
+    closeModalV.onclick = function () {
+        viewmodal.style.display = "none";
+    }
+    cancelButtonV.onclick = function () {
+        viewmodal.style.display = "none";
+    }
+    window.onclick = function (event) {
+        if (event.target === viewmodal) {
+            viewmodal.style.display = "none";
         }
     }
 
+    const resultSideContainer = document.getElementById('result');
+    const searchForm = document.getElementById('search-token-form');
+
+    searchForm.addEventListener('submit', async (e) => {
+        e.preventDefault(); // prevent page reload
+
+        const input = document.getElementById('studentIDCN').value.trim();
+        if (!input) return;
+
+        resultSideContainer.classList.remove('hidden');
+        resultSideContainer.innerHTML = `<p class="text-gray-500">Searching...</p>`;
+
+        try {
+            const response = await fetch('/api/searchStudent', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: input })
+            });
+
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.message || 'Unknown error');
+
+            const { students } = result;
+
+            if (!students || students.length === 0) {
+                resultSideContainer.innerHTML = `<p class="text-red-500">No results found.</p>`;
+                return;
+            }
+
+            // Build the table
+            const tableHTML = `
+            <div class="mt-6 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+              <table class="min-w-full bg-white dark:bg-gray-800">
+                <thead>
+                  <tr>
+                    <th class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-sm text-left font-semibold text-gray-700 dark:text-white">Student ID</th>
+                    <th class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-sm text-left font-semibold text-gray-700 dark:text-white">Complete Name</th>
+                    <th class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-sm text-left font-semibold text-gray-700 dark:text-white">Curriculum Address</th>
+                    <th class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-sm text-left font-semibold text-gray-700 dark:text-white">Achievements</th>
+                    <th class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-sm text-left font-semibold text-gray-700 dark:text-white"></th>
+                  </tr>
+                </thead>
+                <tbody id="table-body">
+                  ${await buildTableRows(students)}
+                </tbody>
+              </table>
+            </div>
+            `;
+
+            resultSideContainer.innerHTML = tableHTML;
+        } catch (err) {
+            resultSideContainer.innerHTML = `<p class="text-red-500">${err.message}</p>`;
+        }
+    });
+
+    async function getStudentCurriculmWithBC(birthCertificate, Institution) {
+        const response = await fetch('/api/getStudentsCurriculum', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ birthCertificate, Institution })
+        });
+
+        if (!response.ok) {
+            console.error("Error getting student curriculum:", await response.text());
+            return null; // or throw an error
+        }
+
+        const data = await response.json();
+        return data.UpCurriculum;  // ← is this a stringified JSON? an object?
+    }
+
+    async function fetchNumberOfAchievements(data) {
+        try {
+
+            const response = await fetch(`/numberOfAchievements?contractAdd=${encodeURIComponent(data)}`, {
+                method: 'GET',
+            });
+
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+            const result = await response.json();
+            if (result.Result === "Error") {
+                return result.Result;
+            } else if (result.Result === "Success") {
+                return result.TotalAchievements;
+            } else {
+                return result.Result;
+            }
+        } catch (error) {
+            console.error('Error fetching numberOfAchievements:', error);
+        }
+    }
     async function GetInfo(address, publicMethod) {
         try {
             // Fetching data from your backend endpoint using GET request with query parameters
@@ -111,145 +193,64 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error(error);
         }
     }
-
-    // Function to update the table rows based on contractAddresses array
-    async function getBirthCertificate(usAd) {
-        const userAddress = usAd;  // Replace with actual user address
-
-        const response = await fetch('/api/getBirthCertificate', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userAddress }),
-        });
-
-        const data = await response.json();
-        return (data.BirthCertificate);
-    }
-
-    // Function to update the table rows based on contractAddresses array
-    async function updateTableRows(contractAddresses) {
-        const tbody = document.querySelector('tbody');
-        tbody.innerHTML = ''; // Clear existing rows
-
-        for (const address of contractAddresses) {
-
-            // Fetch all required information
-            const name = await GetInfo(address, "name");
-            const fLastName = await GetInfo(address, "fLastName");
-            const mLastName = await GetInfo(address, "mLastName");
-            const dateOfCreation = await GetInfo(address, "dateCreation");
-
-            // Skip this iteration if essential data is missing
-            if (!name || !fLastName || !mLastName || !dateOfCreation) {
-                continue; // Skip to the next address
-            }
-            let owner = await GetInfo(address, "owner");
-            // let date = new Date(dateOfCreation * 1000);
-            let date = await getBirthCertificate(owner);
-
-            const tr = document.createElement('tr');
-            tr.className = 'border-t dark:border-gray-600';
-
-            tr.innerHTML = `
-          
-          <td class="py-2 px-4 text-sm text-gray-700 dark:text-white flex items-center">
-              ${name} ${fLastName} ${mLastName}
-          </td>
-          <td class="py-2 px-4 text-sm text-blue-500 dark:text-blue-400">${address}</td>
-          <td class="py-2 px-4 text-sm text-gray-700 dark:text-white">${date.toLocaleString()}</td>
-          <td class="py-2 px-4 text-sm text-gray-700 dark:text-white text-right">
-              <div>
-                  <button class="dark:text-white dark:hover:text-gray-400 hover:text-gray-500 text-gray-700 button-spacing" onclick="viewDetails('${address}')">
-                      <i class="fas fa-eye"></i> View  
-                  </button>
-                  
-              </div>
-          </td>
-      `;
-            tbody.appendChild(tr);
-
-
-        }
-    }
-
-    window.viewDetails = async function (address) {
-        modalView.style.display = "block";
+    async function fetchConsultCertificate(data, i) {
         try {
-            // Fetch information from the contract address
-            const name = await GetInfo(address, "name");
-            const fLastName = await GetInfo(address, "fLastName");
-            const mLastName = await GetInfo(address, "mLastName");
-            const gender = await GetInfo(address, "gender");
-            //convertir la fecha a normal, no en epochhhhhhhhhhhhhhhhhhh
-            const day = await GetInfo(address, "day");
-            const month = await GetInfo(address, "month");
-            const year = await GetInfo(address, "year");
-            const state = await GetInfo(address, "state");
-            const municipality = await GetInfo(address, "municipality");
-            const dateCreation = await GetInfo(address, "dateCreation");
-            let dateC = new Date(dateCreation * 1000);
-            const dateLastUpdate = await GetInfo(address, "dateLastUpdate");
-            let dateU = new Date(dateLastUpdate * 1000);
-            const tokenFather = await GetInfo(address, "tokenFather");
-            const tokenMother = await GetInfo(address, "tokenMother");
-            const tokenDigIdentity = await GetInfo(address, "tokenDigIdentity");
-            const owner = await GetInfo(address, "owner");
-            const government = await GetInfo(address, "government");
-            // Populate the HTML elements with the fetched information
-            let genderType;
-            if (gender) {
-                genderType = "Male";
-            }
-            else {
-                genderType = "Female";
-            }
-            document.getElementById('name2').textContent = name || 'N/A';
-            document.getElementById('fLastName2').textContent = fLastName || 'N/A';
-            document.getElementById('mLastName2').textContent = mLastName || 'N/A';
-            document.getElementById('gender2').textContent = genderType || 'N/A';
-            document.getElementById('day2').textContent = day || 'N/A';
-            document.getElementById('month2').textContent = month || 'N/A';
-            document.getElementById('year2').textContent = year || 'N/A';
-            document.getElementById('state2').textContent = state || 'N/A';
-            document.getElementById('municipality2').textContent = municipality || 'N/A';
-            document.getElementById('dateCreation2').textContent = dateC.toLocaleString() || 'N/A';
-            document.getElementById('dateLastUpdate2').textContent = dateU.toLocaleString() || 'N/A';
-            document.getElementById('tokenFather2').textContent = tokenFather || 'N/A';
-            document.getElementById('tokenMother2').textContent = tokenMother || 'N/A';
-            document.getElementById('tokenDigIdentity2').textContent = tokenDigIdentity || 'N/A';
-            document.getElementById('owner2').textContent = owner || 'N/A';
-            document.getElementById('government2').textContent = government || 'N/A';
-        } catch (error) {
-            console.error('Error fetching information:', error);
-        }
-    }
+            const response = await fetch(`/consultCertificate?contractAdd=${encodeURIComponent(data)}&id=${encodeURIComponent(i)}`, {
+                method: 'GET',
+            });
 
-    window.EditAddress = async function (address) {
-        // First ensure the modal is displayed
-        const modalEdit = document.getElementById("editAdress");
-        if (modalEdit) {
-            modalEdit.style.display = "block";
-        }
-        try {
-            // Fetch information from the contract address
-            const government = await GetInfo(address, "government");
-            // Get elements with error checking
-            const elements = {
-                government: document.getElementById('government3'),
-                contractAddress: document.getElementById('address3')
-            };
-            if (elements.government) {
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-                elements.government.textContent = government || 'N/A';
+            const result = await response.json();
+            if (result.Result === "Error") {
+                return null;
+            } else if (result.Result === "Success") {
+                return result;
             } else {
-                console.warn('Element with ID "government3" not found');
+                return null;
             }
-            elements.contractAddress.textContent = address || 'N/A';
-
         } catch (error) {
-            console.error('Error in EditAddress:', error);
+            console.error('Error fetching consultCertificate:', error);
         }
     }
+    // Helper function to build table rows
+    async function buildTableRows(students) {
+        const Institution = "UpCurriculum";
+        let rows = '';
 
+        for (const student of students) {
+            const { studentID, certificate_string } = student;
+            const responseCurri = await getStudentCurriculmWithBC(certificate_string, Institution);
+            const numAch = await fetchNumberOfAchievements(responseCurri);
+
+            const name = await GetInfo(certificate_string, "name");
+            const fLastName = await GetInfo(certificate_string, "fLastName");
+            const mLastName = await GetInfo(certificate_string, "mLastName");
+            let options = '<option value="">Select Achievement</option>';
+            for (let i = 0; i < numAch; i++) {
+                const ach = await fetchConsultCertificate(responseCurri, i);
+                if (ach?.Achievement?.title) {
+                    options += `<option value="${i}">${ach.Achievement.title}</option>`;
+                }
+            }
+
+            rows += `
+            <tr>
+                <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${studentID}</td>
+                <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${name} ${fLastName} ${mLastName}</td>
+                <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">${responseCurri}</td>
+                <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">
+                    <select class="userTypeSelect border rounded px-2 py-1 bg-white text-gray-700 dark:bg-gray-700 dark:text-white">
+                        ${options}
+                    </select>
+                </td>
+                <td class="py-2 px-4 text-sm text-gray-700 dark:text-gray-300">
+                    <button class="detailsBtn bg-blue-500 text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-500 p-2 rounded">Achievement Details</button>
+                </td>
+            </tr>
+            `;
+        }
+        return rows;
+    }
 
 });

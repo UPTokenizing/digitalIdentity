@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
               ${name} ${fLastName} ${mLastName}
           </td>
           <td class="py-2 px-4 text-sm text-blue-500 dark:text-blue-400">${address}</td>
-          <td class="py-2 px-4 text-sm text-gray-700 dark:text-white">${date.toLocaleString()}</td>
+          <td class="py-2 px-4 text-sm text-gray-700 dark:text-white">${owner}</td>
           <td class="py-2 px-4 text-sm text-gray-700 dark:text-white text-right">
               <div>
                   <button class="dark:text-white dark:hover:text-gray-400 hover:text-gray-500 text-gray-700 button-spacing" onclick="viewDetails('${address}')">

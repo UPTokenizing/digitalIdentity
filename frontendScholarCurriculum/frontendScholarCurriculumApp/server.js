@@ -560,6 +560,64 @@ app.post('/api/updateCurriculum', async (req, res) => {
     res.status(500).send({ message: 'Error updating DigitalIdentity.' });
   }
 });
+
+
+app.post('/api/searchStudent', async (req, res) => {
+  try {
+    const { query } = req.body;
+    if (!query) return res.status(400).json({ message: "Missing search query" });
+
+    const [students] = await pool.query(`
+      SELECT studentID, certificate_string FROM BirthCertificates
+      WHERE studentID = ? `,
+      [query, `%${query}%`]
+    );
+
+    if (!students.length) return res.status(404).json({ message: "No matching students found." });
+
+    res.json({ students });
+  } catch (err) {
+    console.error("Error in /api/searchStudent:", err);
+    res.status(500).json({ message: "Server error searching student" });
+  }
+});
+
+app.post('/api/checkStudentBirthCertificate', async (req, res) => {
+  try {
+    const { studentId } = req.body;
+    
+    // Validate that studentId was provided
+    if (!studentId) {
+      return res.status(400).send(false);
+    }
+    
+    // First check if the BirthCertificates table exists
+    const [tableCheck] = await pool.query(`
+      SELECT COUNT(*) as count
+      FROM information_schema.tables
+      WHERE table_schema = DATABASE() AND table_name = 'BirthCertificates'
+    `);
+
+    if (tableCheck[0].count === 0) {
+      return res.status(200).send(false);
+    }
+    
+    // Then check if the student ID exists in the table
+    const [rows] = await pool.query(
+      'SELECT COUNT(*) as count FROM BirthCertificates WHERE StudentID = ?', 
+      [studentId]
+    );
+
+    // Simply return true if found, false if not
+    return res.status(200).send(rows[0].count > 0);
+    
+  } catch (error) {
+    console.error('Error checking birth certificate:', error);
+    return res.status(200).send(false);
+  }
+});
+
+
 ////////////////////////////////////////////////////////////
 
 app.get('/numberOfAchievements', async (req, res) => {

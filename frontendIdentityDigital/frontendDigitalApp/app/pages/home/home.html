@@ -47,18 +47,13 @@
             const token = localStorage.getItem('authToken');
             if (token) {
                 // If logged in, show restricted buttons
-                // document.getElementById('linkTokenBtn').classList.remove('hidden');
+                document.getElementById('linkTokenBtn').classList.remove('hidden');
                 document.getElementById('logoutBtn').classList.remove('hidden');
                 document.getElementById('loginBtn').classList.add('hidden');
                 // document.getElementById('createDigital').classList.remove('hidden');
-
-
-
-
-
             } else {
                 // If not logged in, show "Login" button and hide restricted buttons
-                // document.getElementById('linkTokenBtn').classList.add('hidden');
+                document.getElementById('linkTokenBtn').classList.add('hidden');
                 document.getElementById('logoutBtn').classList.add('hidden');
                 document.getElementById('loginBtn').classList.remove('hidden');
                 // document.getElementById('createDigital').classList.add('hidden');
@@ -138,11 +133,6 @@
             <div id="resultSideContainer"></div>
             <nav class="mt-6">
                 <ul>
-                    <!-- <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
-                        <button
-                            class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-                            id="linkTokenBtn">Create DigitalIdentity</button>
-                    </li> -->
                     <li
                         class="px-4 py-2 text-gray-200 dark:text-gray-700 hover:bg-gray-600 dark:hover:bg-gray-100 dark:bg-gray-100 bg-gray-600">
                         <button class="w-full h-8 text-left flex items-center px-4 rounded-lg " id="homeBtn">Consult
@@ -151,7 +141,7 @@
                     <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
                         <button
                             class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-                            id="linkT">Link
+                            id="linkTokenBtn">Link
                             Tokens</button>
                     </li>
                 </ul>
@@ -407,20 +397,19 @@
                 </div>
             `;
 
-                // const createBtn = document.getElementById('linkTokenBtn');
-                const linkT = document.getElementById('linkT');
+                const linkT = document.getElementById('linkTokenBtn');
                 if (userType === "Government") {
                     linkT.classList.remove('hidden');
                 }
                 else if ((userType === "Admin" || userType === "User")) {
-                    //createBtn.classList.add('hidden');
+                    //linkT.classList.add('hidden');
                     linkT.classList.remove('hidden');
                 }
                 else if ((userType === "Government" || userType === "Admin" || userType === "User")) {
                     linkT.classList.remove('hidden');
                 }
                 else {
-                    //createBtn.classList.add('hidden');
+                    //linkT.classList.add('hidden');
                 }
                 // Insert HTML into the container
                 resultSideContainer.innerHTML = htmlContent;
@@ -595,15 +584,12 @@
             window.location.href = '/';
         });
 
-        // document.getElementById('linkTokenBtn').addEventListener('click', function () {
-        //     window.location.href = '/dashboard';
-        // });
+        document.getElementById('linkTokenBtn').addEventListener('click', function () {
+            window.location.href = '/tokens';
+        });
 
         document.getElementById('loginBtn').addEventListener('click', function () {
             window.location.href = '/login';
-        });
-        document.getElementById('linkT').addEventListener('click', function () {
-            window.location.href = '/tokens';
         });
 
 

@@ -7,56 +7,75 @@ document.addEventListener('DOMContentLoaded', function () {
         const data = Object.fromEntries(formData.entries());
         const Institution = "UpCurriculum";
 
-        try {
-            // Await the resolved user address
-            const userAddress = await getUserAdd();
+        IDUsed = await checkStudentBirthCertificate(data.studentID);
+        if (!IDUsed) {
+            try {
+                // Await the resolved user address
+                const userAddress = await getUserAdd();
 
-            // Create an object with the input values
-            const inputValues = {
-                gas: 300000, // Get gas amount
-                BirthCertificate: data.BirthCertificateAddress, // Get contract address
-                studentID: data.studentID, // Get token address
-                from: userAddress // Use the awaited address
-            };
-            userUsed = await checkInstitutionField(data.BirthCertificateAddress, Institution);
-            if (!userUsed) {
-                const response = await fetch('/createCurriculum', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(inputValues)
-                });
+                // Create an object with the input values
+                const inputValues = {
+                    gas: 300000, // Get gas amount
+                    BirthCertificate: data.BirthCertificateAddress, // Get contract address
+                    studentID: data.studentID, // Get token address
+                    from: userAddress // Use the awaited address
+                };
+                userUsed = await checkInstitutionField(data.BirthCertificateAddress, Institution);
+                if (!userUsed) {
+                    const response = await fetch('/createCurriculum', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(inputValues)
+                    });
 
-                const result = await response.json();
+                    const result = await response.json();
 
-                // Display the result
-                const resultElement = document.getElementById('result');
-                const resultContentElement = document.getElementById('resultContent');
+                    // Display the result
+                    const resultElement = document.getElementById('result');
+                    const resultContentElement = document.getElementById('resultContent');
 
-                // Check if the response indicates an error
-                if (result.Result === "Error") {
-                    alert("Error during creation");
-                    resultElement.classList.remove('hidden');
-                    resultContentElement.textContent = 'Failed to create contract. Please try again or check the input data.';
-                } else if (result.Result === "Success") {
-                    await updateBirthCertificateWithStudentID(data.studentID, data.BirthCertificateAddress)
-                    await updateScholarCurriculum(data.BirthCertificateAddress, result.contractAddress, "UpCurriculum");
-                    alert("Curriculum created successfully!");
-                    resultElement.classList.remove('hidden');
-                    resultContentElement.textContent = `Curriculum created successfully!`;
-                } else {
-                    alert("Error during creation");
-                    resultElement.classList.remove('hidden');
-                    resultContentElement.textContent = 'Unexpected result: ' + result.Result;
+                    // Check if the response indicates an error
+                    if (result.Result === "Error") {
+                        alert("Error during creation");
+                        resultElement.classList.remove('hidden');
+                        resultContentElement.textContent = 'Failed to create contract. Please try again or check the input data.';
+                    } else if (result.Result === "Success") {
+                        await updateBirthCertificateWithStudentID(data.studentID, data.BirthCertificateAddress)
+                        await updateScholarCurriculum(data.BirthCertificateAddress, result.contractAddress, "UpCurriculum");
+                        alert("Curriculum created successfully!");
+                        resultElement.classList.remove('hidden');
+                        resultContentElement.textContent = `Curriculum created successfully!`;
+                    } else {
+                        alert("Error during creation");
+                        resultElement.classList.remove('hidden');
+                        resultContentElement.textContent = 'Unexpected result: ' + result.Result;
+                    }
                 }
-            }
-            else{
-                alert("This User has alredy a curriculum");
-            }
+                else {
+                    alert("This User has alredy a curriculum");
+                }
 
-        } catch (error) {
-            console.error('Error:', error);
+            } catch (error) {
+                console.error('Error:', error);
+            }
         }
+        else {
+            alert("Student ID already used");
+        }
+
+
     });
+
+    async function checkStudentBirthCertificate(studentId) {
+        const response = await fetch('/api/checkStudentBirthCertificate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ studentId }),
+        });
+
+        const data = await response.json();
+        return data;
+    }
 
     async function checkInstitutionField(birthCertificate, Institution) {
         const response = await fetch('/api/checkInstitutionField', {
@@ -65,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
             body: JSON.stringify({ birthCertificate, Institution }),
         });
 
-        
+
         const data = await response.json();
         return data.exists;
     }

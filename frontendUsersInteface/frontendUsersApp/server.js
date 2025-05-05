@@ -397,6 +397,24 @@ app.post('/api/registerDigitalIdentity', async (req, res) => {
 });
 
 
+app.get('/api/checkUsersTable', async (req, res) => {
+  try {
+    const [rows] = await pool.query(`
+      SELECT COUNT(*) as count
+      FROM information_schema.tables
+      WHERE table_schema = DATABASE() AND table_name = 'users'
+    `);
+
+    if (rows[0].count > 0) {
+      res.status(200).send({ exists: true });
+    } else {
+      res.status(404).send({ exists: false, message: 'users table does not exist.' });
+    }
+  } catch (error) {
+    console.error('Error checking users table:', error);
+    res.status(500).send({ message: 'Internal server error.' });
+  }
+});
 
 
 const PORT = 5512;

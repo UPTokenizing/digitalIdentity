@@ -2,314 +2,227 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><title>Scholar Curriculum | Guest Home</title>
-  <script src="/DashscriptNoEdit.js"></script>
-  <link rel="stylesheet" href="/style.css">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="/styleDashboard.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-  <!-- Dark Mode change -->
-  <script>
-    // Tailwind Configuration
-    tailwind.config = {
-      darkMode: 'class', // Use the 'class' strategy for dark mode
-      theme: {
-        extend: {},
-      },
-    };
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scholar Curriculum | Guest Home</title>
+    <script src="/DashscriptNoEdit.js" defer></script>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/styleDashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- Dark Mode change -->
+    <script>
+        // Tailwind Configuration
+        tailwind.config = {
+            darkMode: 'class', // Use the 'class' strategy for dark mode
+            theme: {
+                extend: {},
+            },
+        };
 
-    // Check if the user has a previously saved preference
-    document.addEventListener('DOMContentLoaded', function () {
-      const darkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
-      if (darkModeEnabled) {
-        document.documentElement.classList.add('dark');
-        document.getElementById('darkModeToggle').checked = true; // Check the toggle switch
-      }
-    });
+        // Check if the user has a previously saved preference
+        document.addEventListener('DOMContentLoaded', function () {
+            const darkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+            if (darkModeEnabled) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('darkModeToggle').checked = true; // Check the toggle switch
+            }
+        });
 
-    // Toggle the dark mode
-    function toggleDarkMode() {
-      const isDarkMode = document.documentElement.classList.toggle('dark');
-      if (isDarkMode) {
-        localStorage.setItem('darkMode', 'enabled'); // Save dark mode preference
-      } else {
-        localStorage.setItem('darkMode', 'disabled'); // Save light mode preference
-      }
-    }
-  </script>
+        // Toggle the dark mode
+        function toggleDarkMode() {
+            const isDarkMode = document.documentElement.classList.toggle('dark');
+            if (isDarkMode) {
+                localStorage.setItem('darkMode', 'enabled'); // Save dark mode preference
+            } else {
+                localStorage.setItem('darkMode', 'disabled'); // Save light mode preference
+            }
+        }
+    </script>
 </head>
 
 <style>
-  /* Circle styling */
-  .user-circle {
-    width: 60px;
-    /* Smaller circle */
-    height: 60px;
-    /* Smaller circle */
-    border-radius: 50%;
-    background-color: rgb(255, 102, 0);
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 18px;
-    /* Adjust font size for initials */
-    font-weight: bold;
-    margin: 10px auto;
-    position: relative;
-    cursor: pointer;
-  }
+    /* Circle styling */
+    .user-circle {
+        width: 60px;
+        /* Smaller circle */
+        height: 60px;
+        /* Smaller circle */
+        border-radius: 50%;
+        background-color: rgb(255, 102, 0);
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;
+        /* Adjust font size for initials */
+        font-weight: bold;
+        margin: 10px auto;
+        position: relative;
+        cursor: pointer;
+    }
 
-  /* Tooltip styling */
-  .tooltip {
-    position: absolute;
-    top: 70px;
-    /* Position tooltip below the circle */
-    left: 25%;
-    background-color: #333;
-    color: #fff;
-    padding: 6px;
-    /* Adjust padding */
-    border-radius: 4px;
-    font-size: 12px;
-    /* Adjust font size */
-    display: none;
-    white-space: nowrap;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    /* Add a shadow for better visibility */
-  }
+    /* Tooltip styling */
+    .tooltip {
+        position: absolute;
+        top: 70px;
+        /* Position tooltip below the circle */
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #333;
+        color: #fff;
+        padding: 6px;
+        /* Adjust padding */
+        border-radius: 4px;
+        font-size: 12px;
+        /* Adjust font size */
+        display: none;
+        white-space: nowrap;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        /* Add a shadow for better visibility */
+    }
 
-  .user-circle:hover .tooltip {
-    display: block;
-  }
+    .user-circle:hover .tooltip {
+        display: block;
+    }
 
-  /* Access text styling */
-  .access-text {
-    text-align: center;
-    margin-top: 5px;
-    /* Reduce margin */
-    font-size: 14px;
-    /* Adjust font size */
-    font-weight: bold;
-  }
+    /* Access text styling */
+    .access-text {
+        text-align: center;
+        margin-top: 5px;
+        /* Reduce margin */
+        font-size: 14px;
+        /* Adjust font size */
+        font-weight: bold;
+    }
+
+    .blue-link {
+        color: rgb(0, 140, 255);
+        text-decoration: underline;
+        font-weight: bold;
+    }
 </style>
 
 <body class="bg-gray-100 dark:bg-gray-900 dark:text-white font-sans">
-  <div class="flex">
-    <!-- Main Content -->
-    <div class="flex-1 p-6">
-      <!-- Navbar -->
-      <div class="flex items-center justify-between mb-6">
-        <div class="flex items-center space-x-4">
-
-          <div id="resultSideContainer"></div>
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="w-64 bg-white dark:bg-gray-800 h-screen shadow-md">
+            <div id="resultSideContainer"></div>
+            <nav class="mt-6">
+                <ul>
+                    <li
+                        class="px-4 py-2 text-gray-200 dark:text-gray-700 hover:bg-gray-600 dark:hover:bg-gray-100 dark:bg-gray-100 bg-gray-600">
+                        <button class="w-full h-8 text-left flex items-center px-4 rounded-lg " id="homeBtn">Consult
+                            Scholar Curriculum</button>
+                    </li>
+                </ul>
+            </nav>
         </div>
-        <div class="flex items-center space-x-4">
+        <!-- Main Content -->
+        <div class="flex-1 p-6">
+            <!-- Navbar -->
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold">Scholar Curriculum Information</h1>
+                        <!-- <p class="text-gray-600 dark:text-gray-400">List of users in firebase</p> -->
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"
+                        id="loginBtn"><i class="fas fa-sign-in-alt"></i> LogIn</button>
+                    <!-- Toggle Switch for Dark Mode -->
+                    <label class="switch">
+                        <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()">
+                        <span class="slider">
+                            <!-- Moon Icon -->
+                            <i class="fas fa-moon moon"></i>
+                        </span>
+                    </label>
+                </div>
+            </div>
+            <div class="mt-4">
+                <h2 class="text-2xl font-bold">Search for a Curriculum</h2>
+                <form id="search-token-form">
+                    <div class="space-y-4">
+                        <div class="mb-4">
+                            <div class="mb-4">
+                                <label for="studentIDCN" class="block text-gray-400 dark:text-gray-300">Student ID or
+                                    Complete Name</label>
+                                <input type="text" id="studentIDCN" name="studentIDCN" placeholder=""
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-900 dark:text-white"
+                                    required>
+                            </div>
+                            <button type="submit"
+                                class="w-full h-12 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                Search
+                            </button>
+                        </div>
+                </form>
+            </div>
+            <!-- Result Display Section -->
+            <div id="result" class="mt-4 p-4 border rounded-lg bg-gray-100 dark:bg-gray-800 hidden">
 
-          <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"
-            id="login"><i class="fas fa-sign-out-alt"></i> Log In</button>
+            </div>
+
+            <!-- View info Modal -->
+            <div id="ViewModal" class="modal hidden fixed inset-0 flex items-center justify-center z-50">
+                <div class="modal-content p-6 rounded-lg shadow-lg bg-white dark:bg-gray-800 dark:text-white relative">
+                    <span
+                        class="close cursor-pointer text-gray-500 dark:text-gray-300 text-lg font-bold absolute top-2 right-2"
+                        id="closeModalV">&times;</span>
+
+                    <h2 class="text-xl font-semibold mb-4">Achievement Details</h2>
+                    <!-- Achievement Title -->
+                    <div class="mb-4">
+                        <label class="block text-gray-700 dark:text-gray-300">Title</label>
+                        <span id="titleV" class="text-lg font-semibold">dasdsa</span>
+                    </div>
+
+                    <!-- Achievement ID -->
+                    <div class="mb-4">
+                        <label class="block text-gray-700 dark:text-gray-300">ID</label>
+                        <span id="achievementIDV" class="text-lg font-semibold"></span>
+                    </div>
+
+                    <!-- Achievement Details -->
+                    <div class="mb-4">
+                        <label class="block text-gray-700 dark:text-gray-300">Details</label>
+                        <span id="detailsV" class="text-lg font-semibold"></span>
+                    </div>
+
+                    <!-- Achievement Creation Date -->
+                    <div class="mb-4">
+                        <label class="block text-gray-700 dark:text-gray-300">Date</label>
+                        <span id="dateV" class="text-lg font-semibold"></span>
+                    </div>
+
+                    <!-- Buttons -->
+                    <button type="button" id="cancelButtonV"
+                        class="bg-red-500 text-white font-semibold px-4 py-2 rounded hover:bg-red-600">Cancel</button>
+                    </form>
+                </div>
+            </div>
 
 
-          <!-- Toggle Switch for Dark Mode -->
-          <label class="switch">
-            <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()">
-            <span class="slider">
-              <!-- Moon Icon -->
-              <i class="fas fa-moon moon"></i>
-            </span>
-          </label>
         </div>
-      </div>
-      <div class="flex items-center justify-between">
-        <div>
-          <h1 class="text-2xl font-bold">Scholar Curriculums</h1>
-          <p class="text-gray-600 dark:text-gray-400">Contracts. Please use this page
-            to view Scholar Curriculums.</p>
-        </div>
-
-      </div>
-      <div class="mt-6 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
-
-        <div id="response-container"></div>
-      </div>
     </div>
-  </div>
-
-  </div>
-
-  <script>
-
-    const resultSideContainer = document.getElementById('resultSideContainer'); // To display results
-
-
-    const getContractAdd = async () => {
-      try {
-        // Send a POST request to the server to get the contract address
-        const response = await fetch('/api/getContractAdd', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json', // Set content type to JSON
-          },
-          body: JSON.stringify({}), // No need to send any data
+    <style>
+        /* Ensure the form is hidden initially using CSS */
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script>
+        // Navigate buttons
+        document.getElementById('homeBtn').addEventListener('click', function () {
+            window.location.href = '/';
         });
-
-        // Handle the response
-        if (!response.ok) {
-          throw new Error('Failed to retrieve contract address');
-        }
-
-        // Parse the response JSON
-        const data = await response.json();
-        return data.contractAdd; // Return the contract address
-
-      } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred while fetching contract address');
-      }
-    };
-
-    const getUserAdd = async () => {
-      try {
-        const email = localStorage.getItem('userEmail'); // Get the email from localStorage
-        if (!email) {
-          throw new Error('No email found in localStorage');
-        }
-
-        // Send a POST request to the server to get the user address
-        const response = await fetch('/api/getUserAdd', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json', // Set content type to JSON
-          },
-          body: JSON.stringify({ email: email }),
+        document.getElementById('loginBtn').addEventListener('click', function () {
+            window.location.href = '/login';
         });
+    </script>
 
-        if (!response.ok) {
-          throw new Error('Failed to retrieve user address');
-        }
-
-        // Parse the response JSON
-        const data = await response.json();
-        console.log('User Address:', data.UserAddress);
-        return data.UserAddress; // Return the user address
-
-      } catch (error) {
-        console.error('Error fetching user address:', error);
-      }
-    };
-
-    // Function to get user info
-    async function getUserInfo(contractAdd, userAddress) {
-      try {
-        const response = await fetch(`/getInfoUser?contractAdd=${encodeURIComponent(contractAdd)}&userAddress=${encodeURIComponent(userAddress)}`);
-
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        return await response.json();
-      } catch (error) {
-        console.error('Error getting user info:', error);
-        return null;
-      }
-    }
-
-
-
-    // Function to display user info in a table
-    function getUserTypeString(type) {
-      switch (type) {
-        case '0':
-          return 'Government';
-        case '1':
-          return 'Admin';
-        case '2':
-          return 'Educational Administrator';
-        case '10':
-          return 'User';
-        default:
-          return 'Unknown';
-      }
-    }
-
-
-    async function displayUserInfoInSideBar(userInfoDef) {
-      const userType = getUserTypeString(userInfoDef.Data.getType);
-
-      if (userType === "Error") {
-        console.log("No user logged");
-      } else {
-        const email = localStorage.getItem('userEmail') || "No email";
-
-        const userAdd = await getUserAdd();
-
-        // Generate HTML
-        const htmlContent = `
-        <div class="user-circle">
-          <span>${initials}</span>
-          <div class="tooltip">
-            <p>Email: ${email}</p>
-            <p>${userAdd}</p>
-          </div>
-        </div>
-        <div class="access-text">
-          <p>${email}</p>
-          <p>Access: ${userType}</p>
-        </div>
-      `;
-
-        // Insert HTML into the container
-        resultSideContainer.innerHTML = htmlContent;
-
-
-      }
-    }
-
-
-
-    document.addEventListener('DOMContentLoaded', async () => {
-      try {
-        const contractAddress = await getContractAdd(); // Wait for contract address
-        const userAddress = await getUserAdd(); // Wait for user address
-
-        if (contractAddress && userAddress) {
-          const userInfoDef = await getUserInfo(contractAddress, userAddress);
-          if (userInfoDef) {
-
-            displayUserInfoInSideBar(userInfoDef); // Display the user info in the sidebar
-          } else {
-            console.error('No user info found');
-          }
-        } else {
-          console.error('Missing contract address or user address');
-        }
-      } catch (error) {
-        console.error('Error during DOMContentLoaded:', error);
-      }
-    });
-
-
-    document.getElementById('login').addEventListener('click', function () {
-      window.location.href = '/login';
-    });
-
-    const checkAuth = () => {
-      const token = localStorage.getItem('authToken');
-      if (token) {
-        // Si no está logueado, redirigir a la página de login
-        window.location.href = '/';
-
-      }
-    };
-
-    // Ejecutar al cargar la página
-    checkAuth();
-
-
-
-  </script>
 </body>
 
 </html>

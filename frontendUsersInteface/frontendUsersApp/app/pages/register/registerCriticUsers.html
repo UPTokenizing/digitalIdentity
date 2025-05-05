@@ -105,9 +105,29 @@
     </script>
     <script>
         //localStorage.setItem('criticCreated', '0'); //commnet this for normal use active for testing
-        if (localStorage.getItem('criticCreated') === 'true') {
-            window.location.href = '/login';
+        async function checkUsersTableExists() {
+            try {
+                const response = await fetch('/api/checkUsersTable');
+                const data = await response.json();
+
+                if (data.exists) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (err) {
+                return false;
+            }
         }
+
+        // Wrap your logic inside an async IIFE
+        (async () => {
+            const critical = await checkUsersTableExists();
+            if (critical) {
+                window.location.href = '/login';
+            }
+        })();
+
         document.getElementById('adminRegisterForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             document.getElementById('overlay').style.display = 'block'; // Show overlay
