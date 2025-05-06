@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Birth Certificate | Guest Home</title>
+  <script src="/PublicDataViewer.js"></script>
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/styleDashboard.css">
+  <link rel="stylesheet" href="/slideBar.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <!-- Dark Mode change -->
+  <script>
+    // Tailwind Configuration
+    tailwind.config = {
+      darkMode: 'class', // Use the 'class' strategy for dark mode
+      theme: {
+        extend: {},
+      },
+    };
+
+    // Check if the user has a previously saved preference
+    document.addEventListener('DOMContentLoaded', function () {
+      const darkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+      if (darkModeEnabled) {
+        document.documentElement.classList.add('dark');
+        document.getElementById('darkModeToggle').checked = true; // Check the toggle switch
+      }
+    });
+
+    // Toggle the dark mode
+    function toggleDarkMode() {
+      const isDarkMode = document.documentElement.classList.toggle('dark');
+      if (isDarkMode) {
+        localStorage.setItem('darkMode', 'enabled'); // Save dark mode preference
+      } else {
+        localStorage.setItem('darkMode', 'disabled'); // Save light mode preference
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 dark:text-white font-sans">
+  <div class="flex">
+    <!-- Main Content -->
+    <div class="flex-1 p-6">
+      <!-- Navbar -->
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center space-x-4">
+
+          <div id="resultSideContainer"></div>
+        </div>
+        <div class="flex items-center space-x-4">
+
+          <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"
+            id="login"><i class="fas fa-sign-out-alt"></i> Log In</button>
+          <!-- Toggle Switch for Dark Mode -->
+          <label class="switch">
+            <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()">
+            <span class="slider">
+              <!-- Moon Icon -->
+              <i class="fas fa-moon moon"></i>
+            </span>
+          </label>
+        </div>
+      </div>
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-bold">Birth Certificate Addresses</h1>
+          <p class="text-gray-600 dark:text-gray-400">Contracts. Please use this page
+            to view clients' Birth Certificates.</p>
+        </div>
+      </div>
+      <div class="mt-6 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+        <table class="min-w-full bg-white dark:bg-gray-800">
+          <thead>
+            <tr>
+              <th
+                class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
+                Complete Name</th>
+              <th
+                class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
+                Contract Address</th>
+              <th
+                class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-left text-sm font-semibold text-gray-700 dark:text-white">
+                Owner Address</th>
+              <th
+                class="py-2 px-4 bg-gray-200 dark:bg-gray-700 text-center text-sm font-semibold text-gray-700 dark:text-white">
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+
+          </tbody>
+        </table>
+        <div id="response-container"></div>
+      </div>
+    </div>
+  </div>
+  <!-- View all Service Modal -->
+  <div id="viewServiceModal" class="modalView hidden fixed inset-0 flex items-center justify-center z-50">
+    <div class="modal-content p-6 rounded-lg shadow-lg bg-white dark:bg-gray-800 dark:text-white relative">
+      <span class="close cursor-pointer text-gray-500 dark:text-gray-300 text-lg font-bold absolute top-2 right-2"
+        id="closeModal2">&times;</span>
+      <h2 class="text-xl font-semibold mb-4">Change Address</h2>
+      <div class="form-container">
+        <div id="show-service-form">
+          <!-- Name -->
+          <div class="mb-4">
+            <label for="name2" class="block text-gray-500 dark:text-gray-300">Name</label>
+            <span id="name2" class="block text-gray-700 dark:text-white"></span>
+          </div>
+          <!-- Father's Last Name -->
+          <div class="mb-4">
+            <label for="fLastName2" class="block text-gray-500 dark:text-gray-300">Father's Last Name</label>
+            <span id="fLastName2" class="block text-gray-700 dark:text-white"></span>
+          </div>
+          <!-- Mother's Last Name -->
+          <div class="mb-4">
+            <label for="mLastName2" class="block text-gray-500 dark:text-gray-300">Mother's Last Name</label>
+            <span id="mLastName2" class="block text-gray-700 dark:text-white"></span>
+          </div>
+          <!-- Sex -->
+          <div class="mb-4">
+            <label for="gender2" class="block text-gray-500 dark:text-gray-300">Sex</label>
+            <span id="gender2" class="block text-gray-700 dark:text-white"></span>
+          </div>
+          <!-- Day -->
+          <div class="mb-4">
+            <label for="day2" class="block text-gray-500 dark:text-gray-300">Day</label>
+            <span id="day2" class="block text-gray-700 dark:text-white"></span>
+          </div>
+          <!-- Month -->
+          <div class="mb-4">
+            <label for="month2" class="block text-gray-500 dark:text-gray-300">Month</label>
+            <span id="month2" class="block text-gray-700 dark:text-white"></span>
+          </div>
+          <!-- Year -->
+          <div class="mb-4">
+            <label for="year2" class="block text-gray-500 dark:text-gray-300">Year</label>
+            <span id="year2" class="block text-gray-700 dark:text-white"></span>
+          </div>
+          <!-- State -->
+          <div class="mb-4">
+            <label for="state2" class="block text-gray-500 dark:text-gray-300">State</label>
+            <span id="state2" class="block text-gray-700 dark:text-white"></span>
+          </div>
+          <!-- Municipality -->
+          <div class="mb-4">
+            <label for="municipality2" class="block text-gray-500 dark:text-gray-300">Municipality</label>
+            <span id="municipality2" class="block text-gray-700 dark:text-white"></span>
+          </div>
+          <!-- dateCreation -->
+          <div class="mb-4">
+            <label for="dateCreation2" class="block text-gray-500 dark:text-gray-300">Date of Creation</label>
+            <span id="dateCreation2" class="block text-gray-700 dark:text-white"></span>
+          </div>
+          <!-- dateLastUpdate -->
+          <div class="mb-4">
+            <label for="dateLastUpdate2" class="block text-gray-500 dark:text-gray-300">Date of Last Update</label>
+            <span id="dateLastUpdate2" class="block text-gray-700 dark:text-white"></span>
+          </div>
+          <!-- Token Father -->
+          <div class="mb-4">
+            <label for="tokenFather2" class="block text-gray-500 dark:text-gray-300">Token Father</label>
+            <span id="tokenFather2" class="block text-gray-700 dark:text-white"></span>
+          </div>
+          <!-- Token Mother -->
+          <div class="mb-4">
+            <label for="tokenMother2" class="block text-gray-500 dark:text-gray-300">Token Mother</label>
+            <span id="tokenMother2" class="block text-gray-700 dark:text-white"></span>
+          </div>
+          <!-- tokenDigldentity -->
+          <div class="mb-4">
+            <label for="tokenDigIdentity2" class="block text-gray-500 dark:text-gray-300">tokenDigIdentity</label>
+            <span id="tokenDigIdentity2" class="block text-gray-700 dark:text-white"></span>
+          </div>
+          <!-- Owner -->
+          <div class="mb-4">
+            <label for="owner2" class="block text-gray-500 dark:text-gray-300">Owner</label>
+            <span id="owner2" class="block text-gray-700 dark:text-white"></span>
+          </div>
+          <!-- government -->
+          <div class="mb-4">
+            <label for="government2" class="block text-gray-500 dark:text-gray-300">Government</label>
+            <span id="government2" class="block text-gray-700 dark:text-white"></span>
+          </div>
+          <!-- Button -->
+          <button type="button" id="cancelButton2"
+            class="bg-red-500 text-white font-semibold px-4 py-2 rounded hover:bg-red-600">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+  <script>
+    document.getElementById('login').addEventListener('click', function () {
+      window.location.href = '/login';
+    });
+
+    const checkAuth = () => {
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        window.location.href = '/';
+        
+      }
+    };
+    checkAuth();
+  
+  </script>
+</body>
+
+</html>

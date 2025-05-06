@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scholar Curriculum | Creation</title>
+  <script src="/Dashscript.js"></script>
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/styleDashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <!-- Dark Mode change -->
+  <script>
+    // Tailwind Configuration
+    tailwind.config = {
+      darkMode: 'class', // Use the 'class' strategy for dark mode
+      theme: {
+        extend: {},
+      },
+    };
+
+    // Check if the user has a previously saved preference
+    document.addEventListener('DOMContentLoaded', function () {
+      const darkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+      if (darkModeEnabled) {
+        document.documentElement.classList.add('dark');
+        document.getElementById('darkModeToggle').checked = true; // Check the toggle switch
+      }
+    });
+
+    // Toggle the dark mode
+    function toggleDarkMode() {
+      const isDarkMode = document.documentElement.classList.toggle('dark');
+      if (isDarkMode) {
+        localStorage.setItem('darkMode', 'enabled'); // Save dark mode preference
+      } else {
+        localStorage.setItem('darkMode', 'disabled'); // Save light mode preference
+      }
+    }
+  </script>
+</head>
+
+<style>
+  /* Circle styling */
+  .user-circle {
+    width: 60px;
+    /* Smaller circle */
+    height: 60px;
+    /* Smaller circle */
+    border-radius: 50%;
+    background-color: rgb(255, 102, 0);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    /* Adjust font size for initials */
+    font-weight: bold;
+    margin: 10px auto;
+    position: relative;
+    cursor: pointer;
+  }
+
+  /* Tooltip styling */
+  .tooltip {
+    position: absolute;
+    top: 70px;
+    /* Position tooltip below the circle */
+    left: 25%;
+    background-color: #333;
+    color: #fff;
+    padding: 6px;
+    /* Adjust padding */
+    border-radius: 4px;
+    font-size: 12px;
+    /* Adjust font size */
+    display: none;
+    white-space: nowrap;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    /* Add a shadow for better visibility */
+  }
+
+  .user-circle:hover .tooltip {
+    display: block;
+  }
+
+  /* Access text styling */
+  .access-text {
+    text-align: center;
+    margin-top: 5px;
+    /* Reduce margin */
+    font-size: 14px;
+    /* Adjust font size */
+    font-weight: bold;
+  }
+</style>
+
+<body class="bg-gray-100 dark:bg-gray-900 dark:text-white font-sans">
+  <div class="flex">
+    <!-- Sidebar -->
+    <div class="w-64 bg-white dark:bg-gray-800 h-screen shadow-md">
+      <nav class="mt-6">
+        <ul>
+          <div id="resultSideContainer"></div>
+          <li
+            class="px-4 py-2 text-gray-200 dark:text-gray-700 hover:bg-gray-600 dark:hover:bg-gray-100 dark:bg-gray-100 bg-gray-600">
+            <button class="w-full h-8 text-left flex items-center px-4 rounded-lg" id="homeBtn">
+              Create Scholar Curriculum
+            </button>
+          </li>
+          <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
+            <button class="hidden w-full h-8 text-left flex items-center px-4 rounded-lg " id="userList">Student
+              Curriculums</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <!-- Main Content -->
+    <div class="flex-1 p-6">
+      <!-- Navbar -->
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center space-x-4">
+
+          <div id="resultSideContainer"></div>
+        </div>
+        <div class="flex items-center space-x-4">
+
+          <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"
+            id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log Out</button>
+
+
+          <!-- Toggle Switch for Dark Mode -->
+          <label class="switch">
+            <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()">
+            <span class="slider">
+              <!-- Moon Icon -->
+              <i class="fas fa-moon moon"></i>
+            </span>
+          </label>
+        </div>
+      </div>
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-bold">Create Scholar Curriculum</h1>
+          <p class="text-gray-600 dark:text-gray-400">Contracts. Please use this page
+            to create Scholar Curriculums.</p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <button id="trashbtn"
+            class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"><i
+              class="fas fa-trash"></i> Delete</button>
+          <!-- <button class="bg-blue-500 text-white hover:bg-blue-700 dark:bg-blue-700  dark:hover:bg-blue-500 p-2 rounded"
+            id="newServiceButton">New</button> -->
+        </div>
+      </div>
+
+      <div id="creat-curriculum-container" class="mt-4 ">
+        <form id="curriculum-form">
+          <div class="space-y-4">
+            <div class="mb-4">
+              <div class="mb-4">
+                <label for="studentID" class="block text-gray-700 dark:text-gray-300">Student ID</label>
+                <input type="text" id="studentID" name="studentID"
+                  class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-900 dark:text-white"
+                  placeholder="Enter token address" required>
+              </div>
+
+              <div class="mb-4">
+                <label for="BirthCertificateAddress" class="block text-gray-400 dark:text-gray-300">Birth Certificate
+                  Address</label>
+                <input type="text" id="BirthCertificateAddress" name="BirthCertificateAddress" placeholder="0x000..."
+                  class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-900 dark:text-white"
+                  placeholder="Enter contract address">
+              </div>
+
+              <div class="mb-4">
+                <label for="from" class="block text-gray-400 dark:text-gray-300">University permited address</label>
+                <input type="text" id="from" name="from"
+                  class="w-full p-2 rounded text-black bg-gray-200 dark:bg-gray-700 dark:text-white" placeholder=""
+                  readonly>
+              </div>
+
+              <button type="submit" class="w-full h-12 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Result Display Section -->
+      <div id="result" class="mt-4 p-4 border rounded-lg bg-gray-100 dark:bg-gray-800 hidden">
+        <h2 class="text-lg font-bold">Result:</h2>
+        <pre id="resultContent" class="text-gray-700 dark:text-gray-300"></pre>
+      </div>
+    </div>
+
+  </div>
+
+  </div>
+
+  <script>
+
+    const resultSideContainer = document.getElementById('resultSideContainer'); // To display results
+
+
+    const getContractAdd = async () => {
+      try {
+        // Send a POST request to the server to get the contract address
+        const response = await fetch('/api/getContractAdd', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Set content type to JSON
+          },
+          body: JSON.stringify({}), // No need to send any data
+        });
+
+        // Handle the response
+        if (!response.ok) {
+          throw new Error('Failed to retrieve contract address');
+        }
+
+        // Parse the response JSON
+        const data = await response.json();
+        return data.contractAdd; // Return the contract address
+
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while fetching contract address');
+      }
+    };
+
+    const getUserAdd = async () => {
+      try {
+
+        const email = localStorage.getItem('userEmail'); // Get the email from localStorage
+        if (!email) {
+          throw new Error('No email found in localStorage');
+        }
+
+        // Send a POST request to the server to get the user address
+        const response = await fetch('/api/getUserAdd', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Set content type to JSON
+          },
+          body: JSON.stringify({ email: email }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to retrieve user address');
+        }
+
+        // Parse the response JSON
+        const data = await response.json();
+        return data.UserAddress; // Return the user address
+
+      } catch (error) {
+        console.error('Error fetching user address:', error);
+      }
+    };
+
+    // Function to get user info
+    async function getUserInfo(contractAdd, userAddress) {
+      try {
+        const response = await fetch(`/getInfoUser?contractAdd=${encodeURIComponent(contractAdd)}&userAddress=${encodeURIComponent(userAddress)}`);
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+      } catch (error) {
+        console.error('Error getting user info:', error);
+        return null;
+      }
+    }
+
+
+
+    // Function to display user info in a table
+    function getUserTypeString(type) {
+      switch (type) {
+        case '0':
+          return 'Government';
+        case '1':
+          return 'Admin';
+        case '2':
+          return 'Educational Administrator';
+        case '10':
+          return 'User';
+        default:
+          return 'Unknown';
+      }
+    }
+
+
+    async function displayUserInfoInSideBar(userInfoDef) {
+      const userType = getUserTypeString(userInfoDef.Data.getType);
+      if (userType !== "Educational Administrator") {
+        window.location.href = '/studentPanel';
+      }
+      if (userType === "Error") {
+        console.warn("No user logged");
+      } else {
+        const email = localStorage.getItem('userEmail') || "No email";
+        const userAdd = await getUserAdd();
+        const initials = email.charAt(0).toUpperCase();
+
+        const htmlContent = `
+        <div class="user-circle">
+          <span>${initials}</span>
+          <div class="tooltip">
+            <p>Email: ${email}</p>
+            <p>${userAdd}</p>
+          </div>
+        </div>
+        <div class="access-text">
+          <p>${email}</p>
+          <p>Access: ${userType}</p>
+        </div>
+      `;
+
+        resultSideContainer.innerHTML = htmlContent;
+
+        function updateButtonsVisibility() {
+          // Comprobar el tipo de usuario
+          if (userInfoDef.Data.getType !== '2') {
+            window.location.href = '/dashboard';
+            // Ocultar botones con data-id 1 y 3
+            document.getElementById('newServiceButton')?.classList.add('hidden');
+            document.getElementById('trashbtn')?.classList.add('hidden');
+            document.getElementById('userList')?.classList.add('hidden');
+            document.querySelectorAll('[data-id="1"],[data-id="2"], [data-id="3"]').forEach(button => {
+              button.classList.add('hidden');
+            });
+          } else {
+
+            // Mostrar botones con data-id 1 y 3
+            document.getElementById('newServiceButton')?.classList.remove('hidden');
+            document.getElementById('trashbtn')?.classList.remove('hidden');
+            document.getElementById('userList')?.classList.remove('hidden');
+            document.querySelectorAll('[data-id="1"],[data-id="2"], [data-id="3"]').forEach(button => {
+              button.classList.remove('hidden');
+            });
+          }
+        }
+
+        // Ejecutar cada 2 segundos
+        setInterval(updateButtonsVisibility, 200);
+
+
+
+      }
+    }
+
+    // Add this function near your other initialization code
+    async function initializeGovernmentField() {
+      try {
+        const userAddress = await getUserAdd();
+        const governmentField = document.getElementById('from');
+
+        if (governmentField && userAddress) {
+          governmentField.value = userAddress;
+        } else {
+          console.warn('Either government field or user address not found');
+        }
+      } catch (error) {
+        console.error('Error setting government field:', error);
+      }
+    }
+
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        await initializeGovernmentField();
+        const contractAddress = await getContractAdd(); // Wait for contract address
+        const userAddress = await getUserAdd(); // Wait for user address
+
+        if (contractAddress && userAddress) {
+          const userInfoDef = await getUserInfo(contractAddress, userAddress);
+          if (userInfoDef) {
+
+            displayUserInfoInSideBar(userInfoDef); // Display the user info in the sidebar
+          } else {
+            console.error('No user info found');
+          }
+        } else {
+          console.error('Missing contract address or user address');
+        }
+      } catch (error) {
+        console.error('Error during DOMContentLoaded:', error);
+      }
+    });
+
+
+
+    const checkAuth = () => {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        // Si no está logueado, redirigir a la página de login
+        window.location.href = '/login';
+      }
+    };
+
+    // Ejecutar al cargar la página
+    checkAuth();
+
+    // Navigate buttons
+    document.getElementById('homeBtn').addEventListener('click', function () {
+      window.location.href = '/';
+    });
+
+
+    document.getElementById('userList').addEventListener('click', function () {
+      window.location.href = '/dashboard';
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', function () {
+
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
+      localStorage.removeItem('userEmail'); // Eliminar el correo guardado
+
+      // Redirigir al login
+
+      window.location.href = '/login'; // Redirect to the login page
+    });
+
+
+
+  </script>
+
+
+
+</body>
+
+</html>

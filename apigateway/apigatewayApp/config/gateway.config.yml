@@ -8,51 +8,245 @@ apiEndpoints:
     host: localhost
     paths: '/ip'
 
-  genesisidentityproof:
+  birthcertificateproof:
     host: localhost
     paths: '/proof'    
 
-  genesisidentityproofB:
+  birthcertificateproofB:
     host: '172.18.1.3'
     paths: '/proof'    
 
-  genesisidentityCreate:
+  birthcertificateCreate:
     host:  localhost
     paths: '/create' 
 
-  genesisidentityCreateB:
+  birthcertificateCreateB:
     host:  '172.18.1.3'
     paths: '/create' 
 
-  genesisidentitySetAddress:
+  birthcertificateSetAddress:
     host:  localhost
     paths: '/setAddress' 
 
-  genesisidentitySetAddressB:
+  birthcertificateSetAddressB:
     host:  '172.18.1.3'
     paths: '/setAddress' 
 
-  genesisidentityConsult:
+  birthcertificateConsult:
     host:  localhost
     paths: '/consult' 
 
-  genesisidentityConsultB:
+  birthcertificateConsultB:
     host:  '172.18.1.3'
     paths: '/consult' 
 
+  birthcertificatPrivate:
+    host:  localhost
+    paths: '/consultPrivates' 
 
-  didentityConsultField:
-    host:  d1c73e42f49e
-    paths: '/consult/field'        
+  birthcertificatPrivateB:
+    host:  '172.18.1.3'
+    paths: '/consultPrivates' 
+
+  # digital identity services
+
+  #Create
+  didentityCreate:
+    host:  localhost
+    paths: '/createDigitalIdentity'    
+
+  didentityCreateB:
+    host:  '172.18.1.3'
+    paths: '/createDigitalIdentity'        
+
+
+  #LinkToken
+  didentitylinkToken:
+    host:  localhost
+    paths: '/linkToken'    
+
+  didentitylinkTokenB:
+    host:  '172.18.1.3'
+    paths: '/linkToken'       
+
+
+
+  #Consult token name 
+  didentityconsultTokens:
+    host:  localhost
+    paths: '/consultTokens'    
+
+  didentityconsultTokensB:
+    host:  '172.18.1.3'
+    paths: '/consultTokens'       
+
+
+
+  #consult token government
+  didentityconsultTokenCreator:
+    host:  localhost
+    paths: '/consultTokenCreator'    
+
+  didentityconsultTokenCreatorB:
+    host:  '172.18.1.3'
+    paths: '/consultTokenCreator'      
+
+
+  #consult token government
+  didentityconsultCreatorIsGovernment:
+    host:  localhost
+    paths: '/consultCreatorIsGovernment'    
+
+  didentityconsultCreatorIsGovernmentB:
+    host:  '172.18.1.3'
+    paths: '/consultCreatorIsGovernment'      
+
+
+  #consult number of tokens
+  didentityconsultNumberToken:
+    host:  localhost
+    paths: '/consultNumberToken'    
+
+  didentityconsultNumberTokenB:
+    host:  '172.18.1.3'
+    paths: '/consultNumberToken'    
+
+  #consult parameters of digital contructor
+  didentityConsult:
+    host:  localhost
+    paths: '/consultDigitalIdentity'    
+
+  didentityConsultB:
+    host:  '172.18.1.3'
+    paths: '/consultDigitalIdentity'  
+
+  #proof method
+  didentityProof:
+    host:  localhost
+    paths: '/proofd'    
+
+  didentityProofB:
+    host:  '172.18.1.3'
+    paths: '/proofd'  
+
+
+
+
+# users services
+
+  #Create
+  usersCreate:
+    host:  localhost
+    paths: '/createUser'    
+
+  usersCreateB:
+    host:  '172.18.1.3'
+    paths: '/createUser'    
+
+  #Consult
+  usersConsult:
+    host:  localhost
+    paths: '/consultuser'    
+
+  usersConsultB:
+    host:  '172.18.1.3'
+    paths: '/consultuser'  
+  
+
+  #Consult info
+  usersGetInfo:
+    host:  localhost
+    paths: '/getInfoUser'    
+
+  usersGetInfoB:
+    host:  '172.18.1.3'
+    paths: '/getInfoUser' 
+
+
+  #RegisterUsers
+  usersRegister:
+    host:  localhost
+    paths: '/registerUser'    
+
+  usersRegisterB:
+    host:  '172.18.1.3'
+    paths: '/registerUser'  
+
+
+  #Proof
+  usersProof:
+    host:  localhost
+    paths: '/proofu'    
+
+  usersProofB:
+    host:  '172.18.1.3'
+    paths: '/proofu'  
+
+
+# Scholar Curriculum services
+
+  #Proof
+  scholarcurriculumProof:
+    host:  localhost
+    paths: '/proofsc'    
+
+  scholarcurriculumProofB:
+    host:  '172.18.1.3'
+    paths: '/proofsc'
+
+  #Create curriculum
+  scholarcurriculumCreate:
+    host:  localhost
+    paths: '/createCurriculum'    
+
+  scholarcurriculumCreateB:
+    host:  '172.18.1.3'
+    paths: '/createCurriculum'
+
+
+  #Add achievement to curriculum
+  scholarcurriculumaddAchievement:
+    host:  localhost
+    paths: '/addAchievement'    
+
+  scholarcurriculumaddAchievementB:
+    host:  '172.18.1.3'
+    paths: '/addAchievement'
+
+  #Consult achievement to curriculum
+  scholarcurriculumconsultCertificate:
+    host:  localhost
+    paths: '/consultCertificate'    
+
+  scholarcurriculumconsultCertificateB:
+    host:  '172.18.1.3'
+    paths: '/consultCertificate'
+
+  #Get nomber of achievement in curriculum
+  scholarcurriculumnumberOfAchievements:
+    host:  localhost
+    paths: '/numberOfAchievements'    
+
+  scholarcurriculumnumberOfAchievementsB:
+    host:  '172.18.1.3'
+    paths: '/numberOfAchievements'
+
+
 
 serviceEndpoints:
   httpbin:
     url: 'https://httpbin.org'
 
-  didentity:
-    url: 'http://172.18.1.3:5502'
+  scholarcurriculum:
+    url: 'http://172.18.1.7:5504'
 
-  genesisidentity:
+  users:
+    url: 'http://172.18.1.6:5503'
+
+  didentity:
+    url: 'http://172.18.1.5:5502'
+
+  birthcertificate:
     url: 'http://172.18.1.4:5501'   #this is the name of the host   
 
 policies:
@@ -77,31 +271,90 @@ pipelines:
               changeOrigin: true
   genesisPipeline:
     apiEndpoints:
-      - genesisidentityproof
-      - genesisidentityCreate
-      - genesisidentityConsult
-      - genesisidentitySetAddress
-      - genesisidentityproofB
-      - genesisidentityCreateB
-      - genesisidentityConsultB
-      - genesisidentitySetAddressB
+      - birthcertificateproof
+      - birthcertificateCreate
+      - birthcertificateConsult
+      - birthcertificateSetAddress
+      - birthcertificateproofB
+      - birthcertificateCreateB
+      - birthcertificateConsultB
+      - birthcertificateSetAddressB
+      - birthcertificatPrivate
+      - birthcertificatPrivateB      
 
     policies:
     # Uncomment `key-auth:` when instructed to in the Getting Started guide.
     # - key-auth:
       - proxy:
           - action:
-              serviceEndpoint: genesisidentity 
+              serviceEndpoint: birthcertificate 
               changeOrigin: true
 
   didentityPipeline:
     apiEndpoints:      
-      - didentityConsultField      
+      - didentityCreate   
+      - didentityCreateB  
+      - didentitylinkToken
+      - didentitylinkTokenB  
+      - didentityconsultTokens
+      - didentityconsultTokensB
+      - didentityconsultTokenCreator
+      - didentityconsultTokenCreatorB
+      - didentityconsultCreatorIsGovernment
+      - didentityconsultCreatorIsGovernmentB
+      - didentityconsultNumberToken
+      - didentityconsultNumberTokenB
+      - didentityConsult
+      - didentityConsultB
+      - didentityProof
+      - didentityProofB
     policies:
     # Uncomment `key-auth:` when instructed to in the Getting Started guide.
     # - key-auth:
       - proxy:
           - action:
               serviceEndpoint: didentity 
+              changeOrigin: true
+
+  usersPipeline:
+    apiEndpoints:      
+      - usersCreate
+      - usersCreateB
+      - usersConsult
+      - usersConsultB
+      - usersGetInfo
+      - usersGetInfoB
+      - usersRegister
+      - usersRegisterB
+      - usersProof
+      - usersProofB
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: users 
+              changeOrigin: true
+
+
+  scholarcurriculumPipeline:
+    apiEndpoints:      
+      - scholarcurriculumProof
+      - scholarcurriculumProofB
+      - scholarcurriculumCreate
+      - scholarcurriculumCreateB
+      - scholarcurriculumaddAchievement
+      - scholarcurriculumaddAchievementB
+      - scholarcurriculumconsultCertificate
+      - scholarcurriculumconsultCertificateB
+      - scholarcurriculumnumberOfAchievements
+      - scholarcurriculumnumberOfAchievementsB
+      
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: scholarcurriculum 
               changeOrigin: true
 

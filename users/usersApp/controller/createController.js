@@ -3,16 +3,11 @@ var utilities = require('./utilities');
 var initializer = {};
 
 
-async function createGIdentitySC(req) {
+async function createUsersGovernSC(req) {
 
-	contractABI = utilities.getContainFileJSON(contractABIPath);	//contractABIPath is a global variable	
-	//contractJSONCode = utilities.getContainFile(contractJSONPath); //contractJSONPath  is a global variable
-	//contractByteCodeObj = utilities.getContainFile(contractABIPath); //contractByteCodeSource  is a global variable	
-	contractByteCodeObj = utilities.getContainFile(contractByteCodeSource); //contractByteCodeSource  is a global variable	
-	//console.log(contractByteCodeObj);
-	//contractByteCodeObj = contractJSONCode.object;	
+	contractABI = utilities.getContainFileJSON(contractABIPath);	
+	contractByteCodeObj = utilities.getContainFile(contractByteCodeSource); 
 	const gas = req.body.gas;
-	const email = req.body.email;
 	const from = req.body.from;
 	var y = "";
 	try {
@@ -34,7 +29,7 @@ async function createGIdentitySC(req) {
 				const userContract = new web3.eth.Contract(contractABI);
 				console.log("Entró3: " + from);
 				const nonce = await web3.eth.getTransactionCount(from);
-				const contractAnswer = await userContract.deploy({ data: contractByteCodeObj, arguments: [email] }).send(
+				const contractAnswer = await userContract.deploy({ data: contractByteCodeObj }).send(
 					{ from: from, gas: gas, gasLimit: "6721975", gasPrice: "20000000000", nonce: nonce }).on('receipt', function (receipt) {
 						console.log("Entró4: " + from);
 						//from = from.toUpperCase();
@@ -108,9 +103,8 @@ async function createGIdentitySC(req) {
 }
 
 
-initializer.createGIdentity = async function (req, res) {
+initializer.createUsersGovern = async function (req, res) {
 	const gas = req.body.gas;
-	const email = req.body.email;
 	const from = req.body.government;
 	console.log("Request from: " + from);
 	var resul = { "Result": "Success" };
@@ -119,7 +113,6 @@ initializer.createGIdentity = async function (req, res) {
 		body:
 		{
 			gas: gas,
-			email: email,
 			from: from
 		}
 	};
@@ -134,7 +127,7 @@ initializer.createGIdentity = async function (req, res) {
 	} else {
 		console.log("Processing request from: " + from);
 		try {
-			const response = await createGIdentitySC(obj).then(resul => {
+			const response = await createUsersGovernSC(obj).then(resul => {
 				let resHE = errorControl.handlingErrorOrNot(resul, from);
 				return resHE;
 			}).catch((e) => {

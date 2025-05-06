@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Users | Register New User</title>
+  <script src="/Dashscript.js"></script>
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/styleDashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <!-- Dark Mode change -->
+  <script>
+    // Tailwind Configuration
+    tailwind.config = {
+      darkMode: 'class', // Use the 'class' strategy for dark mode
+      theme: {
+        extend: {},
+      },
+    };
+
+    // Check if the user has a previously saved preference
+    document.addEventListener('DOMContentLoaded', function () {
+      const darkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+      if (darkModeEnabled) {
+        document.documentElement.classList.add('dark');
+        document.getElementById('darkModeToggle').checked = true; // Check the toggle switch
+      }
+    });
+
+    // Toggle the dark mode
+    function toggleDarkMode() {
+      const isDarkMode = document.documentElement.classList.toggle('dark');
+      if (isDarkMode) {
+        localStorage.setItem('darkMode', 'enabled'); // Save dark mode preference
+      } else {
+        localStorage.setItem('darkMode', 'disabled'); // Save light mode preference
+      }
+    }
+  </script>
+
+
+
+</head>
+
+<style>
+  /* Circle styling */
+  .user-circle {
+    width: 60px;
+    /* Smaller circle */
+    height: 60px;
+    /* Smaller circle */
+    border-radius: 50%;
+    background-color: rgb(255, 102, 0);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    /* Adjust font size for initials */
+    font-weight: bold;
+    margin: 10px auto;
+    position: relative;
+    cursor: pointer;
+  }
+
+  /* Tooltip styling */
+  .tooltip {
+    position: absolute;
+    top: 70px;
+    /* Position tooltip below the circle */
+    left: 150%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 6px;
+    /* Adjust padding */
+    border-radius: 4px;
+    font-size: 12px;
+    /* Adjust font size */
+    display: none;
+    white-space: nowrap;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    /* Add a shadow for better visibility */
+  }
+
+  .user-circle:hover .tooltip {
+    display: block;
+  }
+
+  /* Access text styling */
+  .access-text {
+    text-align: center;
+    margin-top: 5px;
+    /* Reduce margin */
+    font-size: 14px;
+    /* Adjust font size */
+    font-weight: bold;
+  }
+
+  #overlay {
+    display: none;
+    /* Initially hidden */
+  }
+</style>
+
+<body class="bg-gray-100 dark:bg-gray-900 dark:text-white font-sans">
+  <div id="overlay" class="hidden fixed inset-0 bg-gray-500 bg-opacity-50 z-50"></div>
+  <div class="flex">
+    <!-- Sidebar -->
+    <div class="w-64 bg-white dark:bg-gray-800 h-screen shadow-md">
+      <nav class="mt-6">
+        <ul>
+          <div id="resultSideContainer"></div>
+          <li
+            class="px-4 py-2 text-gray-200 dark:text-gray-700 hover:bg-gray-600 dark:hover:bg-gray-100 dark:bg-gray-100 bg-gray-600">
+            <button class="w-full h-8 text-left flex items-center px-4 rounded-lg " id="linkTok">
+              Register user
+            </button>
+          </li>
+          <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
+            <button
+              class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
+              id="homeBtn">
+              Users consult information
+            </button>
+          </li>
+          <li class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">
+            <button
+              class="w-full h-8 text-left flex items-center px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
+              id="userList">User List</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-6">
+      <!-- Navbar -->
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-2xl font-bold">Register new users</h1>
+            <p class="text-gray-600 dark:text-gray-400">Please fill in the following details:</p>
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+
+          <button class="bg-gray-200 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-800 p-2 rounded"
+            id="logoutBtn"><i class="fas fa-sign-out-alt"></i> LogOut</button>
+
+
+
+          <!-- Toggle Switch for Dark Mode -->
+          <label class="switch">
+            <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()">
+            <span class="slider">
+              <!-- Moon Icon -->
+              <i class="fas fa-moon moon"></i>
+            </span>
+          </label>
+        </div>
+      </div>
+      <div>
+
+
+        <div class="mt-4">
+          <form id="RegisterForm">
+            <div class="mb-4">
+              <label for="email" class="block dark:text-gray-400 mb-2 text-gray-600">Email</label>
+              <input type="email" id="email"
+                class="w-full p-2 rounded text-black bg-gray-200 dark:bg-gray-700 dark:text-white" placeholder="Email"
+                required>
+            </div>
+            <div class="mb-4">
+              <label for="password" class="block dark:text-white mb-2 text-gray-600">Password</label>
+              <input type="text" id="password" minlength="8" maxlength="18" required
+                class="w-full p-2 rounded text-black bg-gray-200 dark:bg-gray-700 dark:text-white">
+            </div>
+            <div class="mb-4">
+              <label for="userAddress" class="block dark:text-gray-400 mb-2 text-gray-600">User Address</label>
+              <input type="text" id="userAddress"
+                class="w-full p-2 rounded text-black bg-gray-200 dark:bg-gray-700 dark:text-white"
+                placeholder=" Address (0x...)" required>
+            </div>
+            <div class="mb-4">
+              <label for="userType" class="block dark:text-gray-400 mb-2 text-gray-600">User Type</label>
+              <select id="userType" class="w-full p-2 rounded text-black bg-gray-200 dark:bg-gray-700 dark:text-white"
+                required>
+                <!-- This will dynamically update the options based on the user type -->
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label for="government" class="block dark:text-gray-400 mb-2 text-gray-600">Creator Address</label>
+              <input type="text" id="government"
+                class="w-full p-2 rounded text-black bg-gray-200 dark:bg-gray-700 dark:text-white" placeholder=""
+                disabled>
+            </div>
+            <div class="flex items-center justify-between mb-6">
+              <button type="submit"
+                class="w-full bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-600 p-2 rounded">
+                Register User
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Result Display Section -->
+        <div id="result" class="mt-4 p-4 border rounded-lg bg-gray-100 dark:bg-gray-800 hidden">
+          <h2 class="text-lg font-bold">Result:</h2>
+          <pre id="resultContent" class="text-gray-700 dark:text-gray-300"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </div>
+
+  <script>
+    const resultSideContainer = document.getElementById('resultSideContainer'); // To display results
+    const getContractAdd = async () => {
+      try {
+        // Send a POST request to the server to get the contract address
+        const response = await fetch('/api/getContractAdd', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Set content type to JSON
+          },
+          body: JSON.stringify({}), // No need to send any data
+        });
+        // Handle the response
+        if (!response.ok) {
+          throw new Error('Failed to retrieve contract address');
+        }
+        // Parse the response JSON
+        const data = await response.json();
+        return data.contractAdd; // Return the contract address
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while fetching contract address');
+      }
+    };
+    const getUserAdd = async () => {
+      try {
+        const email = localStorage.getItem('userEmail'); // Get the email from localStorage
+        if (!email) {
+          throw new Error('No email found in localStorage');
+        }
+        // Send a POST request to the server to get the user address
+        const response = await fetch('/api/getUserAdd', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Set content type to JSON
+          },
+          body: JSON.stringify({ email: email }),
+        });
+        if (!response.ok) {
+          throw new Error('Failed to retrieve user address');
+        }
+        // Parse the response JSON
+        const data = await response.json();
+        return data.UserAddress; // Return the user address
+
+      } catch (error) {
+        console.error('Error fetching user address:', error);
+      }
+    };
+    // Function to get user info
+    async function getUserInfo(contractAdd, userAddress) {
+      try {
+        const response = await fetch(`/getInfoUser?contractAdd=${encodeURIComponent(contractAdd)}&userAddress=${encodeURIComponent(userAddress)}`);
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return await response.json();
+      } catch (error) {
+        console.error('Error getting user info:', error);
+        return null;
+      }
+    }
+    // Modified updateUserType function to handle async operations
+    async function updateUserType() {
+      try {
+        // Get the necessary addresses first
+        const contractAdd = await getContractAdd();
+        const userAdd = await getUserAdd();
+
+        if (!contractAdd || !userAdd) {
+          console.warn("Missing contract or user address");
+          return;
+        }
+        // Get user info with the required parameters
+        const userInfo = await getUserInfo(contractAdd, userAdd);
+        const userTypeSelect = document.getElementById("userType");
+
+        if (!userTypeSelect) {
+          console.warn("User type select element not found");
+          return;
+        }
+
+        if (userInfo && userInfo.Data) {
+          // Clear current options
+          userTypeSelect.innerHTML = '';
+          // Depending on the user type, set the options
+          switch (userInfo.Data.getType) {
+            case '0':
+              userTypeSelect.innerHTML = `
+            <option value="0">Government</option>
+            <option value="1">Admin</option>
+            <option value="10">User</option>
+            <option value="2">Educational Administrator</option>
+          `;
+              break;
+            case '1':
+              userTypeSelect.innerHTML = `
+            <option value="1">Admin</option>
+            <option value="10">User</option>
+            <option value="2">Educational Administrator</option>
+          `;
+              break;
+            case '10':
+              window.location.href = "/";
+              break;
+            default:
+              console.warn("Unknown user type:", userInfo.Data.getType);
+          }
+        } else {
+          console.warn("No user info found");
+        }
+      } catch (error) {
+        console.error("Error updating user type:", error);
+      }
+    }
+
+    function getUserTypeString(type) {
+      switch (type) {
+        case '0':
+          return 'Government';
+        case '1':
+          return 'Admin';
+        case '2':
+          return 'Educational Administrator';
+        case '10':
+          return 'User';
+        default:
+          return 'Unknown';
+      }
+    }
+
+    async function displayUserInfoInSideBar(userInfoDef) {
+      const userType = getUserTypeString(userInfoDef.Data.getType);
+
+      if (userType === "Error") {
+      } else {
+        const email = localStorage.getItem('userEmail') || "No email";
+
+        const userAdd = await getUserAdd();
+
+
+
+        // Generate initials
+        const initials = email.charAt(0).toUpperCase();
+
+        // Generate HTML
+        const htmlContent = `
+        <div class="user-circle">
+          <span>${initials}</span>
+          <div class="tooltip">
+            <p>Email: ${email}</p>
+            <p>${userAdd}</p>
+          </div>
+        </div>
+        <div class="access-text">
+          <p>${email}</p>
+          <p>Access: ${userType}</p>
+        </div>
+      `;
+
+        // Insert HTML into the container
+        resultSideContainer.innerHTML = htmlContent;
+
+        const registerUserBtn = document.getElementById('registerUserBtn');
+        if (userType !== "Government" && userType !== "Admin" && registerUserBtn) {
+          registerUserBtn.classList.add('hidden');
+        }
+      }
+    }
+
+
+
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const contractAddress = await getContractAdd(); // Wait for contract address
+        const userAddress = await getUserAdd(); // Wait for user address
+
+        if (contractAddress && userAddress) {
+          const userInfoDef = await getUserInfo(contractAddress, userAddress);
+          if (userInfoDef) {
+            displayUserInfoInSideBar(userInfoDef); // Display the user info in the sidebar
+          } else {
+            console.error('No user info found');
+          }
+        } else {
+          console.error('Missing contract address or user address');
+        }
+      } catch (error) {
+        console.error('Error during DOMContentLoaded:', error);
+      }
+    });
+
+
+    // Add this function near your other initialization code
+    async function initializeGovernmentField() {
+      try {
+        const userAddress = await getUserAdd();
+        const governmentField = document.getElementById('government');
+
+        if (governmentField && userAddress) {
+          governmentField.value = userAddress;
+          console.warn('Set government field to:', userAddress);
+        } else {
+          console.warn('Either government field or user address not found');
+        }
+      } catch (error) {
+        console.error('Error setting government field:', error);
+      }
+    }
+
+    // Modified DOMContentLoaded event listener to include updateUserType
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        // Initialize the government field
+        await initializeGovernmentField();
+
+        // Update user type
+        await updateUserType();
+
+        // Continue with other initialization if needed
+        const contractAddress = await getContractAdd();
+        const userAddress = await getUserAdd();
+
+        if (contractAddress && userAddress) {
+          const userInfoDef = await getUserInfo(contractAddress, userAddress);
+          if (userInfoDef) {
+            displayUserInfoInSideBar(userInfoDef);
+          }
+        }
+      } catch (error) {
+        console.error('Error during initialization:', error);
+      }
+    });
+
+    document.getElementById('homeBtn').addEventListener('click', function () {
+      window.location.href = '/';
+    });
+    document.getElementById('linkTok').addEventListener('click', function () {
+      window.location.href = '/dashboard'; // Navigate to the dashboard page
+    });
+    document.getElementById('userList').addEventListener('click', function () {
+      window.location.href = '/users';
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', function () {
+
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
+      localStorage.removeItem('userEmail');
+
+      // Redirigir al login
+
+      window.location.href = '/login'; // Redirect to the login page
+    });
+
+  </script>
+  <script>
+    document.getElementById("password").addEventListener("input", function () {
+      if (this.value.length < 8 || this.value.length > 18) {
+        this.setCustomValidity("Password must be between 8 and 18 characters.");
+      } else {
+        this.setCustomValidity("");
+      }
+    });
+  </script>
+
+
+  <script>
+    document.getElementById('RegisterForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      document.getElementById('overlay').style.display = 'block'; // Show overlay
+
+      try {
+        try {
+          // Fetch data from the backend API
+          const response = await fetch('/api/getAllEmails');
+          if (!response.ok) {
+            throw new Error('Failed to fetch data from the server');
+          }
+
+          const data = await response.json();
+
+          // Extract email data from the response
+          const emails = data.emails || [];
+          // if document.getElementById('email').value is in emails then return
+          if (emails.includes(document.getElementById('email').value)) {
+            alert('Email already exists');
+            document.getElementById('overlay').style.display = 'none'; // Hide overlay
+            return;
+          }
+          else {
+
+            // Wait for the contract address
+            const contractAdd = await getContractAdd();
+
+            // Prepare the data for registration
+            const createData = {
+              gas: 3000000,
+              contractAdd: contractAdd, // Use the fetched contract address
+              publicMethod: "registerUser",
+              userAddress: document.getElementById('userAddress').value,
+              userType: document.getElementById('userType').value,
+              government: document.getElementById('government').value,
+            };
+            // Send the registration request
+            const response = await fetch('/registerUser', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(createData)
+            });
+
+            const result = await response.json();
+            if (result.hasOwnProperty('Result') && result.Result !== "Error") {
+              if (result.Result == "Success") {
+                const formData = {
+                  email: document.getElementById('email').value,
+                  password: document.getElementById('password').value
+                  , UserAddress: document.getElementById('userAddress').value,
+                  Type: " ",
+                  contractAdd: " "
+                };
+                try {
+                  const response = await fetch('/api/registerUser2', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                  });
+                  if (response.ok) {
+                    const contractAddress = await getContractAdd();
+                    const userInfo = await getUserInfo(contractAddress, formData.UserAddress);
+                    await registerCertificate(userInfo.Data.getDigIdentityAdd);
+                    alert('User registered successfully');
+                    document.getElementById('overlay').style.display = 'none';
+                    window.location.href = '/users';
+
+                  } else {
+                    const error = await response.json();
+                    alert(error.message);
+                  }
+                } catch (error) {
+                  console.error('Error:', error);
+                  alert('Registration failed');
+                }
+                document.getElementById('overlay').style.display = 'none';
+              }
+            }
+            else {
+              alert('Invalid Input');
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching emails:', error);
+
+
+        }
+
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    });
+
+    async function registerCertificate(certificateString) {
+      try {
+        const response = await fetch('/api/registerDigitalIdentity', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ certificateString })
+        });
+        // Await the response.json() to get the actual result
+        const result = await response.json();
+        if (response.ok) {
+          console.warn("Certificate successfully added:", certificateString);
+        } else {
+          console.error("Error adding certificate:", result.message);
+        }
+      } catch (error) {
+        console.error("Error in API call:", error);
+      }
+    }
+
+    const checkAuth = () => {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        // Si no está logueado, redirigir a la página de login
+        window.location.href = '/login';
+      }
+    };
+
+    // Ejecutar al cargar la página
+    checkAuth();
+  </script>
+  <script>
+    // Function to generate a random password
+    function generatePassword() {
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?';
+      let password = '';
+      const passwordLength = 16; // Set the desired password length
+
+      for (let i = 0; i < passwordLength; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        password += characters[randomIndex];
+      }
+      return password; // Return the generated password
+    }
+
+    // Set the password value when the page loads
+    window.onload = function () {
+      const passwordInput = document.getElementById('password');
+      passwordInput.value = generatePassword(); // Assign generated password
+    };
+  </script>
+</body>
+
+</html>

@@ -8,7 +8,8 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var createRouter = require('./routes/create');
 var consult = require('./routes/consult');
-var setAddress = require('./routes/setAddress');
+var getInfo = require('./routes/getInfo');
+var registerUser = require('./routes/registerUser');
 var proof = require('./routes/proof');
 
 var app = express();
@@ -31,10 +32,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/create', createRouter);
-app.use('/consult', consult);
-app.use('/setAddress', setAddress);
-app.use('/proof', proof);
+app.use('/createUser', createRouter);
+app.use('/consultuser', consult);
+app.use('/getInfoUser', getInfo);
+app.use('/registerUser', registerUser);
+app.use('/proofu', proof);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
