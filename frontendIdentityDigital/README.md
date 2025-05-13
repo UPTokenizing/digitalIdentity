@@ -49,13 +49,11 @@
       sudo npm update
   
   
-  Also you nedd to install nodemon and axios:
+  Also you nedd to install nodemon and extra dependecies:
       
      sudo npm install nodemon
 
-     sudo npm install axios
-
-     sudo npm install firebase
+     sudo npm install axios dotenv bcrypt jsonwebtoken mysql2
 
   Change permissions:
       
