@@ -128,7 +128,7 @@ Before proceeding to step 8 of the installation instructions, it's necessary to 
    JWT_SECRET=your_secure_secret_key_here
    ```
 
-   > **NOTE:** The MySQL container should start running before the *`scholarCurriculum`* container.
+   > **NOTE:** The MySQL container should start running after the *`scholarCurriculum`* container.
 
 ## Install
   Install the following instructions: 
