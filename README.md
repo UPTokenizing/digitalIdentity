@@ -99,6 +99,16 @@ Follow these steps to configure your AWS environment:
 6. **Install Project on EC2**  
    SSH into your instance and follow the installation guide in the Install Section.
 
+7. **Connect MySQL with the frontend**  
+   For the database to connect directly with the frontend, create a `.env` file in the root folder of your project (the same directory where the server.js file is located) with the following settings as an example:
+   ```env
+   DB_HOST=tokphy-mysql.xxxxxxxxxx.us-east-2.rds.amazonaws.com
+   DB_USER=root
+   DB_PASSWORD=root_pw123
+   DB_NAME=digital_identity
+   JWT_SECRET=your_secure_secret_key_here
+   ```
+   > **NOTE:** The secret key is a session token.
 
 # Local Setup
 
@@ -111,7 +121,7 @@ Before proceeding to step 8 of the installation instructions, it's necessary to 
    ```
 
 2. **Connect MySQL with the frontend**  
-   For the database to connect directly with the frontend, create a `.env` file in the root folder of your project (the same directory where the server.js file is located) with the following settings:
+   For the database to connect directly with the frontend, create a `.env` file in the root folder of your project (the same directory where the server.js file is located) with the following settings based on the past example:
    ```env
    DB_HOST=tokphy-mysql
    DB_USER=tokuser
@@ -119,20 +129,20 @@ Before proceeding to step 8 of the installation instructions, it's necessary to 
    DB_NAME=tokphydb
    JWT_SECRET=your_secure_secret_key_here
    ```
-
+   > **NOTE:** The secret key is a session token.
    > **NOTE:** The MySQL container should start running after the *`scholarCurriculum`* container.
 
 ## Install
-  Install the following instructions. **The project should have already been cloned from git**
+  Follow the following instructions. **The project should have already been cloned from git**
 
   1. First, install docker, a guide for that visit [docker install](https://docs.docker.com/engine/install/).   
-  2. Install Ganache: follow the instructions explained in file README.md within folder [ganache/](https://github.com/UPTokenizing/digitalIdentity/tree/main/ganache).
-  3. Then, install API-Gateway, follow the instructions explained in file README.md within folder [apigateway/](https://github.com/UPTokenizing/digitalIdentity/tree/main/apigateway).
-  4. Next, install BirthCertificate, follow the instructions explained in file README.md within folder [birthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/birthCertificate).
-  5. Next, install DigitalIdentity, follow the instructions explained in file README.md within folder [digitalIdentity/](https://github.com/UPTokenizing/digitalIdentity/tree/main/digitalIdentity).
-  6. After that, install Users module, follow the instructions explained in file README.md within folder [users/](https://github.com/UPTokenizing/digitalIdentity/tree/main/users).
-  7. Then, install ScholarCurriculum, follow the instructions explained in file README.md within folder [scholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/scholarCurriculum).
-  8. Lastly, install the frontend applications, follow the instructions explained in file README.md within the folders [frontendBirthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendBirthCertificate), [frontendIdentityDigital/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital), [frontendUsersInteface/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendUsersInteface), and [frontendScholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendScholarCurriculum).
+  2. Install Ganache: follow the instructions explained in the file README.md within the folder [ganache/](https://github.com/UPTokenizing/digitalIdentity/tree/main/ganache).
+  3. Then, install API-Gateway, follow the instructions explained in the file README.md within the folder [apigateway/](https://github.com/UPTokenizing/digitalIdentity/tree/main/apigateway).
+  4. Next, install BirthCertificate, follow the instructions explained in the file README.md within the folder [birthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/birthCertificate).
+  5. Next, install DigitalIdentity, follow the instructions explained in the file README.md within the folder [digitalIdentity/](https://github.com/UPTokenizing/digitalIdentity/tree/main/digitalIdentity).
+  6. After that, install Users module, follow the instructions explained in the file README.md within the folder [users/](https://github.com/UPTokenizing/digitalIdentity/tree/main/users).
+  7. Then, install ScholarCurriculum, follow the instructions explained in the file README.md within the folder [scholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/scholarCurriculum).
+  8. Lastly, install the frontend applications, follow the instructions explained in the file README.md within the folders [frontendBirthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendBirthCertificate), [frontendIdentityDigital/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital), [frontendUsersInteface/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendUsersInteface), and [frontendScholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendScholarCurriculum).
 
 The next table illustrates the platforms that were already installed and tested the proofs successfully:
 
@@ -148,7 +158,7 @@ Ubuntu 24.04 LTS(AWS)| Amazon Web Service, m5.large, 2 vCPUs, 8GB RAM, 18GB SSD,
 
 
 ## Deployment
-  Execute orderly the following instructions:    
+  Execute the following instructions:    
   1. Follow the **Deployment** instructions explained in file README.md within folder [ganache/](https://github.com/UPTokenizing/digitalIdentity/tree/main/ganache).
   2. Then, follow the **Deployment** instructions explained in file README.md within folder [apigateway/](https://github.com/UPTokenizing/digitalIdentity/tree/main/apigateway).
   3. Next, follow the **Deployment** instructions explained in file README.md within folder [birthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/birthCertificate).
