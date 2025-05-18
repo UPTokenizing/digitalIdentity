@@ -1,4 +1,4 @@
-# Birth Certificate Microservice
+# Scholar Curriculum Microservice
 ## General description
   This application contains all services to store information in the Blockchain to the system called birth Certificate. This offers a solution using a microservice architecture.
 
