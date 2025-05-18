@@ -123,7 +123,7 @@ Before proceeding to step 8 of the installation instructions, it's necessary to 
    > **NOTE:** The MySQL container should start running after the *`scholarCurriculum`* container.
 
 ## Install
-  Install the following instructions: 
+  Install the following instructions. **The project should have already been cloned from git**
 
   1. First, install docker, a guide for that visit [docker install](https://docs.docker.com/engine/install/).   
   2. Install Ganache: follow the instructions explained in file README.md within folder [ganache/](https://github.com/UPTokenizing/digitalIdentity/tree/main/ganache).
