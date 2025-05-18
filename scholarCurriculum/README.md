@@ -37,7 +37,7 @@
 
   Then, go to the ubuntu instance path:
       
-      cd /scholarcurriculum/scholarcurriculumApp
+      cd /scholarcurriculum/scholarCurriculumApp
 
   You must update some package lists before installing npm:
       sudo apt-get update
