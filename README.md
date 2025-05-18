@@ -1,19 +1,19 @@
 # DigitalIdentity: Architecture for a digital identity ecosystem based on blockchain
-This repository will have all projects about digitizing physical objects and linking it with a person, and setting it up on Amazon Web Services (AWS)
+This repository will have all projects about digitizing physical objects, linking them with a person, and setting them up either on [Amazon Web Services (AWS)](https://github.com/UPTokenizing/digitalIdentity?tab=readme-ov-file#aws-setup) or a [local machine](https://github.com/UPTokenizing/digitalIdentity?tab=readme-ov-file#local-setup).
 
 ## General description
   This is an architecture containing the following parts: 
   - An API-Gateway service;
-  - A blockchain server access. This uses Ganache program (application part of Truffle Suite).
-  - EC2 intance (AWS).
-  - RDS MySQL data base.
+  - A blockchain server access. This uses the Ganache program (application part of the Truffle Suite).
+  - MySQL database.
   - Birth certificate.
   - Digital identity.
   - Scholar Curriculum for Universidad Panamericana.
   - User system. 
+  - EC2 instance (AWS).
 
 ## Folders
-  It is composed by the following folders:
+  It is composed of the following folders:
 
   - ganache/
   - apigateway/
@@ -104,13 +104,31 @@ Follow these steps to configure your AWS environment:
    ```
    ***Make sure the path mysql/schema.sql matches the location of the schema file relative to where you are running the command.***
 
-
-
-   
-
 6. **Install Project on EC2**  
    SSH into your instance and follow the installation guide in the Install Section.
 
+
+# Local Setup
+
+Before proceeding to step 8 of the installation instructions, it's necessary to create a MySQL container where the database will be connected. Follow these steps:
+
+1. **Create the MySQL container**  
+   In the following command, you'll need to customize the `--name`, `MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE`, `MYSQL_USER`, and `MYSQL_PASSWORD` values. The last two parameters contain the login information for MySQL, and `MYSQL_DATABASE` is where the database name is assigned.
+   ```bash
+   docker run -d --name tokphy-mysql --network TokPhyAppNetwork -e MYSQL_ROOT_PASSWORD=root_pw123 -e MYSQL_DATABASE=tokphydb -e MYSQL_USER=tokuser -e MYSQL_PASSWORD=user_pw123 -p 3306:3306 mysql:8
+   ```
+
+2. **Connect MySQL with the frontend**  
+   For the database to connect directly with the frontend, create a `.env` file in the root folder of your project (the same directory where the server.js file is located) with the following settings:
+   ```env
+   DB_HOST=tokphy-mysql
+   DB_USER=tokuser
+   DB_PASSWORD=user_pw123
+   DB_NAME=tokphydb
+   JWT_SECRET=your_secure_secret_key_here
+   ```
+
+   > **NOTE:** The MySQL container should start running before the *`scholarCurriculum`* container.
 
 ## Install
   Install the following instructions: 
