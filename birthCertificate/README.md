@@ -37,7 +37,7 @@
 
   Then, go to the ubuntu instance path:
       
-      cd /birthcertificate/birthcertificateApp
+      cd /birthcertificate/birthCertificateApp
 
   You must update some package lists before installing npm:
       sudo apt-get update
