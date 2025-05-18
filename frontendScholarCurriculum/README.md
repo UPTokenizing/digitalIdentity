@@ -3,7 +3,7 @@
   This application is the Front-End for the digital identity project. This offers a solution to have a interactive interface.
 
 ## Pre-requirements
-  Althouth it should have been installed previously. Check if you have the network created:
+  Although it should have been installed previously. Check if you have the network created:
 
     
       docker network inspect TokPhyAppNetwork
@@ -15,15 +15,15 @@
 
  
 ## Install process
-  Download this repository in a path in your computer, so-called PATHL from now on.  Execute the following steps: 
+  Download this repository to a path on your computer, so-called PATHL, from now on.  Execute the following steps: 
 
-  Go the following patch:
+  Go to the following path:
       
       cd PATHL  
-  You must see Dockerfile, README.md file and folder frontendScholarCurriculumApp:
+  You must see Dockerfile, README.md file, and folder frontendScholarCurriculumApp:
       
       ls 
-  Download ubuntu image (althouth this step should not be required because of the previous Ganache installation):
+  Download ubuntu image (although this step should not be required because of the previous Ganache installation):
       
       sudo docker pull ubuntu:24.04
     
@@ -40,9 +40,10 @@
       
       cd frontendscholarcurriculum/frontendScholarCurriculumApp/
 
-  You must update and upgrade the system before any isntallation:
+  You must update and upgrade the system before any installation:
 
       sudo apt-get update && apt-get upgrade -y
+      sudo apt install libcurl4-openssl-dev
 
   You must intro to the ubuntu instance and install npm:
       
@@ -81,19 +82,19 @@
     Server is running on port 5510
     
 
-  You can execute ctrl+C to exit
+  You can execute Ctrl + C to exit
 
 ## Deployment
   
-  Check the containers installed executing the following:
+  Check the containers installed by executing the following:
     
     sudo docker ps -a
 
-  Identify the container id of **frontendscholarcurriculum** and set the following command:
+  Identify the container ID of **frontendscholarcurriculum** and set the following command:
     
     sudo docker start <containerid>
 
-  Go into container **frontendscholarcurriculum** by executing the following:
+  Go into the container **frontendscholarcurriculum** by executing the following:
     
     sudo docker exec -it <containerid> /bin/bash
 
