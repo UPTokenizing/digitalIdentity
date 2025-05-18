@@ -96,14 +96,6 @@ Follow these steps to configure your AWS environment:
    EXIT;
    ```
 
-   #### Step 3:  Import the Schema
-   Once inside the MySQL shell, run the following SQL command to create the database (you can change the name if needed):
-
-   ```bash
-   mysql -h <your-endpoint> -u <username> -p digital_identity < mysql/schema.sql
-   ```
-   ***Make sure the path mysql/schema.sql matches the location of the schema file relative to where you are running the command.***
-
 6. **Install Project on EC2**  
    SSH into your instance and follow the installation guide in the Install Section.
 
