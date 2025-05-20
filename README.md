@@ -99,8 +99,8 @@ Follow these steps to configure your AWS environment:
    EXIT;
    ```
 
-6. **Install Project on EC2**  
-   SSH into your instance and follow the installation guide in the Install Section.
+6. **Install Project on the EC2**  
+   SSH into your instance or direct connectivity using AWS, clone the git project, and follow the installation guide in the **[Install Section](https://github.com/UPTokenizing/digitalIdentity?tab=readme-ov-file#install)** until step 7, continue with the next step of the AWS setup, and after completing step 7 of the setup, continue from the 8th step of the **[Install Section](https://github.com/UPTokenizing/digitalIdentity?tab=readme-ov-file#install)**.
 
 7. **Connect MySQL with the frontend**  
    To connect the database directly to the frontend, create a .env file in the root folder of every frontend project (the same directory where the server.js file is located, for example, for project **frontendIdentityDigital** the path is [digitalIdentity/frontendIdentityDigital/frontendDigitalApp/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital/frontendDigitalApp/)  ) with the following settings (it is based on the past example):
@@ -137,6 +137,8 @@ Before proceeding to step 8 of the installation instructions, it's necessary to 
    > **NOTE:** The JWT secret value is a session token.
    
    > **NOTE:** The MySQL container should start running after the *`scholarCurriculum`* container (This is for the IP assignation).
+3. **Continue with the Installation**
+   Continue from step 8 of the **[Install Section](https://github.com/UPTokenizing/digitalIdentity?tab=readme-ov-file#install)**.
    
 
 ## Install
