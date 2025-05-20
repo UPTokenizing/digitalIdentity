@@ -123,7 +123,7 @@ Before proceeding to step 8 of the installation instructions, it's necessary to 
    
 
 2. **Connect MySQL with the frontend**  
-   For the database to connect directly with the frontend, create a `.env` file in the root folder of your project (the same directory where the server.js file is located) with the following settings based on the past example:
+   To connect the database directly to the frontend, create a `.env` file in the root folder of every frontend project (the same directory where the server.js file is located) with the following settings based on the past example:
    ```env
    DB_HOST=tokphy-mysql
    DB_USER=tokuser
@@ -132,7 +132,9 @@ Before proceeding to step 8 of the installation instructions, it's necessary to 
    JWT_SECRET=your_secure_secret_key_here
    ```
    > **NOTE:** The secret key is a session token.
+   
    > **NOTE:** The MySQL container should start running after the *`scholarCurriculum`* container.
+   
    > **NOTE:** To write down the .env it is recommended to stop the frontends (Not the container, just the application).
 
 ## Install
