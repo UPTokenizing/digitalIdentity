@@ -108,7 +108,7 @@ Follow these steps to configure your AWS environment:
    DB_NAME=digital_identity
    JWT_SECRET=your_secure_secret_key_here
    ```
-   > **NOTE:** The secret key is a session token.
+   > **NOTE:**  The JWT secret value is a session token.
 
 # Local Setup
 
