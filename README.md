@@ -8,7 +8,7 @@ This repository will have all projects about digitizing physical objects, linkin
   - MySQL database.
   - Birth certificate.
   - Digital identity.
-  - Scholar Curriculum for Universidad Panamericana.
+  - Scholar Curriculum for a University.
   - User system. 
   - EC2 instance (AWS).
 
@@ -48,9 +48,9 @@ Follow these steps to configure your AWS environment:
    - Instance type: `db.t3.micro` or higher  
    - Storage: 20 GB (General Purpose SSD)  
    - Enable EC2 connectivity  
-   - Select the desired instance that will connect to the Database (Ex: TokenizingEC2)
-   - Select security group used by the EC2 instance
-   - Note down endpoint, port, username and password.
+   - Select the desired instance that will connect to the Database (Ex, TokenizingEC2)
+   - Select the security group used by the EC2 instance
+   - Note down the endpoint, port, username, and password.
 
 3. **Configure RDS Security Group**  
    - Allow or verify inbound connections on port `3306`.  
@@ -119,6 +119,8 @@ Before proceeding to step 8 of the installation instructions, it's necessary to 
    ```bash
    docker run -d --name tokphy-mysql --network TokPhyAppNetwork -e MYSQL_ROOT_PASSWORD=root_pw123 -e MYSQL_DATABASE=tokphydb -e MYSQL_USER=tokuser -e MYSQL_PASSWORD=user_pw123 -p 3306:3306 mysql:8
    ```
+   > **NOTE:** The MySQL container should start running after the *`scholarCurriculum`* container, so in his case it is necessary to stop the container if it is running.
+   
 
 2. **Connect MySQL with the frontend**  
    For the database to connect directly with the frontend, create a `.env` file in the root folder of your project (the same directory where the server.js file is located) with the following settings based on the past example:
@@ -131,6 +133,7 @@ Before proceeding to step 8 of the installation instructions, it's necessary to 
    ```
    > **NOTE:** The secret key is a session token.
    > **NOTE:** The MySQL container should start running after the *`scholarCurriculum`* container.
+   > **NOTE:** To write down the .env it is recommended to stop the frontends (Not the container, just the application).
 
 ## Install
   Follow the following instructions. **The project should have already been cloned from git**
