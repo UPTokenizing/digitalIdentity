@@ -1,5 +1,5 @@
 # DigitalIdentity: Architecture for a digital identity ecosystem based on blockchain
-This repository will have all projects about digitizing physical objects, linking them with a person, and setting them up either on [Amazon Web Services (AWS)](https://github.com/UPTokenizing/digitalIdentity?tab=readme-ov-file#aws-setup) or a [local machine](https://github.com/UPTokenizing/digitalIdentity?tab=readme-ov-file#local-setup).
+This repository will have all projects about digitizing physical objects, linking them with a person.
 
 ## General description
   This is an architecture containing the following parts: 
@@ -27,7 +27,10 @@ This repository will have all projects about digitizing physical objects, linkin
   - frontendIdentityDigital/
   - frontendScholarCurriculum/
 
-## AWS Setup  
+## Environment
+Before proceding to the installation steps, it is required to set the enviroment. We provide two options [Amazon Web Services (AWS)](https://github.com/UPTokenizing/digitalIdentity?tab=readme-ov-file#aws-setup) or a [local machine](https://github.com/UPTokenizing/digitalIdentity?tab=readme-ov-file#local-setup).
+
+### AWS Setup  
 Follow these steps to configure your AWS environment:
 
 1. **Launch an EC2 Instance**  
@@ -100,7 +103,7 @@ Follow these steps to configure your AWS environment:
    SSH into your instance and follow the installation guide in the Install Section.
 
 7. **Connect MySQL with the frontend**  
-   For the database to connect directly with the frontend, create a `.env` file in the root folder of your project (the same directory where the server.js file is located) with the following settings as an example:
+   To connect the database directly to the frontend, create a .env file in the root folder of every frontend project (the same directory where the server.js file is located, for example, for project **frontendIdentityDigital** the path is [digitalIdentity/frontendIdentityDigital/frontendDigitalApp/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital/frontendDigitalApp/)  ) with the following settings (it is based on the past example):
    ```env
    DB_HOST=tokphy-mysql.xxxxxxxxxx.us-east-2.rds.amazonaws.com
    DB_USER=root
@@ -110,7 +113,7 @@ Follow these steps to configure your AWS environment:
    ```
    > **NOTE:**  The JWT secret value is a session token.
 
-# Local Setup
+### Local Setup
 
 Before proceeding to step 8 of the installation instructions, it's necessary to create a MySQL container where the database will be connected. Follow these steps:
 
