@@ -123,7 +123,7 @@ Before proceeding to step 8 of the installation instructions, it's necessary to 
    
 
 2. **Connect MySQL with the frontend**  
-   To connect the database directly to the frontend, create a .env file in the root folder of every frontend project (the same directory where the server.js file is located, for example, for project frontendIdentityDigital the path is digitalIdentity/frontendIdentityDigital/frontendDigitalApp/) with the following settings (it is based on the past example):
+   To connect the database directly to the frontend, create a .env file in the root folder of every frontend project (the same directory where the server.js file is located, for example, for project **frontendIdentityDigital** the path is [digitalIdentity/frontendIdentityDigital/frontendDigitalApp/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital/frontendDigitalApp/)  ) with the following settings (it is based on the past example):
    ```env
    DB_HOST=tokphy-mysql
    DB_USER=tokuser
@@ -131,11 +131,10 @@ Before proceeding to step 8 of the installation instructions, it's necessary to 
    DB_NAME=tokphydb
    JWT_SECRET=your_secure_secret_key_here
    ```
-   > **NOTE:** The secret key is a session token.
+   > **NOTE:** The JWT secret value is a session token.
    
-   > **NOTE:** The MySQL container should start running after the *`scholarCurriculum`* container.
+   > **NOTE:** The MySQL container should start running after the *`scholarCurriculum`* container (This is for the IP assignation).
    
-   > **NOTE:** To write down the .env it is recommended to stop the frontends (Not the container, just the application).
 
 ## Install
   Follow the following instructions. **The project should have already been cloned from git**
