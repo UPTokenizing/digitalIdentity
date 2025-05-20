@@ -123,7 +123,7 @@ Before proceeding to step 8 of the installation instructions, it's necessary to 
    
 
 2. **Connect MySQL with the frontend**  
-   To connect the database directly to the frontend, create a `.env` file in the root folder of every frontend project (the same directory where the server.js file is located) with the following settings based on the past example:
+   To connect the database directly to the frontend, create a .env file in the root folder of every frontend project (the same directory where the server.js file is located, for example, for project frontendIdentityDigital the path is digitalIdentity/frontendIdentityDigital/frontendDigitalApp/) with the following settings (it is based on the past example):
    ```env
    DB_HOST=tokphy-mysql
    DB_USER=tokuser
