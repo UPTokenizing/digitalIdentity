@@ -59,8 +59,8 @@ Follow these steps to configure your AWS environment:
    - Set your RSA keys and keep them safe. (You can only download them once)
    - Set the VPC and Security groups according to your needs.
    - Allocate at least **18 GB** of storage.  
-   - Allow inbound access on ports `22` (SSH), `80`, `443`, `3306` and any custom ports your backend uses.
-   ***For this project: allow ports `5500–5515`***
+   - Allow inbound access on TCP ports `22` (SSH), `80`, `443`, `3306` and any custom ports your backend uses.
+   ***For this project: allow TCP ports `5500–5515`***
 
 2. **Create a MySQL RDS Instance**  
    - Engine: MySQL  
