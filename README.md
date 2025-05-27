@@ -63,7 +63,8 @@ Follow these steps to configure your AWS environment:
    ***For this project: allow TCP ports `5500–5515`***
 
 2. **Create a MySQL RDS Instance**  
-   - Engine: MySQL  
+   - Engine: MySQL
+   - Version: 8 or newer
    - Template: Free tier
    - Configure credentials:
      * Set a master username
