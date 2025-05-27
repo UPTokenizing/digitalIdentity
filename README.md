@@ -41,7 +41,7 @@ Windows 10 Home      | AMD Ryzen 3 2300U with Radeon Vega, Mobile Gfx, 2000Mhz, 
 MACOS 14.4.1 (23E224)| Intel Iris Plus Graphics 1536 MB, 1.2 GHz Quad-Core Intel Core i7,  16 GB 3733 MHz LPDDR4X      |   Yes    
 Windows 11 Home      |  i7-11800H, @2.80GHz, 32GB RAM, 64-bit, x64-based processor, with NVIDIA RTX 3070, x64-based PC.|   Yes
 Windows 11 Home      | AMD Ryzen 3600 with NVIDIA RTX 2060, 3.6GHz, 6 Cores, 16GB RAM, x64-based PC                    |   Yes
-Ubuntu 24.04 LTS(AWS)| Amazon Web Service, m5.large, 2 vCPUs, 8GB RAM, 18GB SSD, x64-based instance                    |   Yes
+Ubuntu 24.04 LTS(AWS)| Amazon Web Service, m5.large, 2 vCPUs, 8GB RAM, 18GB SSD, 64 bits x86-based instance            |   Yes
 
 
 
