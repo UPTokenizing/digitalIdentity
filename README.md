@@ -53,7 +53,8 @@ Before proceeding to the installation steps, it is required to set the environme
 ### AWS  
 Follow these steps to configure your AWS environment:
 
-1. **Launch an EC2 Instance**  
+1. **Launch an EC2 Instance**
+   - Name your Instance, Ex: "TokenizingEC2"
    - Use instance type `m5.large` (2 vCPUs, 8 GB RAM).  
    - Select Ubuntu (24.04 LTS or newer) as the OS.  
    - Set your RSA keys and keep them safe. (You can only download them once)
@@ -62,7 +63,7 @@ Follow these steps to configure your AWS environment:
    - Allow inbound access on TCP ports `22` (SSH), `80`, `443`, `3306` and any custom ports your backend uses.
    ***For this project: allow TCP ports `5500–5515`***
 
-2. **Create a MySQL RDS Instance**  
+3. **Create a MySQL RDS Instance**  
    - Engine: MySQL
    - Version: 8 or newer
    - Template: Free tier
@@ -72,15 +73,15 @@ Follow these steps to configure your AWS environment:
    - Instance type: `db.t3.micro` or higher  
    - Storage: 20 GB (General Purpose SSD)  
    - Enable EC2 connectivity  
-   - Select the desired instance that will connect to the Database (Ex, TokenizingEC2)
+   - Select the desired instance that will connect to the Database (Ex, TokenizingEC2 (previously created Instance))
    - Select the security group used by the EC2 instance
    - Note down the endpoint, port, username, and password.
 
-3. **Configure RDS Security Group**  
+4. **Configure RDS Security Group**  
    - Allow or verify inbound connections on port `3306`.  
    - Only allow traffic from your EC2's security group or your current IP address.
 
-4. **Recommended EC2 Setup**
+5. **Recommended EC2 Setup**
    - Update & Upgrade System
    ```bash
    sudo apt update && sudo apt upgrade -y
@@ -101,7 +102,7 @@ Follow these steps to configure your AWS environment:
    sudo apt install nano -y 
    ```
   
-5. **Initialize MySQL Database**
+6. **Initialize MySQL Database**
 
    From your EC2 instance, follow these steps to connect and set up your MySQL database hosted on AWS RDS.
 
@@ -120,7 +121,7 @@ Follow these steps to configure your AWS environment:
    EXIT;
    ```
 
-6. **Install Project on the EC2**  
+7. **Install Project on the EC2**  
    Follow the following instructions. **The project should have already been cloned from git**
    - #### Step 1.
      First, install docker, a guide for that visit [docker install](https://docs.docker.com/engine/install/).   
