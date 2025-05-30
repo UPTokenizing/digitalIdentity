@@ -16,7 +16,7 @@
   
   Go the following patch:
       
-      cd PATHL  
+      cd PATHLBLOCKCHAIN  
   
   Download ubuntu image:
       
