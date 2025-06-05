@@ -233,7 +233,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             const data = await response.json();
-            return data.UpCurriculum; // Return the curriculum data
+            return data.ScholarCurriculum; // Return the curriculum data
         } catch (error) {
             console.error('Error:', error);
             alert('An error occurred while fetching');
@@ -280,7 +280,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 throw new Error('Failed to fetch data from the server');
             }
 
-            const Institution = "UpCurriculum";
+            const Institution = "ScholarCurriculum";
             const data = await response.json();
             const students = data.students || [];
 

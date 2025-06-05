@@ -486,7 +486,7 @@ app.post('/api/getStudentsCurriculum', async (req, res) => {
     }
 
     // Devolver el currículo
-    res.status(200).send({ UpCurriculum: rows[0][Institution] });
+    res.status(200).send({ ScholarCurriculum: rows[0][Institution] });
   } catch (error) {
     console.error('Error retrieving student curriculum:', error);
     res.status(500).send({ message: 'Error retrieving student curriculum.' });
