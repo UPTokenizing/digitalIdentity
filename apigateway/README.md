@@ -3,45 +3,38 @@
   This application is the API Gateway for the digital identity project. This offers a solution to insert various microservices.
 
 ## Pre-requirements
-  Althouth it should have been installed previously. Check if you have the network created:
+  Check the network created previously:
 
-    
-      docker network inspect TokPhyAppNetwork
+    docker network inspect TokPhyAppNetwork
 
-  If not, install it with:
-
-    
-      docker network create --gateway 172.18.1.1 --subnet 172.18.1.0/24 TokPhyAppNetwork
-
+  You must see the network details
  
 ## Install process
-  Download this repository in a path in your computer, so-called PATHL from now on.  Execute the following steps: 
-
-  Go the following patch:
+Go to path "digitalIdentity/apigatewayApp", so-called PATHL, there you can see this readme. Execute the following steps
       
-      cd PATHL  
-  You must see Dockerfile, README.md file and folder apigatewayApp:
-      
-      ls 
-  Download ubuntu image (althouth this step should not be required because of the previous Ganache installation):
-      
-      sudo docker pull ubuntu:24.04
+    cd <PATHL>  
     
-  Build the ubuntu image in a repository:
-      
-      sudo docker build -t apigateway  <PATHL>
+Create the new image from digitalidentityimage container, first check its id:
+  
+    sudo docker ps -a
 
-  Run ubuntu: 
-      
-      sudo docker run -it --network TokPhyAppNetwork -p 5500:5500 -p 9876:9876 -v  <PATHL>:/apigateway  apigateway
+Now you must create the image:      
+    
+    sudo docker commit <digitaldentityimage Container Id> apigateway
 
-  Now, you must stay within the ganache's instance, then go to the path:
+Run ubuntu: 
+      
+    sudo docker run -dit --name apigateway --network TokPhyAppNetwork -p 5500:5500 -p 9876:9876 -v  <PATHL>:/apigateway  digitalidentityimage
+
+Go into container **apigateway** by checking the CONTAINER ID with the following:
+
+    sudo docker ps -a
+    
+    sudo docker exec -it <containerid> /bin/bash
+
+Now, you must stay within the ganache's instance, then go to the path:
       
       cd /apigateway/apigatewayApp
-
-  You must intro to the ubuntu instance and install npm:
-      
-      sudo apt install nodejs npm
   
   Then, Update npm:
       

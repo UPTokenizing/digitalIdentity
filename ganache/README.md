@@ -3,38 +3,46 @@
   This will install the blockchain instance, which will store the transactions of TokPhyApp. We have used Ganache application (part of the Truffle Suite). We have not modified anything of Ganache.
 
 ## Pre-requirements
-  It is required to have created a network in docker as follows:
-
-    docker network create --gateway 172.18.1.1 --subnet 172.18.1.0/24 TokPhyAppNetwork
-  
-  To see the created network:    
+  Check the network created previously:
 
     docker network inspect TokPhyAppNetwork
+
+  You must see the network details
  
 ## Install process
-  Download this repository in a path in your computer, so-called PATHLBLOCKCHAIN
-  
-  Go the following patch:
+Go to path "digitalIdentity/ganache", so-called PATHL, there you can see this readme. Execute the following steps
       
-      cd PATHLBLOCKCHAIN  
+      cd PATHL  
   
-  Download ubuntu image:
-      
-      sudo docker pull ubuntu:24.04
+Create the new image from digitalidentityimage container, first check its id:
+  
+    sudo docker ps -a
+
+Now you must create the image:      
     
-  If you are running docker in MacOS (intel version), see the Dockerfile (in PATHLBLOCKCHAIN) and disable line 28 and enable line 31.
+    sudo docker commit <digitaldentityimage Container Id> ganache
 
-  Build the ubuntu image in a repository:
+Run ubuntu: 
       
-      sudo docker build -t ganacheimage  <PATHLBLOCKCHAIN>
+    sudo docker run -dit --name ganache --network TokPhyAppNetwork -p 8546:8546 -v <PATHL>:/tokPhyApp/ganache digitalidentityimage
 
-  Run ubuntu: 
-      
-      sudo docker run -it --network TokPhyAppNetwork -p 8546:8546 -v <PATHLBLOCKCHAIN>:/tokPhyApp/ganache  ganacheimage
+Go into container **ganache** by checking the CONTAINER ID with the following:
+
+    sudo docker ps -a
+    
+    sudo docker exec -it <containerid> /bin/bash
 
   Now, you must stay within the ganache's instance, then go to the path as follows:
   
       cd /tokPhyApp/ganache
+
+  You must intro to the ubuntu instance and install ganche:
+      
+    // Use the following in Windows OS or Linux
+    npm install ganache --global
+
+    // Use the following in MAC OS intel cpu
+    npm install -g ganache-cli 
 
   Update npm:
       
@@ -70,3 +78,4 @@
   Then, execute the following command:
       
       /tokPhyApp/ganache/startApp
+
