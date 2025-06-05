@@ -163,7 +163,7 @@ Follow these steps to configure your AWS environment:
    First, install docker, a guide for that visit [docker install](https://docs.docker.com/engine/install/).   
  2. **Services Installation**  
     - #### Step 1.
-      Install **DigitalIdentityImage**, follow the instructions explained in the file README.md within the folder [ganache/](https://github.com/UPTokenizing/digitalIdentity/tree/main/image).
+      Install **DigitalIdentityImage**, follow the instructions explained in the file README.md within the folder [image/](https://github.com/UPTokenizing/digitalIdentity/tree/main/image).
     - #### Step 2.
       Install **Ganache**, follow the instructions explained in the file README.md within the folder [ganache/](https://github.com/UPTokenizing/digitalIdentity/tree/main/ganache).
     - #### Step 3.
