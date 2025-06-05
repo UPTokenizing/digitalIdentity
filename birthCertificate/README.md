@@ -3,48 +3,41 @@
   This application contains all services to store information in the Blockchain to the system called birth Certificate. This offers a solution using a microservice architecture.
 
 ## Pre-requirements
-  Althouth it should have been installed previously. Check if you have the network created:    
+  Check the network created previously:
 
     docker network inspect TokPhyAppNetwork
 
-  If not, install it with:
-
-    docker network create --gateway 172.18.1.1 --subnet 172.18.1.0/24 TokPhyAppNetwork
-
+  You must see the network details
  
 ## Install process
-  Download this repository in a path in your computer, so-called PATHL from now on.  Execute the following steps: 
-
-  Go to the following path:
+Go to path "digitalIdentity/birthcertificate", so-called PATHL, there you can see this readme. Execute the following steps
       
-      cd PATHL  
-  
-  You must see Dockerfile, README.md file, folder birthCertificateApp and birthCertificateServices.pdf:
-      
-      ls 
-  
-  Download ubuntu image (althouth this step should not be required because of the previous Ganache installation):
-      
-      sudo docker pull ubuntu:24.04
+    cd <PATHL>  
     
-  Build the ubuntu image in a repository:
-      
-      sudo docker build -t birthcertificate  <PATHL>
+Create the new image from digitalidentityimage container, first check its id:
+  
+    sudo docker ps -a
 
-  Run ubuntu: 
-      
-      docker run -it --network TokPhyAppNetwork -p 5501:5501 -v <PATHL>:/birthcertificate  birthcertificate
+Now you must create the image:      
+    
+    sudo docker commit <digitaldentityimage Container Id> birthcertificate
 
-  Then, go to the ubuntu instance path:
+Run ubuntu: 
+      
+    sudo docker run -dit --name birthcertificate --network TokPhyAppNetwork  -p 5501:5501 -v <PATHL>:/birthcertificate  digitalidentityimage
+
+Go into container **birthcertificate** by checking the CONTAINER ID with the following:
+
+    sudo docker ps -a
+    
+    sudo docker exec -it <containerid> /bin/bash
+
+Then, go to the ubuntu instance path:
       
       cd /birthcertificate/birthCertificateApp
 
   You must update some package lists before installing npm:
       sudo apt-get update
-  
-  You must intro to the ubuntu instance and install npm:
-      
-      sudo apt install nodejs npm
   
   Then, Update npm:
       
