@@ -74,7 +74,7 @@ Follow these steps to configure your AWS environment:
    ```bash
    git clone https://github.com/UPTokenizing/digitalIdentity.git
    ```
-   Now, install following any of the two options: [Manually](https://github.com/UPTokenizing/digitalIdentity?tab=readme-ov-file#Manual-Installation-option) or [Semi-automatic](https://github.com/UPTokenizing/digitalIdentity?tab=readme-ov-file#Semi-Automatic-Installation-option).
+   Now, install following any of the two options: [Manually](https://github.com/UPTokenizing/digitalIdentity?tab=aws-setup-ov-file#Manual-Installation-option) or [Semi-automatic](https://github.com/UPTokenizing/digitalIdentity?tab=aws-setup-ov-file#Semi-Automatic-Installation-option).
 
    * #### Manual Installation option
       - #### Step 1.
@@ -151,4 +151,4 @@ Follow these steps to configure your AWS environment:
             > **NOTE:**  The JWT secret value is a session token.
         - Complete the **Front-Ends** installation: [frontendBirthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendBirthCertificate), [frontendIdentityDigital/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital), [frontendUsersInteface/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendUsersInteface), and [frontendScholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendScholarCurriculum).
         
-  #### **NOTE:**  After completing the installation process, the next step is going to the users web page at the route /registerGovernment (for example, PUBLIC_IP:5512/registerGovernment) and register the initial critical user of the system. Then, follow the [User Manual](https://github.com/UPTokenizing/digitalIdentity/UserManual.pdf).
+  #### **NOTE:**  After completing the installation process, the next step is going to the users web page at the route /registerGovernment (for example, PUBLIC_IP:5512/registerGovernment) and register the initial critical user of the system. Then, follow the [User Manual](https://github.com/UPTokenizing/digitalIdentity/blob/main/UserManual.pdf).
