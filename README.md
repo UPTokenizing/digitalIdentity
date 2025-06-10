@@ -197,7 +197,8 @@ Follow these steps to configure your AWS environment:
             ```
             > **NOTE:**  The JWT secret value is a session token.
         - Complete the **Front-Ends** installation: [frontendBirthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendBirthCertificate), [frontendIdentityDigital/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital), [frontendUsersInteface/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendUsersInteface), and [frontendScholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendScholarCurriculum).
-      
+        
+### > **NOTE:**  After completing the installation, the first step is to go to the users page at /registerGovernment (for example, `PUBLIC_IP:5512/registerGovernment`) and register the initial critical user of the system.
 
 ---
 
@@ -274,7 +275,7 @@ Follow these steps to configure your AWS environment:
           > **NOTE:** The JWT secret value is a session token.
         - Complete the **Front-Ends** installation: [frontendBirthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendBirthCertificate), [frontendIdentityDigital/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital), [frontendUsersInteface/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendUsersInteface), and [frontendScholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendScholarCurriculum).
 
-### _The next steps are only if the Service Installation was the manual option._
+    ### _The next steps are only if the Service Installation was the manual option._
 
 3. **Create the MySQL container**  
    In the following command, you'll need to customize the `--name`, `MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE`, `MYSQL_USER`, and `MYSQL_PASSWORD` values. The last two parameters contain the login information for MySQL, and `MYSQL_DATABASE` is where the database name is assigned.
@@ -298,9 +299,8 @@ Follow these steps to configure your AWS environment:
    > **NOTE:** The MySQL container should start running after the *`scholarCurriculum`* container (This is for the IP assignation).
 5. **Front-End Installation**
     Follow the instructions explained in the file README.md within the folders [frontendBirthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendBirthCertificate), [frontendIdentityDigital/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital), [frontendUsersInteface/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendUsersInteface), and [frontendScholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendScholarCurriculum).
-
-
-
+  
+  ### > **NOTE:**  After completing the installation, the first step is to go to the users page at /registerGovernment (for example, `localhost:5512/registerGovernment`) and register the initial critical user of the system.
 
 ## Deployment
   Execute the following instructions:    
