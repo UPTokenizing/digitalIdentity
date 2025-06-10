@@ -122,10 +122,12 @@ Follow these steps to configure your AWS environment:
    ```
 
 7. **Install Project on the EC2**  
-   Follow the following instructions. [manuall](https://github.com/UPTokenizing/digitalIdentity?tab=readme-ov-file#Manual-Installation-option) y or [semi-automatic](https://github.com/UPTokenizing/digitalIdentity?tab=readme-ov-file#Semi-Automatic-Installation-option). **Clone the project from the Github: https://github.com/UPTokenizing/digitalIdentity.git**
+   **Clone the project from the Github: https://github.com/UPTokenizing/digitalIdentity.git**
    ```bash
    git clone https://github.com/UPTokenizing/digitalIdentity.git
    ```
+   Now, install following any of the two options: [Manually](https://github.com/UPTokenizing/digitalIdentity?tab=readme-ov-file#Manual-Installation-option) or [Semi-automatic](https://github.com/UPTokenizing/digitalIdentity?tab=readme-ov-file#Semi-Automatic-Installation-option).
+
    * #### Manual Installation option
       - #### Step 1.
         First, install docker, a guide for that visit [docker install](https://docs.docker.com/engine/install/).   
@@ -201,16 +203,18 @@ Follow these steps to configure your AWS environment:
             > **NOTE:**  The JWT secret value is a session token.
         - Complete the **Front-Ends** installation: [frontendBirthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendBirthCertificate), [frontendIdentityDigital/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital), [frontendUsersInteface/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendUsersInteface), and [frontendScholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendScholarCurriculum).
         
-  #### **NOTE:**  After completing the installation, the first step is to go to the users page at /registerGovernment (for example, `PUBLIC_IP:5512/registerGovernment`) and register the initial critical user of the system.
+  #### **NOTE:**  After completing the installation process, the next step is going to the users web page at the route /registerGovernment (for example, PUBLIC_IP:5512/registerGovernment) and register the initial critical user of the system. Then, follow the [User Manual](https://github.com/UPTokenizing/digitalIdentity/UserManual.pdf).
 
 ---
 
 ### Local Setup
 
- Follow the following instructions. [manuall](https://github.com/UPTokenizing/digitalIdentity?tab=readme-ov-file#Manual-Installation-option) y or [semi-automatic](https://github.com/UPTokenizing/digitalIdentity?tab=readme-ov-file#Semi-Automatic-Installation-option). **Clone the project from the Github: https://github.com/UPTokenizing/digitalIdentity.git**
- ```bash
- git clone https://github.com/UPTokenizing/digitalIdentity.git
- ```
+   **Clone the project from the Github: https://github.com/UPTokenizing/digitalIdentity.git**
+   ```bash
+   git clone https://github.com/UPTokenizing/digitalIdentity.git
+   ```
+   Now, install following any of the two options: [Manually](https://github.com/UPTokenizing/digitalIdentity?tab=readme-ov-file#Manual-Installation-option) or [Semi-automatic](https://github.com/UPTokenizing/digitalIdentity?tab=readme-ov-file#Semi-Automatic-Installation-option).
+
  1. **Docker Installation**  
    First, install docker, a guide for that visit [docker install](https://docs.docker.com/engine/install/).   
  2. **Services Installation**  
@@ -306,7 +310,7 @@ Follow these steps to configure your AWS environment:
 5. **Front-End Installation**
     Follow the instructions explained in the file README.md within the folders [frontendBirthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendBirthCertificate), [frontendIdentityDigital/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital), [frontendUsersInteface/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendUsersInteface), and [frontendScholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendScholarCurriculum).
   
-  #### **NOTE:**  After completing the installation, the first step is to go to the users page at /registerGovernment (for example, `localhost:5512/registerGovernment`) and register the initial critical user of the system.
+  #### **NOTE:**  After completing the installation process, the next step is going to the users web page at the route /registerGovernment (for example, PUBLIC_IP:5512/registerGovernment) and register the initial critical user of the system. Then, follow the [User Manual](https://github.com/UPTokenizing/digitalIdentity/UserManual.pdf).
 
 ## Deployment
   Execute the following instructions:    
