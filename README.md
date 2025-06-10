@@ -48,7 +48,7 @@ Ubuntu 24.04 LTS(AWS)| Amazon Web Service, m5.large, 2 vCPUs, 8GB RAM, 18GB SSD,
 
 
 ## Environment-Based Installation
-Before proceeding to the installation steps, it is required to set the environment. We provide two options [Amazon Web Services (AWS)](https://github.com/UPTokenizing/digitalIdentity/AWS-Setup.md) or within a [local machine](https://github.com/UPTokenizing/digitalIdentity/Local-Setup.md).
+Before proceeding to the installation steps, it is required to set the environment. We provide two options [Amazon Web Services (AWS)](https://github.com/UPTokenizing/digitalIdentity/blob/main/AWS-Setup.md) or within a [local machine](https://github.com/UPTokenizing/digitalIdentity/blob/main/Local-Setup.md).
 
 
 ---
