@@ -10,7 +10,13 @@ services:
       - "8546:8546"
     volumes:
       - ./ganache:/tokPhyApp/ganache
-    command: tail -f /dev/null
+    command: >
+      bash -c "
+        cd /tokPhyApp/ganache &&
+        npm install -g ganache-cli &&
+        npm update &&
+        chmod 544 startApp &&
+      "
 
   apigateway:
     image: branxz07/digitalidentityimage:latest
@@ -23,8 +29,12 @@ services:
       - "9876:9876"
     volumes:
       - ./apigateway:/apigateway
-    command: tail -f /dev/null
-
+    command: >
+      bash -c "
+        cd /apigateway/apigatewayApp &&
+        npm update &&
+        chmod 544 startApp &&
+      "
   birthcertificate:
     image: branxz07/digitalidentityimage:latest
     container_name: birthcertificate
@@ -35,7 +45,12 @@ services:
       - "5501:5501"
     volumes:
       - ./birthCertificate:/birthcertificate
-    command: tail -f /dev/null
+    command: >
+      bash -c "
+        cd /birthcertificate/birthCertificateApp &&
+        npm update &&
+        chmod 544 startApp &&
+      "
 
   digitalidentity:
     image: branxz07/digitalidentityimage:latest
@@ -47,7 +62,12 @@ services:
       - "5502:5502"
     volumes:
       - ./digitalIdentity:/digitalidentity
-    command: tail -f /dev/null
+    command: >
+      bash -c "
+        cd /digitaldentity/digitaldentityApp &&
+        npm update &&
+        chmod 544 startApp &&
+      "
 
   users:
     image: branxz07/digitalidentityimage:latest
@@ -59,7 +79,12 @@ services:
       - "5503:5503"
     volumes:
       - ./users:/users
-    command: tail -f /dev/null
+    command: >
+      bash -c "
+        cd /users/usersApp &&
+        npm update &&
+        chmod 544 startApp &&
+      "
 
   scholarcurriculum:
     image: branxz07/digitalidentityimage:latest
@@ -71,7 +96,12 @@ services:
       - "5504:5504"
     volumes:
       - ./scholarCurriculum:/scholarcurriculum
-    command: tail -f /dev/null
+    command: >
+      bash -c "
+        cd /scholarcurriculum/scholarCurriculumApp &&
+        npm update &&
+        chmod 544 startApp &&
+      "
 
   frontendusersinterface:
     image: branxz07/digitalidentityimage:latest
@@ -83,7 +113,17 @@ services:
       - "5512:5512"
     volumes:
       - ./frontendUsersInteface:/frontendusersinterface
-    command: tail -f /dev/null
+    command: >
+      bash -c "
+        apt-get update &&
+        apt-get upgrade -y &&
+        apt-get install -y libcurl4-openssl-dev &&
+        cd frontendusersinteface/frontendUsersApp/ &&
+        npm update &&
+        npm install -g nodemon &&
+        npm install axios dotenv bcrypt jsonwebtoken mysql2 &&
+        chmod 544 startApp &&
+      "
 
   frontendbirthcertificate:
     image: branxz07/digitalidentityimage:latest
@@ -95,7 +135,17 @@ services:
       - "5510:5510"
     volumes:
       - ./frontendBirthCertificate:/frontendbirthcertificate
-    command: tail -f /dev/null
+    command: >
+      bash -c "
+        apt-get update &&
+        apt-get upgrade -y &&
+        apt-get install -y libcurl4-openssl-dev &&
+        cd frontendbirthcertificate/frontendBirthCertificateApp/ &&
+        npm update &&
+        npm install -g nodemon &&
+        npm install axios dotenv bcrypt jsonwebtoken mysql2 &&
+        chmod 544 startApp &&
+      "
 
   frontendidentitydigital:
     image: branxz07/digitalidentityimage:latest
@@ -107,7 +157,17 @@ services:
       - "5511:5511"
     volumes:
       - ./frontendIdentityDigital:/frontendidentitydigital
-    command: tail -f /dev/null
+    command: >
+      bash -c "
+        apt-get update &&
+        apt-get upgrade -y &&
+        apt-get install -y libcurl4-openssl-dev &&
+        cd frontendidentitydigital/frontendDigitalApp/ &&
+        npm update &&
+        npm install -g nodemon &&
+        npm install axios dotenv bcrypt jsonwebtoken mysql2 &&
+        chmod 544 startApp &&
+      "
 
   frontendscholarcurriculum:
     image: branxz07/digitalidentityimage:latest
@@ -119,7 +179,17 @@ services:
       - "5513:5513"
     volumes:
       - ./frontendScholarCurriculum:/frontendscholarcurriculum
-    command: tail -f /dev/null
+    command: >
+      bash -c "
+        apt-get update &&
+        apt-get upgrade -y &&
+        apt-get install -y libcurl4-openssl-dev &&
+        cd frontendscholarcurriculum/frontendScholarCurriculumApp/ &&
+        npm update &&
+        npm install -g nodemon &&
+        npm install axios dotenv bcrypt jsonwebtoken mysql2 &&
+        chmod 544 startApp &&
+      "
 
 networks:
   TokPhyAppNetwork:

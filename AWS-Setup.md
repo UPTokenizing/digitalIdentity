@@ -74,26 +74,27 @@ Follow these steps to configure your AWS environment:
    ```bash
    git clone https://github.com/UPTokenizing/digitalIdentity.git
    ```
-   Now, install following any of the two options: [Manually](https://github.com/UPTokenizing/digitalIdentity?tab=aws-setup-ov-file#Manual-Installation-option) or [Semi-automatic](https://github.com/UPTokenizing/digitalIdentity?tab=aws-setup-ov-file#Semi-Automatic-Installation-option).
+   **Docker Installation**  
+   First, install docker, a guide for that visit [docker install](https://docs.docker.com/engine/install/).   
 
-   * #### Manual Installation option
+   Now, install following any of the two options: [Manually](https://github.com/UPTokenizing/digitalIdentity/blob/main/AWS-Setup.md#manual-installation-option) or [Automatic](https://github.com/UPTokenizing/digitalIdentity/blob/main/AWS-Setup.md#automatic-installation-option).
+    
+   * ### Manual Installation option
       - #### Step 1.
-        First, install docker, a guide for that visit [docker install](https://docs.docker.com/engine/install/).   
-      - #### Step 2.
         Install Image container: follow the instructions explained in the file README.md within the folder [image/](https://github.com/UPTokenizing/digitalIdentity/tree/main/image).
-      - #### Step 3.
+      - #### Step 2.
         Install Ganache: follow the instructions explained in the file README.md within the folder [ganache/](https://github.com/UPTokenizing/digitalIdentity/tree/main/ganache).
-      - #### Step 4.
+      - #### Step 3.
         Then, install API-Gateway, follow the instructions explained in the file README.md within the folder [apigateway/](https://github.com/UPTokenizing/digitalIdentity/tree/main/apigateway).
-      - #### Step 5.
+      - #### Step 4.
         Next, install BirthCertificate, follow the instructions explained in the file README.md within the folder [birthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/birthCertificate).
-      - #### Step 6.
+      - #### Step 5.
         Next, install DigitalIdentity, follow the instructions explained in the file README.md within the folder [digitalIdentity/](https://github.com/UPTokenizing/digitalIdentity/tree/main/digitalIdentity).
-      - #### Step 7.
+      - #### Step 6.
         After that, install Users module, follow the instructions explained in the file README.md within the folder [users/](https://github.com/UPTokenizing/digitalIdentity/tree/main/users).
-      - #### Step 8.
+      - #### Step 7.
         Then, install ScholarCurriculum, follow the instructions explained in the file README.md within the folder [scholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/scholarCurriculum).
-      - #### Step 9.
+      - #### Step 8.
         **Connect MySQL with the frontend**  
         To connect the database directly to the frontend, create a .env file in the root folder of every frontend project (the same directory where the server.js file is located, for example, for project **frontendIdentityDigital** the path is [digitalIdentity/frontendIdentityDigital/frontendDigitalApp/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital/frontendDigitalApp/)  ) with the following settings (it is based on the past example):
         ```env
@@ -105,11 +106,11 @@ Follow these steps to configure your AWS environment:
         ```
         > **NOTE:**  The JWT secret value is a session token.
 
-      - #### Step 10.
+      - #### Step 9.
         Lastly, install the frontend applications, follow the instructions explained in the file README.md within the folders [frontendBirthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendBirthCertificate), [frontendIdentityDigital/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital), [frontendUsersInteface/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendUsersInteface), and [frontendScholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendScholarCurriculum).
 
-    * #### Semi-Automatic Installation option
-      This method spins up all required Docker containers automatically, but you will still need to perform some manual configuration inside each service. 
+    * ###  Automatic Installation option
+       
       - #### Step 1.
         Install **Docker Compose**, in your comand console run the following command:
         ```bash
@@ -121,34 +122,17 @@ Follow these steps to configure your AWS environment:
         ```
     
       - #### Step 2.
-        Run the **docker-compose.yml**, in your comand console run the following command:
+        Run the script **setup_aws_containers**, in your comand console run the following commands:
         ```bash
-        sudo docker-compose up -d
+        sudo chmod 544 setup_aws_containers.sh
+        sudo ./setup_aws_containers
         ```
-        > **NOTE:** You can undo what the compose did with the next command. 
+        > **NOTE:** You can undo what the script did with the next commands (all containers have to be stoped). 
         ```bash 
         sudo docker-compose down
         ```
     
       - #### Step 3.
-        Follow the individual README instructions from the `Go into container <SERVICE NAME> by checking the CONTAINER ID with the following:` in the **Installation Section** to complete the setup after the containers are running.
-
-        - Complete **Ganache** installation: [ganache/](https://github.com/UPTokenizing/digitalIdentity/tree/main/ganache).
-        - Complete **API-Gateway** installation: [apigateway/](https://github.com/UPTokenizing/digitalIdentity/tree/main/apigateway).
-        - Complete **BirthCertificate** installation: [birthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/birthCertificate).
-        - Complete **DigitalIdentity** installation: [digitalIdentity/](https://github.com/UPTokenizing/digitalIdentity/tree/main/digitalIdentity).
-        - Complete **Users** module installation: [users/](https://github.com/UPTokenizing/digitalIdentity/tree/main/users).
-        - Complete **ScholarCurriculum** installation: [scholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/scholarCurriculum).
-        - **Connect MySQL with the frontend**  
-            To connect the database directly to the frontend, create a .env file in the root folder of every frontend project (the same directory where the server.js file is located, for example, for project **frontendIdentityDigital** the path is [digitalIdentity/frontendIdentityDigital/frontendDigitalApp/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital/frontendDigitalApp/)  ) with the following settings (it is based on the past example):
-            ```env
-            DB_HOST=<DB endpoint. EX: tokphy-mysql.xxxxxxxxxx.us-east-2.rds.amazonaws.com>
-            DB_USER=root
-            DB_PASSWORD="root_pw123"
-            DB_NAME=digital_identity
-            JWT_SECRET=<your_secure_secret_key_here>
-            ```
-            > **NOTE:**  The JWT secret value is a session token.
-        - Complete the **Front-Ends** installation: [frontendBirthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendBirthCertificate), [frontendIdentityDigital/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital), [frontendUsersInteface/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendUsersInteface), and [frontendScholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendScholarCurriculum).
+        Continue with [Deployment](https://github.com/UPTokenizing/digitalIdentity/blob/Tokenizing-Temp-Main/README.md#deployment)
         
-  #### **NOTE:**  After completing the installation process, the next step is going to the users web page at the route /registerGovernment (for example, PUBLIC_IP:5512/registerGovernment) and register the initial critical user of the system. Then, follow the [User Manual](https://github.com/UPTokenizing/digitalIdentity/blob/main/UserManual.pdf).
+  #### **NOTE:**  After completing the installation and deployment process, the next step is going to the users web page at the route /registerGovernment (for example, PUBLIC_IP:5512/registerGovernment) and register the initial critical user of the system. Then, follow the [User Manual](https://github.com/UPTokenizing/digitalIdentity/blob/main/UserManual.pdf).
