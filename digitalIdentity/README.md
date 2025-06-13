@@ -34,7 +34,7 @@ Go into container **digitaldentity** by checking the CONTAINER ID with the follo
 
   Then, go to the ubuntu instance path:
       
-      cd /digitaldentity/digitaldentityApp
+      cd digitalidentity/digitaldentityApp/
   
   Then, Update npm:
       
@@ -70,7 +70,7 @@ Go into container **digitaldentity** by checking the CONTAINER ID with the follo
 
   Go to the following path:
     
-    cd /digitaldentity/digitaldentityApp
+    cd digitalidentity/digitaldentityApp/
 
   Then, execute the following command:
     

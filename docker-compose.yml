@@ -67,7 +67,7 @@ services:
       - ./digitalIdentity:/digitalidentity
     command: >
       bash -c "
-        cd /digitaldentity/digitaldentityApp &&
+        cd digitalidentity/digitaldentityApp/ &&
         npm update &&
         chmod 544 startApp &&
         tail -f /dev/null
@@ -124,7 +124,7 @@ services:
         apt-get update &&
         apt-get upgrade -y &&
         apt-get install -y libcurl4-openssl-dev &&
-        cd frontendusersinteface/frontendUsersApp/ &&
+        cd frontendusersinterface/frontendUsersApp/ &&
         npm update &&
         npm install -g nodemon &&
         npm install axios dotenv bcrypt jsonwebtoken mysql2 &&

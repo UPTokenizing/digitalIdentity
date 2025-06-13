@@ -34,7 +34,7 @@ Go into container **frontendusersinteface** by checking the CONTAINER ID with th
 
   Then, go to the ubuntu instance path:
       
-      cd frontendusersinteface/frontendUsersApp/
+      cd frontendusersinterface/frontendUsersApp/
 
   You must update and upgrade the system before any installation:
 
@@ -90,7 +90,7 @@ Go into container **frontendusersinteface** by checking the CONTAINER ID with th
 
   Go to the following path:
     
-    cd frontendusersinteface/frontendUsersApp/
+    cd frontendusersinterface/frontendUsersApp/
 
   Then, execute the following command:
     
