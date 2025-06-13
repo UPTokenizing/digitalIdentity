@@ -16,6 +16,7 @@ services:
         npm install -g ganache-cli &&
         npm update &&
         chmod 544 startApp &&
+        tail -f /dev/null
       "
 
   apigateway:
@@ -34,6 +35,7 @@ services:
         cd /apigateway/apigatewayApp &&
         npm update &&
         chmod 544 startApp &&
+        tail -f /dev/null
       "
   birthcertificate:
     image: branxz07/digitalidentityimage:latest
@@ -50,6 +52,7 @@ services:
         cd /birthcertificate/birthCertificateApp &&
         npm update &&
         chmod 544 startApp &&
+        tail -f /dev/null
       "
 
   digitalidentity:
@@ -67,6 +70,7 @@ services:
         cd /digitaldentity/digitaldentityApp &&
         npm update &&
         chmod 544 startApp &&
+        tail -f /dev/null
       "
 
   users:
@@ -84,6 +88,7 @@ services:
         cd /users/usersApp &&
         npm update &&
         chmod 544 startApp &&
+        tail -f /dev/null
       "
 
   scholarcurriculum:
@@ -101,6 +106,7 @@ services:
         cd /scholarcurriculum/scholarCurriculumApp &&
         npm update &&
         chmod 544 startApp &&
+        tail -f /dev/null
       "
 
   frontendusersinterface:
@@ -123,6 +129,7 @@ services:
         npm install -g nodemon &&
         npm install axios dotenv bcrypt jsonwebtoken mysql2 &&
         chmod 544 startApp &&
+        tail -f /dev/null
       "
 
   frontendbirthcertificate:
@@ -145,6 +152,7 @@ services:
         npm install -g nodemon &&
         npm install axios dotenv bcrypt jsonwebtoken mysql2 &&
         chmod 544 startApp &&
+        tail -f /dev/null
       "
 
   frontendidentitydigital:
@@ -167,6 +175,7 @@ services:
         npm install -g nodemon &&
         npm install axios dotenv bcrypt jsonwebtoken mysql2 &&
         chmod 544 startApp &&
+        tail -f /dev/null
       "
 
   frontendscholarcurriculum:
@@ -189,6 +198,7 @@ services:
         npm install -g nodemon &&
         npm install axios dotenv bcrypt jsonwebtoken mysql2 &&
         chmod 544 startApp &&
+        tail -f /dev/null
       "
 
 networks:
