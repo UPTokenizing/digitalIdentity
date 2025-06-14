@@ -82,10 +82,7 @@ docker run -d \
   -p 3306:3306 \
   mysql:8
 
-# Pause for a few seconds, then stop the container
 sleep 3
-docker stop "$MYSQL_CONTAINER_NAME"
-
 echo " "
 echo "==========================================="
 echo " "

@@ -11,13 +11,16 @@ services:
     volumes:
       - ./ganache:/tokPhyApp/ganache
     command: >
-      bash -c "
-        cd /tokPhyApp/ganache &&
-        npm install -g ganache-cli &&
+      bash -c '
+      cd /tokPhyApp/ganache &&
+      if [ ! -f .setup_done ]; then
+        npm install ganache --global &&
         npm update &&
         chmod 544 startApp &&
-        tail -f /dev/null
-      "
+        touch .setup_done
+      fi &&
+      tail -f /dev/null
+      '
 
   apigateway:
     image: branxz07/digitalidentityimage:latest
@@ -31,12 +34,16 @@ services:
     volumes:
       - ./apigateway:/apigateway
     command: >
-      bash -c "
-        cd /apigateway/apigatewayApp &&
+      bash -c '
+      cd /apigateway/apigatewayApp &&
+      if [ ! -f .setup_done ]; then
         npm update &&
         chmod 544 startApp &&
-        tail -f /dev/null
-      "
+        touch .setup_done
+      fi &&
+      tail -f /dev/null
+      '
+
   birthcertificate:
     image: branxz07/digitalidentityimage:latest
     container_name: birthcertificate
@@ -48,12 +55,16 @@ services:
     volumes:
       - ./birthCertificate:/birthcertificate
     command: >
-      bash -c "
-        cd /birthcertificate/birthCertificateApp &&
+      bash -c '
+      cd /birthcertificate/birthCertificateApp &&
+      if [ ! -f .setup_done ]; then
+        apt-get update -y &&
         npm update &&
         chmod 544 startApp &&
-        tail -f /dev/null
-      "
+        touch .setup_done
+      fi &&
+      tail -f /dev/null
+      '
 
   digitalidentity:
     image: branxz07/digitalidentityimage:latest
@@ -66,12 +77,15 @@ services:
     volumes:
       - ./digitalIdentity:/digitalidentity
     command: >
-      bash -c "
-        cd digitalidentity/digitaldentityApp/ &&
+      bash -c '
+      cd /digitalidentity/digitaldentityApp &&
+      if [ ! -f .setup_done ]; then
         npm update &&
         chmod 544 startApp &&
-        tail -f /dev/null
-      "
+        touch .setup_done
+      fi &&
+      tail -f /dev/null
+      '
 
   users:
     image: branxz07/digitalidentityimage:latest
@@ -84,12 +98,15 @@ services:
     volumes:
       - ./users:/users
     command: >
-      bash -c "
-        cd /users/usersApp &&
+      bash -c '
+      cd /users/usersApp &&
+      if [ ! -f .setup_done ]; then
         npm update &&
         chmod 544 startApp &&
-        tail -f /dev/null
-      "
+        touch .setup_done
+      fi &&
+      tail -f /dev/null
+      '
 
   scholarcurriculum:
     image: branxz07/digitalidentityimage:latest
@@ -102,12 +119,15 @@ services:
     volumes:
       - ./scholarCurriculum:/scholarcurriculum
     command: >
-      bash -c "
-        cd /scholarcurriculum/scholarCurriculumApp &&
+      bash -c '
+      cd /scholarcurriculum/scholarCurriculumApp &&
+      if [ ! -f .setup_done ]; then
         npm update &&
         chmod 544 startApp &&
-        tail -f /dev/null
-      "
+        touch .setup_done
+      fi &&
+      tail -f /dev/null
+      '
 
   frontendusersinterface:
     image: branxz07/digitalidentityimage:latest
@@ -120,17 +140,20 @@ services:
     volumes:
       - ./frontendUsersInteface:/frontendusersinterface
     command: >
-      bash -c "
-        apt-get update &&
+      bash -c '
+      cd /frontendusersinterface/frontendUsersApp/ &&
+      if [ ! -f .setup_done ]; then
+        apt-get update -y &&
         apt-get upgrade -y &&
         apt-get install -y libcurl4-openssl-dev &&
-        cd frontendusersinterface/frontendUsersApp/ &&
         npm update &&
         npm install -g nodemon &&
         npm install axios dotenv bcrypt jsonwebtoken mysql2 &&
         chmod 544 startApp &&
-        tail -f /dev/null
-      "
+        touch .setup_done
+      fi &&
+      tail -f /dev/null
+      '
 
   frontendbirthcertificate:
     image: branxz07/digitalidentityimage:latest
@@ -143,17 +166,20 @@ services:
     volumes:
       - ./frontendBirthCertificate:/frontendbirthcertificate
     command: >
-      bash -c "
-        apt-get update &&
+      bash -c '
+      cd /frontendbirthcertificate/frontendBirthCertificateApp/ &&
+      if [ ! -f .setup_done ]; then
+        apt-get update -y &&
         apt-get upgrade -y &&
         apt-get install -y libcurl4-openssl-dev &&
-        cd frontendbirthcertificate/frontendBirthCertificateApp/ &&
         npm update &&
         npm install -g nodemon &&
         npm install axios dotenv bcrypt jsonwebtoken mysql2 &&
         chmod 544 startApp &&
-        tail -f /dev/null
-      "
+        touch .setup_done
+      fi &&
+      tail -f /dev/null
+      '
 
   frontendidentitydigital:
     image: branxz07/digitalidentityimage:latest
@@ -166,17 +192,20 @@ services:
     volumes:
       - ./frontendIdentityDigital:/frontendidentitydigital
     command: >
-      bash -c "
-        apt-get update &&
+      bash -c '
+      cd /frontendidentitydigital/frontendDigitalApp/ &&
+      if [ ! -f .setup_done ]; then
+        apt-get update -y &&
         apt-get upgrade -y &&
         apt-get install -y libcurl4-openssl-dev &&
-        cd frontendidentitydigital/frontendDigitalApp/ &&
         npm update &&
         npm install -g nodemon &&
         npm install axios dotenv bcrypt jsonwebtoken mysql2 &&
         chmod 544 startApp &&
-        tail -f /dev/null
-      "
+        touch .setup_done
+      fi &&
+      tail -f /dev/null
+      '
 
   frontendscholarcurriculum:
     image: branxz07/digitalidentityimage:latest
@@ -189,17 +218,20 @@ services:
     volumes:
       - ./frontendScholarCurriculum:/frontendscholarcurriculum
     command: >
-      bash -c "
-        apt-get update &&
+      bash -c '
+      cd /frontendscholarcurriculum/frontendScholarCurriculumApp/ &&
+      if [ ! -f .setup_done ]; then
+        apt-get update -y &&
         apt-get upgrade -y &&
         apt-get install -y libcurl4-openssl-dev &&
-        cd frontendscholarcurriculum/frontendScholarCurriculumApp/ &&
         npm update &&
         npm install -g nodemon &&
         npm install axios dotenv bcrypt jsonwebtoken mysql2 &&
         chmod 544 startApp &&
-        tail -f /dev/null
-      "
+        touch .setup_done
+      fi &&
+      tail -f /dev/null
+      '
 
 networks:
   TokPhyAppNetwork:

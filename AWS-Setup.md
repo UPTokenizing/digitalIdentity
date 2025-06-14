@@ -130,9 +130,9 @@ Follow these steps to configure your AWS environment:
         > **NOTE:** You can undo what the script did with the next commands (all containers have to be stoped). 
         ```bash 
         sudo docker-compose down
+        sudo find . -name ".setup_done" -delete
         ```
     
       - #### Step 3.
         Continue with [Deployment](https://github.com/UPTokenizing/digitalIdentity/blob/Tokenizing-Temp-Main/README.md#deployment)
         
-  #### **NOTE:**  After completing the installation and deployment process, the next step is going to the users web page at the route /registerGovernment (for example, PUBLIC_IP:5512/registerGovernment) and register the initial critical user of the system. Then, follow the [User Manual](https://github.com/UPTokenizing/digitalIdentity/blob/main/UserManual.pdf).

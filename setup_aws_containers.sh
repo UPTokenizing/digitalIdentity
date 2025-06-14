@@ -37,14 +37,13 @@ read -p "Enter DB_HOST : " DB_HOST
 read -p "Enter DB_USER (Username): " DB_USER
 read -p "Enter DB_PASSWORD (Username password): " DB_PASSWORD
 read -p "Enter DB_NAME (Database name): " DB_NAME
-read -p "Enter JWT_SECRET (Session token): " JWT_SECRET
 
 # Create a formatted string that will be saved to the .env files
 ENV_CONTENT="DB_HOST=$DB_HOST
 DB_USER=$DB_USER
 DB_PASSWORD=$DB_PASSWORD
 DB_NAME=$DB_NAME
-JWT_SECRET=$JWT_SECRET
+JWT_SECRET=dha7toiacrwoa98cr2pujc2j4u
 "
 
 # List of paths where .env files should be created
@@ -71,7 +70,26 @@ done
 echo "========== Starting containers ============"
 echo "Starting containers with docker-compose..."
 docker-compose up -d
-
+sleep 1
+echo ". . ."
+sleep 1
+echo ". . ."
+sleep 1
+echo ". . ."
+sleep 1
+echo ". . ."
+sleep 1
+echo ". . ."
+sleep 1
+echo ". . ."
+sleep 1
+echo ". . ."
+sleep 1
+echo ". . ."
+sleep 1
+echo ". . ."
+sleep 1
+echo ". . ."
 echo "==========================================="
 echo "Setup complete, continue with deployment instructions"
 echo "=============== Done ======================"
