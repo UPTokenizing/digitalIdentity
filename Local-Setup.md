@@ -76,8 +76,8 @@
         ```
         > **NOTE:** You can undo what the script did with the next commands (all containers have to be stoped). 
         ```bash 
-        sudo docker-compose down
         sudo docker rm <DB_HOST>
+        sudo docker-compose down
         sudo find . -name ".setup_done" -delete
         ```
     

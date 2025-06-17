@@ -18,12 +18,6 @@ read -p "Username (MYSQL_USER): " MYSQL_USER
 read -p "User Password (MYSQL_PASSWORD): " MYSQL_PASSWORD
 
 echo " "
-echo "========= Extra details needed ============"
-echo " "
-
-# Prompt for JWT secret used for authentication
-read -p "JWT_SECRET (session token JWT): " JWT_SECRET
-echo " "
 echo "============ Creating .env ================"
 echo " "
 echo "Creating .env files in frontend applications"
@@ -33,7 +27,7 @@ ENV_CONTENT="DB_HOST=$MYSQL_CONTAINER_NAME
 DB_USER=$MYSQL_USER
 DB_PASSWORD=$MYSQL_PASSWORD
 DB_NAME=$MYSQL_DATABASE
-JWT_SECRET=$JWT_SECRET
+JWT_SECRET=dha7toiacrwoa98cr2pujc2j4u
 "
 
 # Define paths where .env files will be created
@@ -62,7 +56,26 @@ echo "Starting containers with docker-compose..."
 # Launch containers defined in docker-compose.yml
 docker-compose up -d
 echo " "
-
+sleep 1
+echo ". . ."
+sleep 1
+echo ". . ."
+sleep 1
+echo ". . ."
+sleep 1
+echo ". . ."
+sleep 1
+echo ". . ."
+sleep 1
+echo ". . ."
+sleep 1
+echo ". . ."
+sleep 1
+echo ". . ."
+sleep 1
+echo ". . ."
+sleep 1
+echo ". . ."
 echo "Waiting for network to be available..."
 
 # Detect the Docker network created by docker-compose
@@ -82,7 +95,7 @@ docker run -d \
   -p 3306:3306 \
   mysql:8
 
-sleep 3
+sleep 5
 echo " "
 echo "==========================================="
 echo " "
