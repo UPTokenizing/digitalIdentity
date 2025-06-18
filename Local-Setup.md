@@ -27,7 +27,7 @@
         Install **ScholarCurriculum**, follow the instructions explained in the file README.md within the folder [scholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/scholarCurriculum).
       - #### Step 8.
         **Create the MySQL container**  
-        In the following command, you'll need to customize the `--name`, `MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE`, `MYSQL_USER`, and `MYSQL_PASSWORD` values. The last two parameters contain the login information for MySQL, and `MYSQL_DATABASE` is where the database name is assigned.
+        In the following command, you'll need to customize the `--name`, `MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE`, `MYSQL_USER`, and `MYSQL_PASSWORD` (Do not use \" or "#") values. The last two parameters contain the login information for MySQL, and `MYSQL_DATABASE` is where the database name is assigned.
         ```bash
         docker run -d --name tokphy-mysql --network TokPhyAppNetwork -e MYSQL_ROOT_PASSWORD=root_pw123 -e MYSQL_DATABASE=tokphydb -e MYSQL_USER=tokuser -e MYSQL_PASSWORD=user_pw123 -p 3306:3306 mysql:8
         ```
@@ -35,11 +35,11 @@
         
       - #### Step 9.
         **Connect MySQL with the frontend**  
-        To connect the database directly to the frontend, create a .env file in the root folder of every frontend project (the same directory where the server.js file is located, for example, for project **frontendIdentityDigital** the path is [digitalIdentity/frontendIdentityDigital/frontendDigitalApp/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital/frontendDigitalApp/)  ) with the following settings (it is based on the past example):
+        To connect the database directly to the frontend, create a .env file in the root folder of every frontend project (the same directory where the server.js file is located, for example, for project **frontendIdentityDigital** the path is [digitalIdentity/frontendIdentityDigital/frontendDigitalApp/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital/frontendDigitalApp/)  ) with the following settings (it is based on the past example, Do not use \" or "#" for passwords):
         ```env
         DB_HOST=tokphy-mysql
         DB_USER=tokuser
-        DB_PASSWORD=user_pw123
+        DB_PASSWORD="user_pw123"
         DB_NAME=tokphydb
         JWT_SECRET=your_secure_secret_key_here
         ```

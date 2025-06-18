@@ -30,7 +30,7 @@ Go into container **frontendscholarcurriculum** by checking the CONTAINER ID wit
 
     sudo docker ps -a
     
-    sudo docker exec -it <containerid> /bin/bash
+    sudo docker exec -it frontendscholarcurriculum /bin/bash
 
   Then, go to the ubuntu instance path:
       
@@ -76,24 +76,3 @@ Go into container **frontendscholarcurriculum** by checking the CONTAINER ID wit
 
   You can execute Ctrl + C to exit
 
-## Deployment
-  
-  Check the containers installed by executing the following:
-    
-    sudo docker ps -a
-
-  Identify the container ID of **frontendscholarcurriculum** and set the following command:
-    
-    sudo docker start <containerid>
-
-  Go into the container **frontendscholarcurriculum** by executing the following:
-    
-    sudo docker exec -it <containerid> /bin/bash
-
-  Go to the following path:
-    
-    cd frontendscholarcurriculum/frontendScholarCurriculumApp/
-
-  Then, execute the following command:
-    
-    ./startApp

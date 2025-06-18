@@ -17,7 +17,7 @@ Follow these steps to configure your AWS environment:
    - Template: Free tier
    - Configure credentials:
      * Set a master username
-     * Set a well-secured Master Password and keep it safe
+     * Set a well-secured Master Password and keep it safe (Do not use \" or "#")
    - Instance type: `db.t3.micro` or higher  
    - Storage: 20 GB (General Purpose SSD)  
    - Enable EC2 connectivity  
@@ -96,7 +96,7 @@ Follow these steps to configure your AWS environment:
         Then, install ScholarCurriculum, follow the instructions explained in the file README.md within the folder [scholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/scholarCurriculum).
       - #### Step 8.
         **Connect MySQL with the frontend**  
-        To connect the database directly to the frontend, create a .env file in the root folder of every frontend project (the same directory where the server.js file is located, for example, for project **frontendIdentityDigital** the path is [digitalIdentity/frontendIdentityDigital/frontendDigitalApp/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital/frontendDigitalApp/)  ) with the following settings (it is based on the past example):
+        To connect the database directly to the frontend, create a .env file in the root folder of every frontend project (the same directory where the server.js file is located, for example, for project **frontendIdentityDigital** the path is [digitalIdentity/frontendIdentityDigital/frontendDigitalApp/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital/frontendDigitalApp/)  ) with the following settings (it is based on the past example, Do not use \" or "#" for the passwords):
         ```env
         DB_HOST=<DB endpoint. EX: tokphy-mysql.xxxxxxxxxx.us-east-2.rds.amazonaws.com>
         DB_USER=root

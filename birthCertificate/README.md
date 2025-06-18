@@ -30,7 +30,7 @@ Go into container **birthcertificate** by checking the CONTAINER ID with the fol
 
     sudo docker ps -a
     
-    sudo docker exec -it <containerid> /bin/bash
+    sudo docker exec -it birthcertificate /bin/bash
 
 Then, go to the ubuntu instance path:
       
@@ -58,23 +58,3 @@ Then, go to the ubuntu instance path:
 
   You can execute ctrl+C to exit
 
-## Deployment
-  Check the containers installed executing the following:
-    
-    sudo docker ps -a
-
-  Identify the container id of **birthcertificate** and set the following command:
-    
-    sudo docker start <containerid>
-
-  Go into container **birthcertificate** by executing the following:
-    
-    sudo docker exec -it <containerid> /bin/bash
-
-  Go to the following path:
-    
-    cd /birthcertificate/birthCertificateApp
-
-  Then, execute the following command:
-    
-    ./startApp

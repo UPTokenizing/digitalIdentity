@@ -30,7 +30,7 @@ Go into container **frontendbirthcertificate** by checking the CONTAINER ID with
 
     sudo docker ps -a
     
-    sudo docker exec -it <containerid> /bin/bash
+    sudo docker exec -it frontendbirthcertificate /bin/bash
 
   Then, go to the ubuntu instance path:
       
@@ -75,24 +75,4 @@ Go into container **frontendbirthcertificate** by checking the CONTAINER ID with
 
   You can execute Ctrl + C to exit
 
-## Deployment
-  
-  Check the containers installed by executing the following:
-    
-    sudo docker ps -a
 
-  Identify the container ID of **frontendbirthcertificate** and set the following command:
-    
-    sudo docker start <containerid>
-
-  Go into the container **frontendbirthcertificate** by executing the following:
-    
-    sudo docker exec -it <containerid> /bin/bash
-
-  Go to the following path:
-    
-    cd frontendbirthcertificate/frontendBirthCertificateApp/
-
-  Then, execute the following command:
-    
-    ./startApp

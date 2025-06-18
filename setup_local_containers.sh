@@ -15,7 +15,7 @@ read -p "Container name (DB_HOST): " MYSQL_CONTAINER_NAME
 read -p "Root Password (MYSQL_ROOT_PASSWORD): " MYSQL_ROOT_PASSWORD
 read -p "Database name Ex. digital_identity (MYSQL_DATABASE): " MYSQL_DATABASE
 read -p "Username (MYSQL_USER): " MYSQL_USER
-read -p "User Password (MYSQL_PASSWORD): " MYSQL_PASSWORD
+read -p "User Password (MYSQL_PASSWORD)  Do not use \" or "#": " MYSQL_PASSWORD
 
 echo " "
 echo "============ Creating .env ================"
@@ -55,27 +55,49 @@ echo "Starting containers with docker-compose..."
 
 # Launch containers defined in docker-compose.yml
 docker-compose up -d
+sleep 1
+echo "..."
+sleep 1
+echo "..."
+sleep 1
+echo "..."
+sleep 1
+echo "..."
+sleep 1
+echo "..."
+sleep 1
+echo "..."
+sleep 1
+echo "..."
+sleep 1
+echo "..."
+sleep 1
+echo "..."
+sleep 1
+echo "..."
+sleep 1
+echo "Executing commands inside containers..."
+sleep 12
+echo "..."
+sleep 12
+echo "..."
+sleep 12
+echo "..."
+sleep 12
+echo "..."
+sleep 12
+echo "..."
+sleep 12
+echo "..."
+sleep 12
+echo "..."
+sleep 12
+echo "..."
+sleep 12
+echo "..."
+sleep 12
+echo "..."
 echo " "
-sleep 1
-echo ". . ."
-sleep 1
-echo ". . ."
-sleep 1
-echo ". . ."
-sleep 1
-echo ". . ."
-sleep 1
-echo ". . ."
-sleep 1
-echo ". . ."
-sleep 1
-echo ". . ."
-sleep 1
-echo ". . ."
-sleep 1
-echo ". . ."
-sleep 1
-echo ". . ."
 echo "Waiting for network to be available..."
 
 # Detect the Docker network created by docker-compose

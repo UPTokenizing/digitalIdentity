@@ -10,7 +10,7 @@
   You must see the network details
  
 ## Install process
-Go to path "digitalIdentity/frontendUsersInteface", so-called PATHL, there you can see this readme. Execute the following steps
+Go to path "digitalIdentity/frontendusersinterface", so-called PATHL, there you can see this readme. Execute the following steps
       
     cd <PATHL>  
     
@@ -20,17 +20,17 @@ Create the new image from digitalidentityimage container, first check its id:
 
 Now you must create the image:      
     
-    sudo docker commit <digitaldentityimage Container Id> frontendusersinteface
+    sudo docker commit <digitaldentityimage Container Id> frontendusersinterface
 
 Run ubuntu: 
       
-    sudo docker run -dit --name frontendusersinteface --network TokPhyAppNetwork  -p 5512:5512  -v  <PATHL>:/frontendusersinteface   digitalidentityimage
+    sudo docker run -dit --name frontendusersinterface --network TokPhyAppNetwork  -p 5512:5512  -v  <PATHL>:/frontendusersinteface   digitalidentityimage
 
-Go into container **frontendusersinteface** by checking the CONTAINER ID with the following:
+Go into container **frontendusersinterface** by checking the CONTAINER ID with the following:
 
     sudo docker ps -a
     
-    sudo docker exec -it <containerid> /bin/bash
+    sudo docker exec -it frontendusersinterface /bin/bash
 
   Then, go to the ubuntu instance path:
       
@@ -74,24 +74,3 @@ Go into container **frontendusersinteface** by checking the CONTAINER ID with th
 
   You can execute Ctrl + C to exit
 
-## Deployment
-  
-  Check the containers installed by executing the following:
-    
-    sudo docker ps -a
-
-  Identify the container ID of **frontendusersinteface** and set the following command:
-    
-    sudo docker start <containerid>
-
-  Go into the container **frontendusersinteface** by executing the following:
-    
-    sudo docker exec -it <containerid> /bin/bash
-
-  Go to the following path:
-    
-    cd frontendusersinterface/frontendUsersApp/
-
-  Then, execute the following command:
-    
-    ./startApp

@@ -35,7 +35,7 @@ sleep 1
 # Prompt user to input environment variables for connecting to the database
 read -p "Enter DB_HOST : " DB_HOST
 read -p "Enter DB_USER (Username): " DB_USER
-read -p "Enter DB_PASSWORD (Username password): " DB_PASSWORD
+read -p "Enter DB_PASSWORD (Username password) Do not use \" or "#": " DB_PASSWORD
 read -p "Enter DB_NAME (Database name): " DB_NAME
 
 # Create a formatted string that will be saved to the .env files
