@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
         event.preventDefault();
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
-        const Institution = "UpCurriculum";
+        const Institution = "ScholarCurriculum";
 
         IDUsed = await checkStudentBirthCertificate(data.studentID);
         if (!IDUsed) {
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         resultContentElement.textContent = 'Failed to create contract. Please try again or check the input data.';
                     } else if (result.Result === "Success") {
                         await updateBirthCertificateWithStudentID(data.studentID, data.BirthCertificateAddress)
-                        await updateScholarCurriculum(data.BirthCertificateAddress, result.contractAddress, "UpCurriculum");
+                        await updateScholarCurriculum(data.BirthCertificateAddress, result.contractAddress, "ScholarCurriculum");
                         alert("Curriculum created successfully!");
                         resultElement.classList.remove('hidden');
                         resultContentElement.textContent = `Curriculum created successfully!`;

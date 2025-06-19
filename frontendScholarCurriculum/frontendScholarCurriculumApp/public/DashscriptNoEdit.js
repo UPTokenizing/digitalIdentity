@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         const data = await response.json();
-        return data.UpCurriculum;  // ← is this a stringified JSON? an object?
+        return data.ScholarCurriculum;  // ← is this a stringified JSON? an object?
     }
 
     async function fetchNumberOfAchievements(data) {
@@ -215,7 +215,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     // Helper function to build table rows
     async function buildTableRows(students) {
-        const Institution = "UpCurriculum";
+        const Institution = "ScholarCurriculum";
         let rows = '';
 
         for (const student of students) {

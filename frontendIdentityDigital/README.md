@@ -3,40 +3,36 @@
   This application is the Front-End for the digital identity project. This offers a solution to have an interactive interface.
 
 ## Pre-requirements
-  Although it should have been installed previously. Check if you have the network created:
+  Check the network created previously:
 
-    
-      docker network inspect TokPhyAppNetwork
+    docker network inspect TokPhyAppNetwork
 
-  If not, install it with:
-
-    
-      docker network create --gateway 172.18.1.1 --subnet 172.18.1.0/24 TokPhyAppNetwork
-
+  You must see the network details
  
 ## Install process
-  Download this repository to a path on your computer, so-called PATHL, from now on.  Execute the following steps: 
-
-  Go to the following patch:
+Go to path "digitalIdentity/frontendIdentityDigital", so-called PATHL, there you can see this readme. Execute the following steps
       
-      cd PATHL  
-  You must see Dockerfile, README.md file, and the folder frontendDigitalApp:
-      
-      ls 
-  Download ubuntu image (although this step should not be required because of the previous Ganache installation):
-      
-      sudo docker pull ubuntu:24.04
+    cd <PATHL>  
     
-  Build the ubuntu image in a repository:
-      
-      sudo docker build -t frontendidentitydigital  <PATHL>
+Create the new image from digitalidentityimage container, first check its id:
+  
+    sudo docker ps -a
 
-  Run ubuntu: 
-      
-      sudo docker run -it --network TokPhyAppNetwork -p 5511:5511  -v  <PATHL>:/frontendidentitydigital  frontendidentitydigital
-      
+Now you must create the image:      
+    
+    sudo docker commit <digitaldentityimage Container Id> frontendidentitydigital
 
-  Then, go to the path:
+Run ubuntu: 
+      
+    sudo docker run -dit --name frontendidentitydigital --network TokPhyAppNetwork  -p 5511:5511  -v  <PATHL>:/frontendidentitydigital   digitalidentityimage
+
+Go into container **frontendidentitydigital** by checking the CONTAINER ID with the following:
+
+    sudo docker ps -a
+    
+    sudo docker exec -it frontendidentitydigital /bin/bash
+
+  Then, go to the ubuntu instance path:
       
       cd frontendidentitydigital/frontendDigitalApp/
 
@@ -44,15 +40,10 @@
 
       sudo apt-get update && apt-get upgrade -y
       sudo apt install libcurl4-openssl-dev
-
-  You must intro to the ubuntu instance and install npm:
-      
-      sudo apt install nodejs npm
   
   Then, Update npm:
       
       sudo npm update
-  
   
   Also you nedd to install nodemon and extra dependecies:
       
@@ -83,24 +74,4 @@
 
   You can execute Ctrl + C to exit
 
-## Deployment
-  
-  Check the containers installed by executing the following:
-    
-    sudo docker ps -a
 
-  Identify the container ID of **frontendidentitydigital** and set the following command:
-    
-    sudo docker start <containerid>
-
-  Go into the container **frontendidentitydigital** by executing the following:
-    
-    sudo docker exec -it <containerid> /bin/bash
-
-  Go to the following path:
-    
-    cd frontendidentitydigital/frontendDigitalApp/
-
-  Then, execute the following command:
-    
-    ./startApp
