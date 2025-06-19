@@ -134,5 +134,5 @@ Follow these steps to configure your AWS environment:
         ```
     
       - #### Step 3.
-        Continue with [Deployment](https://github.com/UPTokenizing/digitalIdentity/blob/Tokenizing-Temp-Main/README.md#deployment)
+        Continue with [Deployment](https://github.com/UPTokenizing/digitalIdentity/blob/main/README.md#deployment)
         
