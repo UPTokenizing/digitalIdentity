@@ -1,6 +1,6 @@
 # Local Setup and Installation
 
-   **Clone the project from the Github: https://github.com/UPTokenizing/digitalIdentity.git**
+   **Clone the project from the GitHub: https://github.com/UPTokenizing/digitalIdentity.git**
    ```bash
    git clone https://github.com/UPTokenizing/digitalIdentity.git
    ```
@@ -55,7 +55,7 @@
     * ### Automatic Installation option
        
       - #### Step 1.
-        Install **Docker Compose**, in your comand console run the following command:
+        Install **Docker Compose**, in your command console, run the following command:
         **Linux**
         ```bash
         apt  install docker-compose -y
@@ -69,18 +69,34 @@
         ```
     
       - #### Step 2.
-        Run the script **setup_local_containers**, in your comand console run the following commands:
+        Run the script **setup_local_containers**, in your command console, run the following commands:
+        **Linux / MacOS**
         ```bash
         sudo chmod 544 setup_local_containers.sh
-        sudo ./setup_local_containers
+        sudo ./setup_local_containers.sh
         ```
-        > **NOTE:** You can undo what the script did with the next commands (all containers have to be stoped). 
+        
+        **Windows (Powershell terminal)**
+        ```bash
+        .\setup_local_containers.ps1
+        ```
+     
+        ---
+        > **NOTE:** You can undo what the script did with the next commands (all containers have to be stopped).
+        
+        **Linux / MacOS**
         ```bash 
         sudo docker rm <DB_HOST>
         sudo docker-compose down
         sudo find . -name ".setup_done" -delete
         ```
-    
+        
+        **Windows (Powershell terminal)**
+        ```bash 
+        docker rm <DB_HOST>
+        docker-compose down
+        Get-ChildItem -Recurse -Filter ".setup_done" | Remove-Item -Force
+        ```
       - #### Step 3.
         Continue with [Deployment](https://github.com/UPTokenizing/digitalIdentity/blob/Tokenizing-Temp-Main/README.md#deployment)
         
