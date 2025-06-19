@@ -55,13 +55,13 @@ Before proceeding to the installation steps, it is required to set the environme
 
 ## Deployment
   Execute the following instructions:    
-  1. Follow the **Deployment** instructions explained in file README.md within folder [ganache/](https://github.com/UPTokenizing/digitalIdentity/tree/main/ganache).
-  2. Then, follow the **Deployment** instructions explained in file README.md within folder [apigateway/](https://github.com/UPTokenizing/digitalIdentity/tree/main/apigateway).
-  3. Next, follow the **Deployment** instructions explained in file README.md within folder [birthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/birthCertificate).
-  4. Following with the **Deployment** instructions explained in file README.md within folder [digitalIdentity/](https://github.com/UPTokenizing/digitalIdentity/tree/main/digitalIdentity).
-  5. After digital Identity, follow the **Deployment** instructions explained in file README.md within folder [users/](https://github.com/UPTokenizing/digitalIdentity/tree/main/users).
-  6. After digital Identity, follow the **Deployment** instructions explained in file README.md within folder [scholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/scholarCurriculum). **NOTE**
-  7. Lastly, follow the **Deployment** instructions explained in file README.md within the folders of for the user interactions [frontendBirthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendBirthCertificate), [frontendIdentityDigital/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital), [frontendUsersInterface/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendUsersInteface), [frontendScholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendScholarCurriculum).
+  1. Follow the **Deployment** instructions explained in file README.md within folder [ganache/](https://github.com/UPTokenizing/digitalIdentity/tree/main/ganache/Deployment.md).
+  2. Then, follow the **Deployment** instructions explained in file README.md within folder [apigateway/](https://github.com/UPTokenizing/digitalIdentity/tree/main/apigateway/Deployment.md).
+  3. Next, follow the **Deployment** instructions explained in file README.md within folder [birthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/birthCertificate/Deployment.md).
+  4. Following with the **Deployment** instructions explained in file README.md within folder [digitalIdentity/](https://github.com/UPTokenizing/digitalIdentity/tree/main/digitalIdentity/Deployment.md).
+  5. After digital Identity, follow the **Deployment** instructions explained in file README.md within folder [users/](https://github.com/UPTokenizing/digitalIdentity/tree/main/users/Deployment.md).
+  6. After digital Identity, follow the **Deployment** instructions explained in file README.md within folder [scholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/scholarCurriculum/Deployment.md). **NOTE**
+  7. Lastly, follow the **Deployment** instructions explained in file README.md within the folders of for the user interactions [frontendBirthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendBirthCertificate/Deployment.md), [frontendIdentityDigital/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital/Deployment.md), [frontendUsersInterface/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendUsersInteface/Deployment.md), [frontendScholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendScholarCurriculum/Deployment.md).
   
   > **NOTE:** If the project is within a local machine, the MySQL container should start running after the *`scholarCurriculum`* container (This is for the IP assignation).
 
