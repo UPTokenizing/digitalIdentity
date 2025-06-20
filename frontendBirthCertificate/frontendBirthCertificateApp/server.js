@@ -211,22 +211,18 @@ app.post('/api/login', async (req, res) => {
 });
 
 
-//Get contract Address for whole project (Critical user) *Uses a default Address to look for it -> "0x2CFcBB9Cf2910fBa7E7E7a8092aa1a40BC5BA341"
 app.post('/api/getContractAdd', async (req, res) => {
-  const UserAddress = '0x2CFcBB9Cf2910fBa7E7E7a8092aa1a40BC5BA341';  // Default address
-
   try {
     const connection = await pool.getConnection();
 
     const [rows] = await connection.query(
-      'SELECT contractAdd FROM users WHERE UserAddress = ? LIMIT 1',
-      [UserAddress]
+      'SELECT contractAdd FROM users WHERE contractAdd IS NOT NULL LIMIT 1'
     );
 
     connection.release();
 
     if (rows.length === 0) {
-      return res.status(200).send({ contractAdd: UserAddress }); // Default if not found
+      return res.status(404).send({ message: 'No contract address found' });
     }
 
     res.status(200).send({ contractAdd: rows[0].contractAdd });
@@ -235,6 +231,7 @@ app.post('/api/getContractAdd', async (req, res) => {
     res.status(400).send({ message: error.message });
   }
 });
+
 
 //Fetch User Address by utilizing its email saved on the user table 
 app.post('/api/getUserAdd', async (req, res) => {
