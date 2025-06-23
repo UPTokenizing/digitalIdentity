@@ -25,8 +25,6 @@ sleep 0.5
 echo "DB_PASSWORD=\"root_pw123\" "
 sleep 0.5
 echo "DB_NAME=digital_identity"
-sleep 0.5
-echo "JWT_SECRET=<your_secure_secret_key_here>"
 echo " "
 echo " "
 echo "==========================================="
