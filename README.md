@@ -60,14 +60,12 @@ Before proceeding to the installation steps, it is required to set the environme
   3. Next, follow the **Deployment** instructions explained in file README.md within folder [birthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/birthCertificate/Deployment.md).
   4. Following with the **Deployment** instructions explained in file README.md within folder [digitalIdentity/](https://github.com/UPTokenizing/digitalIdentity/tree/main/digitalIdentity/Deployment.md).
   5. After digital Identity, follow the **Deployment** instructions explained in file README.md within folder [users/](https://github.com/UPTokenizing/digitalIdentity/tree/main/users/Deployment.md).
-  6. After digital Identity, follow the **Deployment** instructions explained in file README.md within folder [scholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/scholarCurriculum/Deployment.md). **NOTE**
+  6. After digital Identity, follow the **Deployment** instructions explained in file README.md within folder [scholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/scholarCurriculum/Deployment.md). 
   7. Lastly, follow the **Deployment** instructions explained in file README.md within the folders of for the user interactions [frontendBirthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendBirthCertificate/Deployment.md), [frontendIdentityDigital/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital/Deployment.md), [frontendUsersInterface/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendUsersInteface/Deployment.md), [frontendScholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendScholarCurriculum/Deployment.md).
   8. **Check that the MySWL Database is running. For local installation, run the command in case it is down**
    ```bash
     sudo docker start <DB_HOST>.
    ```
-  
-  > **NOTE:** If the project is within a local machine, the MySQL container should start running after the *`scholarCurriculum`* container (This is for the IP assignation).
 
   #### **NOTE:**  After completing the installation and deployment process, the next step is going to the users web page at the route /registerGovernment (for example, PUBLIC_IP:5512/registerGovernment) and register the initial critical user of the system. Then, follow the [User Manual](https://github.com/UPTokenizing/digitalIdentity/blob/main/UserManual.pdf).
 
