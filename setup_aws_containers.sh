@@ -67,39 +67,50 @@ done
 # Start Docker containers
 echo "========== Starting containers ============"
 echo "Starting containers with docker-compose..."
+# Launch containers defined in docker-compose.yml
 docker-compose up -d
 sleep 1
-echo ". . ."
+echo "..."
 sleep 1
-echo ". . ."
+echo "..."
 sleep 1
-echo ". . ."
+echo "..."
 sleep 1
-echo ". . ."
+echo "..."
 sleep 1
-echo ". . ."
+echo "..."
 sleep 1
-echo ". . ."
+echo "..."
 sleep 1
-echo ". . ."
+echo "..."
 sleep 1
-echo ". . ."
+echo "..."
 sleep 1
-echo ". . ."
+echo "..."
 sleep 1
-echo ". . ."
-
-# Sleep sequence with visual dots
-for ($i = 1; $i -le 10; $i++) {
-  Start-Sleep -Seconds 1
-  Write-Host "..."
-}
-
-Write-Host "Executing commands inside containers..."
-for ($i = 1; $i -le 10; $i++) {
-  Start-Sleep -Seconds 12
-  Write-Host "..."
-}
+echo "..."
+sleep 1
+echo "Executing commands inside containers..."
+sleep 12
+echo "..."
+sleep 12
+echo "..."
+sleep 12
+echo "..."
+sleep 12
+echo "..."
+sleep 12
+echo "..."
+sleep 12
+echo "..."
+sleep 12
+echo "..."
+sleep 12
+echo "..."
+sleep 12
+echo "..."
+sleep 12
+echo "..."
 
 echo "==========================================="
 echo "Setup complete, continue with deployment instructions"
