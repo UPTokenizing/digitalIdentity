@@ -43,7 +43,7 @@
         DB_NAME=tokphydb
         JWT_SECRET=your_secure_secret_key_here
         ```
-        > **NOTE:** The JWT secret value is a session token.
+        > **NOTE:** The JWT secret value is a session token. Ex: M1_53cuR3_K3Y
         
         > **NOTE:** The MySQL container should start running after the *`scholarCurriculum`* container (This is for the IP assignation).
 
@@ -58,6 +58,7 @@
         Install **Docker Compose**, in your command console, run the following command:
         **Linux**
         ```bash
+        cd digitalIdentity
         apt  install docker-compose -y
         ```
         **Windows and macOS**
