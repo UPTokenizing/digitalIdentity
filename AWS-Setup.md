@@ -104,7 +104,7 @@ Follow these steps to configure your AWS environment:
         DB_NAME=digital_identity
         JWT_SECRET=<your_secure_secret_key_here>
         ```
-        > **NOTE:**  The JWT secret value is a session token.
+        > **NOTE:**  The JWT secret value is a session token. Ex: M1_53cuR3_K3Y
 
       - #### Step 9.
         Lastly, install the frontend applications, follow the instructions explained in the file README.md within the folders [frontendBirthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendBirthCertificate), [frontendIdentityDigital/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital), [frontendUsersInteface/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendUsersInteface), and [frontendScholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendScholarCurriculum).
