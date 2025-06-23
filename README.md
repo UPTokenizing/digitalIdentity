@@ -62,7 +62,7 @@ Before proceeding to the installation steps, it is required to set the environme
   5. After digital Identity, follow the **Deployment** instructions explained in file README.md within folder [users/](https://github.com/UPTokenizing/digitalIdentity/tree/main/users/Deployment.md).
   6. After digital Identity, follow the **Deployment** instructions explained in file README.md within folder [scholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/scholarCurriculum/Deployment.md). 
   7. Lastly, follow the **Deployment** instructions explained in file README.md within the folders of for the user interactions [frontendBirthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendBirthCertificate/Deployment.md), [frontendIdentityDigital/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital/Deployment.md), [frontendUsersInterface/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendUsersInteface/Deployment.md), [frontendScholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendScholarCurriculum/Deployment.md).
-  8. **Check that the MySQL Database is running. For local installation, run the command in case it is down**
+  8. **Check that the MySQL Database is running. In case it is down, for local installation run the command:  **
    ```bash
     sudo docker start <DB_HOST>.
    ```
