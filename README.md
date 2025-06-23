@@ -67,7 +67,7 @@ Before proceeding to the installation steps, it is required to set the environme
     sudo docker start <DB_HOST>.
    ```
 
-  #### **NOTE:**  After completing the installation and deployment process, the next step is going to the users web page at the route /registerGovernment (for example, PUBLIC_IP:5512/registerGovernment) and register the initial critical user of the system. Then, follow the [User Manual](https://github.com/UPTokenizing/digitalIdentity/blob/main/UserManual.pdf).
+  #### **NOTE:**  After completing the installation and deployment process, follow the [User Manual](https://github.com/UPTokenizing/digitalIdentity/blob/main/UserManual.pdf).
 
 You can execute the following command in the host operating system to check if every service is ok:
     
