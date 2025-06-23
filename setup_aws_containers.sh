@@ -88,6 +88,19 @@ sleep 1
 echo ". . ."
 sleep 1
 echo ". . ."
+
+# Sleep sequence with visual dots
+for ($i = 1; $i -le 10; $i++) {
+  Start-Sleep -Seconds 1
+  Write-Host "..."
+}
+
+Write-Host "Executing commands inside containers..."
+for ($i = 1; $i -le 10; $i++) {
+  Start-Sleep -Seconds 12
+  Write-Host "..."
+}
+
 echo "==========================================="
 echo "Setup complete, continue with deployment instructions"
 echo "=============== Done ======================"
