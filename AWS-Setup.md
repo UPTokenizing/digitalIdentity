@@ -114,6 +114,7 @@ Follow these steps to configure your AWS environment:
       - #### Step 1.
         Install **Docker Compose**, in your comand console run the following command:
         ```bash
+        cd digitalIdentity
         apt  install docker-compose -y
         ```
         > **NOTE:** You can verify that Docker Compose is installed and working. 
@@ -125,7 +126,7 @@ Follow these steps to configure your AWS environment:
         Run the script **setup_aws_containers**, in your comand console run the following commands:
         ```bash
         sudo chmod 544 setup_aws_containers.sh
-        sudo ./setup_aws_containers
+        sudo ./setup_aws_containers.sh
         ```
         > **NOTE:** You can undo what the script did with the next commands (all containers have to be stoped). 
         ```bash 
