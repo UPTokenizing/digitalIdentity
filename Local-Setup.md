@@ -26,8 +26,12 @@
       - #### Step 7.
         Install **ScholarCurriculum**, follow the instructions explained in the file README.md within the folder [scholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/scholarCurriculum).
       - #### Step 8.
-        **Create the MySQL container**  
-        In the following command, you'll need to customize the `--name`, `MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE`, `MYSQL_USER`, and `MYSQL_PASSWORD` (Do not use \" or "#") values. The last two parameters contain the login information for MySQL, and `MYSQL_DATABASE` is where the database name is assigned.
+        **Create the MySQL container**
+        - Pull MySQL image
+        ```bash
+        sudo docker pull mysql:8
+        ```
+        - In the following command, you'll need to customize the `--name`, `MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE`, `MYSQL_USER`, and `MYSQL_PASSWORD` (Do not use \" or "#") values. The last two parameters contain the login information for MySQL, and `MYSQL_DATABASE` is where the database name is assigned.
         ```bash
         docker run -d --name tokphy-mysql --network TokPhyAppNetwork -e MYSQL_ROOT_PASSWORD=root_pw123 -e MYSQL_DATABASE=tokphydb -e MYSQL_USER=tokuser -e MYSQL_PASSWORD=user_pw123 -p 3306:3306 mysql:8
         ```
@@ -55,11 +59,12 @@
     * ### Automatic Installation option
        
       - #### Step 1.
-        Install **Docker Compose**, in your command console, run the following command:
+        Install **Docker Compose** and the mysql image, in your command console, run the following command:
         **Linux**
         ```bash
         cd digitalIdentity
         apt  install docker-compose -y
+        sudo docker pull mysql:8
         ```
         **Windows and macOS**
         Docker Compose is included by default with `Docker Desktop`.
@@ -67,6 +72,7 @@
         > **NOTE:** You can verify that Docker Compose is installed and working. 
         ```bash 
         docker-compose --version
+        docker pull mysql:8
         ```
     
       - #### Step 2.
