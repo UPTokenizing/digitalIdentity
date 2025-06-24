@@ -24,7 +24,7 @@ Now you must create the image:
 
 Run ubuntu: 
       
-    sudo docker run -dit --name frontendusersinterface --network TokPhyAppNetwork  -p 5512:5512  -v  <PATHL>:/frontendusersinteface   digitalidentityimage
+    sudo docker run -dit --name frontendusersinterface --network TokPhyAppNetwork  -p 5512:5512  -v  <PATHL>:/frontendusersinterface   digitalidentityimage
 
 Go into container **frontendusersinterface** by checking the CONTAINER ID with the following:
 
