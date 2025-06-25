@@ -147,8 +147,6 @@ services:
         apt-get upgrade -y &&
         apt-get install -y libcurl4-openssl-dev &&
         npm update &&
-        npm install -g nodemon &&
-        npm install axios dotenv bcrypt jsonwebtoken mysql2 &&
         chmod 544 startApp &&
         touch .setup_done
       fi &&
@@ -173,8 +171,6 @@ services:
         apt-get upgrade -y &&
         apt-get install -y libcurl4-openssl-dev &&
         npm update &&
-        npm install -g nodemon &&
-        npm install axios dotenv bcrypt jsonwebtoken mysql2 &&
         chmod 544 startApp &&
         touch .setup_done
       fi &&
@@ -199,8 +195,6 @@ services:
         apt-get upgrade -y &&
         apt-get install -y libcurl4-openssl-dev &&
         npm update &&
-        npm install -g nodemon &&
-        npm install axios dotenv bcrypt jsonwebtoken mysql2 &&
         chmod 544 startApp &&
         touch .setup_done
       fi &&
@@ -225,8 +219,6 @@ services:
         apt-get upgrade -y &&
         apt-get install -y libcurl4-openssl-dev &&
         npm update &&
-        npm install -g nodemon &&
-        npm install axios dotenv bcrypt jsonwebtoken mysql2 &&
         chmod 544 startApp &&
         touch .setup_done
       fi &&
