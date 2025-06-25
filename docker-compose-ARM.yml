@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   ganache:
-    image: branxz07/digitalidentityimagearm:latest
+    image: branxz07/digitalidentityimagearm:arm64
     container_name: ganache
     networks:
       TokPhyAppNetwork:
@@ -23,7 +23,7 @@ services:
       '
 
   apigateway:
-    image: branxz07/digitalidentityimagearm:latest
+    image: branxz07/digitalidentityimagearm:arm64
     container_name: apigateway
     networks:
       TokPhyAppNetwork:
@@ -45,7 +45,7 @@ services:
       '
 
   birthcertificate:
-    image: branxz07/digitalidentityimagearm:latest
+    image: branxz07/digitalidentityimagearm:arm64
     container_name: birthcertificate
     networks:
       TokPhyAppNetwork:
@@ -67,7 +67,7 @@ services:
       '
 
   digitalidentity:
-    image: branxz07/digitalidentityimagearm:latest
+    image: branxz07/digitalidentityimagearm:arm64
     container_name: digitalidentity
     networks:
       TokPhyAppNetwork:
@@ -88,7 +88,7 @@ services:
       '
 
   users:
-    image: branxz07/digitalidentityimagearm:latest
+    image: branxz07/digitalidentityimagearm:arm64
     container_name: users
     networks:
       TokPhyAppNetwork:
@@ -109,7 +109,7 @@ services:
       '
 
   scholarcurriculum:
-    image: branxz07/digitalidentityimagearm:latest
+    image: branxz07/digitalidentityimagearm:arm64
     container_name: scholarcurriculum
     networks:
       TokPhyAppNetwork:
@@ -130,7 +130,7 @@ services:
       '
 
   frontendusersinterface:
-    image: branxz07/digitalidentityimagearm:latest
+    image: branxz07/digitalidentityimagearm:arm64
     container_name: frontendusersinterface
     networks:
       TokPhyAppNetwork:
@@ -154,7 +154,7 @@ services:
       '
 
   frontendbirthcertificate:
-    image: branxz07/digitalidentityimagearm:latest
+    image: branxz07/digitalidentityimagearm:arm64
     container_name: frontendbirthcertificate
     networks:
       TokPhyAppNetwork:
@@ -178,7 +178,7 @@ services:
       '
 
   frontendidentitydigital:
-    image: branxz07/digitalidentityimagearm:latest
+    image: branxz07/digitalidentityimagearm:arm64
     container_name: frontendidentitydigital
     networks:
       TokPhyAppNetwork:
@@ -202,7 +202,7 @@ services:
       '
 
   frontendscholarcurriculum:
-    image: branxz07/digitalidentityimagearm:latest
+    image: branxz07/digitalidentityimagearm:arm64
     container_name: frontendscholarcurriculum
     networks:
       TokPhyAppNetwork:
