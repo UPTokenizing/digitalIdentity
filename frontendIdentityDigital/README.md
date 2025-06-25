@@ -44,12 +44,6 @@ Go into container **frontendidentitydigital** by checking the CONTAINER ID with 
   Then, Update npm:
       
       sudo npm update
-  
-  Also you nedd to install nodemon and extra dependecies:
-      
-     sudo npm install nodemon
-
-     sudo npm install axios dotenv bcrypt jsonwebtoken mysql2
 
   Change permissions:
       
