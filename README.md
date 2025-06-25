@@ -67,9 +67,7 @@ Before proceeding to the installation steps, it is required to set the environme
     sudo docker start <DB_HOST>.
    ```
 
-  #### **NOTE:**  After completing the installation and deployment process, follow the [User Manual](https://github.com/UPTokenizing/digitalIdentity/blob/main/UserManual.pdf).
-
-You can execute the following command in the host operating system to check if every service is ok:
+You might execute the following command in the host operating system to check if every service is ok:
     
     curl -X GET http://localhost:5500/proof
     curl -X GET http://localhost:5500/proofd
@@ -83,6 +81,10 @@ It must return:
     Returning: route /proof digital
     Returning: route /proof users
     Returning: route /proof scholarCertificates
+
+
+### After completing the installation and deployment process, follow the [User Manual](https://github.com/UPTokenizing/digitalIdentity/blob/main/UserManual.pdf).
+
 
 ## Example to consume the services
 To consume a list of services, check the following:
