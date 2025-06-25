@@ -108,6 +108,8 @@ Follow these steps to configure your AWS environment:
 
       - #### Step 9.
         Lastly, install the frontend applications, follow the instructions explained in the file README.md within the folders [frontendBirthCertificate/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendBirthCertificate), [frontendIdentityDigital/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendIdentityDigital), [frontendUsersInteface/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendUsersInteface), and [frontendScholarCurriculum/](https://github.com/UPTokenizing/digitalIdentity/tree/main/frontendScholarCurriculum).
+      - #### Step 10.
+        Continue with [Deployment](https://github.com/UPTokenizing/digitalIdentity/blob/main/README.md#deployment)
 
     * ###  Automatic Installation option
        
