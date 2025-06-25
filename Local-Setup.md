@@ -88,7 +88,12 @@
         ```bash
         .\setup_local_containers.ps1
         ```
-     
+        
+       **ARM architecture (e.g, MacOS no Intel)**
+        ```bash
+        sudo chmod 544 setup_local_ARM_containers.sh
+        sudo ./setup_local_ARM_containers.sh
+        ```
         ---
         > **NOTE:** You can undo what the script did with the next commands (all containers have to be stopped).
         
