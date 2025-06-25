@@ -74,7 +74,6 @@
         > **NOTE:** You can verify that Docker Compose is installed and working. 
         ```bash 
         docker-compose --version
-        docker pull mysql:8
         ```
     
       - #### Step 2.
