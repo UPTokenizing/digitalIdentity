@@ -1,4 +1,4 @@
-# DigitalIdentity: Architecture for a digital identity ecosystem based on blockchain
+# ChainIDentity: Architecture for a digital identity ecosystem based on blockchain
 This repository will have all projects about digitizing physical objects, linking them with a person.
 
 ## General description
